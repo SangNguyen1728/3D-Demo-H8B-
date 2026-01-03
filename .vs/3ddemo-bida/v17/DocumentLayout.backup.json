@@ -52,7 +52,7 @@
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedHeight": 210,
+          "DockedHeight": 254,
           "SelectedChildIndex": 1,
           "Children": [
             {
@@ -76,7 +76,7 @@
               "RelativeDocumentMoniker": "Assets\\Script\\GameManager.cs",
               "ToolTip": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\GameManager.cs",
               "RelativeToolTip": "Assets\\Script\\GameManager.cs",
-              "ViewState": "AgIAAAgAAAAAAAAAAAAAwBEAAAAyAAAAAAAAAA==",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAAwB8AAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-12-29T14:16:41.824Z",
               "EditorCaption": ""
@@ -191,12 +191,16 @@
           ]
         },
         {
-          "DockedHeight": 110,
+          "DockedHeight": 66,
           "SelectedChildIndex": -1,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
             }
           ]
         }

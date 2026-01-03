@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\assets\\script\\aiming.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\aiming.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|c:\\users\\sangnguyen\\desktop\\3ddemo-bida\\assets\\script\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -31,10 +35,6 @@
       "RelativeMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\ball.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\assets\\script\\aiming.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\aiming.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\assets\\script\\skillbuttoncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\skillbuttoncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -52,12 +52,12 @@
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedHeight": 210,
-          "SelectedChildIndex": 1,
+          "DockedHeight": 254,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "Ball.cs",
               "DocumentMoniker": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\Ball.cs",
               "RelativeDocumentMoniker": "Assets\\Script\\Ball.cs",
@@ -70,20 +70,56 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "GameManager.cs",
-              "DocumentMoniker": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\GameManager.cs",
-              "RelativeDocumentMoniker": "Assets\\Script\\GameManager.cs",
-              "ToolTip": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\GameManager.cs",
-              "RelativeToolTip": "Assets\\Script\\GameManager.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAyAAAAAAAAAA==",
+              "DocumentIndex": 2,
+              "Title": "CueStickController.cs",
+              "DocumentMoniker": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\CueStickController.cs",
+              "RelativeDocumentMoniker": "Assets\\Script\\CueStickController.cs",
+              "ToolTip": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\CueStickController.cs",
+              "RelativeToolTip": "Assets\\Script\\CueStickController.cs",
+              "ViewState": "AgIAABcAAAAAAAAAAAAAwCcAAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-29T14:16:41.824Z",
+              "WhenOpened": "2025-11-10T12:55:48.202Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "SkillSlowMotion.cs",
+              "DocumentMoniker": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\SkillSlowMotion.cs",
+              "RelativeDocumentMoniker": "Assets\\Script\\SkillSlowMotion.cs",
+              "ToolTip": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\SkillSlowMotion.cs",
+              "RelativeToolTip": "Assets\\Script\\SkillSlowMotion.cs",
+              "ViewState": "AgIAAIUAAAAAAAAAAADwv44AAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-24T09:14:07.993Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "CueBallSensor.cs",
+              "DocumentMoniker": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\CueBallSensor.cs",
+              "RelativeDocumentMoniker": "Assets\\Script\\CueBallSensor.cs",
+              "ToolTip": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\CueBallSensor.cs",
+              "RelativeToolTip": "Assets\\Script\\CueBallSensor.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-17T13:54:05.282Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Aiming.cs",
+              "DocumentMoniker": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\Aiming.cs",
+              "RelativeDocumentMoniker": "Assets\\Script\\Aiming.cs",
+              "ToolTip": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\Aiming.cs",
+              "RelativeToolTip": "Assets\\Script\\Aiming.cs",
+              "ViewState": "AgIAAAMBAAAAAAAAAADgvxQBAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-12T08:16:47.014Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "PocketTowPs.cs",
               "DocumentMoniker": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\PocketTowPs.cs",
               "RelativeDocumentMoniker": "Assets\\Script\\PocketTowPs.cs",
@@ -96,42 +132,19 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "CueStickController.cs",
-              "DocumentMoniker": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\CueStickController.cs",
-              "RelativeDocumentMoniker": "Assets\\Script\\CueStickController.cs",
-              "ToolTip": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\CueStickController.cs",
-              "RelativeToolTip": "Assets\\Script\\CueStickController.cs",
-              "ViewState": "AgIAABcAAAAAAAAAAAAAwCcAAAAKAAAAAAAAAA==",
+              "Title": "GameManager.cs",
+              "DocumentMoniker": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\GameManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Script\\GameManager.cs",
+              "ToolTip": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\GameManager.cs",
+              "RelativeToolTip": "Assets\\Script\\GameManager.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAAwB8AAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-10T12:55:48.202Z"
+              "WhenOpened": "2025-12-29T14:16:41.824Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "SkillSlowMotion.cs",
-              "DocumentMoniker": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\SkillSlowMotion.cs",
-              "RelativeDocumentMoniker": "Assets\\Script\\SkillSlowMotion.cs",
-              "ToolTip": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\SkillSlowMotion.cs",
-              "RelativeToolTip": "Assets\\Script\\SkillSlowMotion.cs",
-              "ViewState": "AgIAAIUAAAAAAAAAAADwv44AAAAjAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-24T09:14:07.993Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "CueBallSensor.cs",
-              "DocumentMoniker": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\CueBallSensor.cs",
-              "RelativeDocumentMoniker": "Assets\\Script\\CueBallSensor.cs",
-              "ToolTip": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\CueBallSensor.cs",
-              "RelativeToolTip": "Assets\\Script\\CueBallSensor.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-17T13:54:05.282Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
               "Title": "PocketDetector.cs",
               "DocumentMoniker": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\PocketDetector.cs",
               "RelativeDocumentMoniker": "Assets\\Script\\PocketDetector.cs",
@@ -140,18 +153,6 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-12-17T14:12:54.776Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "Aiming.cs",
-              "DocumentMoniker": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\Aiming.cs",
-              "RelativeDocumentMoniker": "Assets\\Script\\Aiming.cs",
-              "ToolTip": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\Aiming.cs",
-              "RelativeToolTip": "Assets\\Script\\Aiming.cs",
-              "ViewState": "AgIAADIAAAAAAAAAAAAgwFgAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-12T08:16:47.014Z"
             },
             {
               "$type": "Document",
@@ -191,12 +192,16 @@
           ]
         },
         {
-          "DockedHeight": 110,
+          "DockedHeight": 66,
           "SelectedChildIndex": -1,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
             }
           ]
         }
