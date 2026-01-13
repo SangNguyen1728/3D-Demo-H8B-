@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using Unity.Cinemachine;
+using System;
 
 public class CueStickController : MonoBehaviour
 {
@@ -12,13 +13,14 @@ public class CueStickController : MonoBehaviour
     public Camera mainCamera;
     public Rigidbody cueBall;
     public List<Rigidbody> balls;
-    public Slider forceSlider;
+    
     public GameObject aimingLine;
 
     [Header("Settings")]
     public float mouseSensitivity = 1.5f;
     public float hitForceAmount = 30f;
     public float stickHitSpeed = 10f;
+    public float stickLeavingSpeed = 0.5f;
     public float stopThreshold = 0.15f;
 
     [Header("Logic State")]
@@ -30,27 +32,43 @@ public class CueStickController : MonoBehaviour
     private Transform cueStickPivot, stickTransform;
     private Vector3 lastMousePosition, stickPullBack;
     private Vector3 stickOriginalPosition;
+    private Vector3 tableMinBounds = new Vector3(-3.5f, 0f, -1.7f),
+        tableMaxBounds =  new Vector3(3.5f, 0f, 1.7f);
+
     private float sliderHitForce;
     private bool hitPeriod = false;
 
+    [Header("Camera")]
     public CinemachineCamera cameraOnTop, cameraOnStick;
-    public bool isOnTopCameraActive = false, isDraggingStick = false;
+    public bool isOnTopCameraActive = false, isDraggingStick = false, isDraggingCueBall = false, isMoveCueBallAllow = true, isInitialMoveCueBall = false;
     private float topRotationSensitviity = 0.8f, camStickRotationSensitivity = 5f;
 
-    public GameManager gameManager;
+    [Header("Slider")]
+    public Slider powerSlider;
+    [NonSerialized] public Animator powerSliderAnim;
 
+    public GameManager gameManager;
+    //public PocketTowPs PocketTowPs;
+
+    
     void Start()
     {
         cueStickPivot = GetComponent<Transform>();
-        gameManager = GetComponent<GameManager>();
-        if (gameManager == null) gameManager = Object.FindFirstObjectByType<GameManager>();
+        //gameManager = GetComponent<GameManager>();
+        //pocketManager = GetComponent<PocketTowPs>();
+        if (gameManager == null) gameManager = UnityEngine.Object.FindFirstObjectByType<GameManager>();
         stickTransform = cueStickPivot.GetChild(0);
+        powerSliderAnim = powerSlider.GetComponent<Animator>();
+
         stickOriginalPosition = stickTransform.localPosition;
-        if (pocketManager == null) pocketManager = Object.FindFirstObjectByType<PocketTowPs>();
+        if (pocketManager == null) pocketManager = UnityEngine.Object.FindFirstObjectByType<PocketTowPs>();
         SetStickVisibility(true);
 
         cameraOnTop.Priority = 10;
         cameraOnStick.Priority = 20;
+
+        isMoveCueBallAllow = true;
+        isInitialMoveCueBall = true;
     }
 
     void Update()
@@ -145,8 +163,8 @@ public class CueStickController : MonoBehaviour
     public void OnSliderValueChange()
     {
         if (isMoving || hitPeriod) return;
-        sliderHitForce = hitForceAmount * forceSlider.value;
-        float pullDistance = forceSlider.value * 0.8f;
+        sliderHitForce = hitForceAmount * powerSlider.value;
+        float pullDistance = powerSlider.value * 0.8f;
         stickTransform.localPosition = stickOriginalPosition + Vector3.back * pullDistance;
         stickPullBack = stickTransform.localPosition;
     }
@@ -167,9 +185,9 @@ public class CueStickController : MonoBehaviour
 
     private IEnumerator ResetSlider()
     {
-        while (forceSlider.value > 0)
+        while (powerSlider.value > 0)
         {
-            forceSlider.value = Mathf.MoveTowards(forceSlider.value, 0, Time.deltaTime * 2f);
+            powerSlider.value = Mathf.MoveTowards(powerSlider.value, 0, Time.deltaTime * 2f);
             yield return null;
         }
     }

@@ -882,7 +882,7 @@ GameObject:
   - component: {fileID: 125260540}
   - component: {fileID: 125260539}
   m_Layer: 5
-  m_Name: PlayButton
+  m_Name: ResumeButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -951,7 +951,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 125260540}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1455611370}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: ResumeGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &125260540
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4172,7 +4184,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 706515094}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1455611370}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: ResumeGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &706515094
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4223,7 +4247,7 @@ Animator:
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 5e000a5a458ee9347844e06da110f468, type: 2}
   m_CullingMode: 0
-  m_UpdateMode: 0
+  m_UpdateMode: 2
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
@@ -7986,7 +8010,7 @@ Animator:
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 5f18c0826b677e949a9c6d7bda5d83cc, type: 2}
   m_CullingMode: 0
-  m_UpdateMode: 0
+  m_UpdateMode: 2
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
@@ -8544,6 +8568,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UpperUIAnimator: {fileID: 1229941297}
+  cameraButtonAnim: {fileID: 1573398351}
+  buttonPauseAnim: {fileID: 2028622368}
+  backButton: {fileID: 706515091}
+  pausePanel: {fileID: 1821312143}
+  backGround: {fileID: 2036354651}
   UpperUIShift: 1
   cueStickController: {fileID: 9187042310700018758}
 --- !u!4 &1455611371
@@ -8950,7 +8979,7 @@ Animator:
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: f8042ef511966ee40a2830ff17d75cf0, type: 2}
   m_CullingMode: 0
-  m_UpdateMode: 0
+  m_UpdateMode: 2
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
@@ -9650,7 +9679,7 @@ Animator:
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: d36b13319bd74d041a8a043cb2547f3f, type: 2}
   m_CullingMode: 0
-  m_UpdateMode: 0
+  m_UpdateMode: 2
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
@@ -11334,7 +11363,7 @@ Animator:
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 427b64a22e7aac844960e53888d85007, type: 2}
   m_CullingMode: 0
-  m_UpdateMode: 0
+  m_UpdateMode: 2
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
@@ -13021,7 +13050,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2028622366}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1455611370}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: OnPauseButtonClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2028622366
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14160,17 +14201,21 @@ MonoBehaviour:
   - {fileID: 1398973471}
   - {fileID: 1492858553}
   - {fileID: 783444865}
-  forceSlider: {fileID: 1487662658}
   aimingLine: {fileID: 2007217056}
   mouseSensitivity: 1
   hitForceAmount: 20
   stickHitSpeed: 5
+  stickLeavingSpeed: 0.5
   stopThreshold: 0.15
   isMoving: 0
   cameraOnTop: {fileID: 559244677}
   cameraOnStick: {fileID: 263975031}
   isOnTopCameraActive: 0
   isDraggingStick: 0
+  isDraggingCueBall: 0
+  isMoveCueBallAllow: 1
+  isInitialMoveCueBall: 0
+  powerSlider: {fileID: 1487662658}
   gameManager: {fileID: 1455611370}
 --- !u!114 &9187042310700018759
 MonoBehaviour:
