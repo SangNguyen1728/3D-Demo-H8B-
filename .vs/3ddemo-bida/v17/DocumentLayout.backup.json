@@ -3,11 +3,11 @@
   "WorkspaceRootPath": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\assets\\script\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|c:\\users\\sangnguyen\\desktop\\3ddemo-bida\\assets\\script\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|c:\\users\\sangnguyen\\desktop\\3ddemo-bida\\assets\\script\\cuestickcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\assets\\script\\cuestickcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\cuestickcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -100,7 +100,7 @@
               "RelativeDocumentMoniker": "Assets\\Script\\GameManager.cs",
               "ToolTip": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\GameManager.cs",
               "RelativeToolTip": "Assets\\Script\\GameManager.cs",
-              "ViewState": "AgIAAD4AAAAAAAAAAAAgwB8AAAAiAAAAAAAAAA==",
+              "ViewState": "AgIAAOsAAAAAAAAAAAAcwKoAAAA7AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-12-29T14:16:41.824Z",
               "EditorCaption": ""
@@ -115,8 +115,7 @@
               "RelativeToolTip": "Assets\\Script\\CueStickController.cs",
               "ViewState": "AgIAAGQAAAAAAAAAAAAkwD8AAABFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-10T12:55:48.202Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-10T12:55:48.202Z"
             },
             {
               "$type": "Document",
