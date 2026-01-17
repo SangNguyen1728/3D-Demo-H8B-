@@ -5093,6 +5093,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4491929870674011261, guid: 10d32b47a32e2624eaac71edcaaf92da, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1494089759}
+    - targetCorrespondingSourceObject: {fileID: 4491929870674011261, guid: 10d32b47a32e2624eaac71edcaaf92da, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1494089760}
   m_SourcePrefab: {fileID: 100100000, guid: 10d32b47a32e2624eaac71edcaaf92da, type: 3}
 --- !u!1 &543383031
 GameObject:
@@ -16041,6 +16044,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b3f855414fad994382c07dfe693fd02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1494089760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1494089755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92f952e7ff8624745bb31e4364fc8808, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ballRadius: 0.08
+  sensitivity: 1.5
+  spinValues: {x: 0, y: 0}
 --- !u!1 &1505269554
 GameObject:
   m_ObjectHideFlags: 0
@@ -25201,21 +25219,18 @@ MonoBehaviour:
   - {fileID: 1492858553}
   - {fileID: 783444865}
   aimingLine: {fileID: 2007217056}
+  englishController: {fileID: 1494089760}
   mouseSensitivity: 1
   hitForceAmount: 20
   stickHitSpeed: 5
-  stickLeavingSpeed: 0.5
   stopThreshold: 0.15
   isMoving: 0
   cameraOnTop: {fileID: 559244677}
   cameraOnStick: {fileID: 263975031}
   isOnTopCameraActive: 0
-  isDraggingStick: 0
-  isDraggingCueBall: 0
-  isMoveCueBallAllow: 1
-  isInitialMoveCueBall: 0
+  camStickRotationSensitivity: 5
   powerSlider: {fileID: 1487662658}
-  gameManager: {fileID: 1455611370}
+  gameManager: {fileID: 0}
 --- !u!114 &9187042310700018759
 MonoBehaviour:
   m_ObjectHideFlags: 0

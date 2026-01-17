@@ -13,14 +13,13 @@ public class CueStickController : MonoBehaviour
     public Camera mainCamera;
     public Rigidbody cueBall;
     public List<Rigidbody> balls;
-    
     public GameObject aimingLine;
+    public CueBallEnglish englishController; // Kéo CueBall vào đây
 
     [Header("Settings")]
     public float mouseSensitivity = 1.5f;
     public float hitForceAmount = 30f;
     public float stickHitSpeed = 10f;
-    public float stickLeavingSpeed = 0.5f;
     public float stopThreshold = 0.15f;
 
     [Header("Logic State")]
@@ -30,116 +29,110 @@ public class CueStickController : MonoBehaviour
     private bool hasProcessedShot = true;
 
     private Transform cueStickPivot, stickTransform;
-    private Vector3 lastMousePosition, stickPullBack;
+    private Vector3 lastMousePosition;
     private Vector3 stickOriginalPosition;
-    private Vector3 tableMinBounds = new Vector3(-3.5f, 0f, -1.7f),
-        tableMaxBounds =  new Vector3(3.5f, 0f, 1.7f);
-
     private float sliderHitForce;
     private bool hitPeriod = false;
 
     [Header("Camera")]
-    public CinemachineCamera cameraOnTop, cameraOnStick;
-    public bool isOnTopCameraActive = false, isDraggingStick = false, isDraggingCueBall = false, isMoveCueBallAllow = true, isInitialMoveCueBall = false;
-    private float topRotationSensitviity = 0.8f, camStickRotationSensitivity = 5f;
+    public CinemachineCamera cameraOnTop;
+    public CinemachineCamera cameraOnStick;
+    public bool isOnTopCameraActive = false;
+    private bool isDraggingStick = false;
+    public float camStickRotationSensitivity = 50f;
 
     [Header("Slider")]
     public Slider powerSlider;
     [NonSerialized] public Animator powerSliderAnim;
-
     public GameManager gameManager;
-    //public PocketTowPs PocketTowPs;
 
-    
     void Start()
     {
-        cueStickPivot = GetComponent<Transform>();
-        //gameManager = GetComponent<GameManager>();
-        //pocketManager = GetComponent<PocketTowPs>();
+        cueStickPivot = transform;
         if (gameManager == null) gameManager = UnityEngine.Object.FindFirstObjectByType<GameManager>();
+        if (englishController == null) englishController = cueBall.GetComponent<CueBallEnglish>();
+
         stickTransform = cueStickPivot.GetChild(0);
         powerSliderAnim = powerSlider.GetComponent<Animator>();
-
         stickOriginalPosition = stickTransform.localPosition;
+
         if (pocketManager == null) pocketManager = UnityEngine.Object.FindFirstObjectByType<PocketTowPs>();
         SetStickVisibility(true);
 
+        // Khởi tạo Camera
         cameraOnTop.Priority = 10;
         cameraOnStick.Priority = 20;
-
-        isMoveCueBallAllow = true;
-        isInitialMoveCueBall = true;
     }
 
     void Update()
     {
         bool movingNow = !AreAllBallsStopped();
-
         if (isMoving && !movingNow) OnAllBallsStoppedAction();
-
         isMoving = movingNow;
 
         if (!isMoving && !hitPeriod)
         {
             SetStickVisibility(true);
             cueStickPivot.position = cueBall.position;
+
+            // Cập nhật vị trí Visual của cơ dựa trên English
+            Vector3 offset = (englishController != null) ? englishController.GetHitOffset(cueStickPivot) : Vector3.zero;
+            stickTransform.localPosition = stickOriginalPosition + cueStickPivot.InverseTransformDirection(offset);
+
             HandleMouseInput();
         }
         else
         {
             SetStickVisibility(false);
         }
+
+
     }
 
-    private void SetStickVisibility(bool visible)
+    private void HandleMouseInput()
     {
-        if (stickTransform.gameObject.activeSelf != visible) stickTransform.gameObject.SetActive(visible);
-        if (aimingLine != null && aimingLine.activeSelf != visible) aimingLine.SetActive(visible);
-    }
+        if (EventSystem.current.IsPointerOverGameObject()) return;
 
-    private void OnAllBallsStoppedAction()
-    {
-        if (hasProcessedShot) return;
-        if (pocketManager != null) pocketManager.HandleStrokeResult(hitTargetBallFirst);
-        hasProcessedShot = true;
-        firstCollisionDetected = false;
-        hitTargetBallFirst = false;
-    }
+        float mouseX = Input.GetAxis("Mouse X");
+        float mouseY = Input.GetAxis("Mouse Y");
 
-    public bool AreAllBallsStopped()
-    {
-        // Kiểm tra và ép bi dừng nếu vận tốc quá nhỏ (Khắc phục lỗi bi trôi)
-        if (CheckAndStopBall(cueBall)) return false;
-        foreach (Rigidbody ball in balls)
+        // CHẾ ĐỘ 1: CHỈNH ENGLISH (Giữ Shift)
+        if (Input.GetKey(KeyCode.LeftShift))
         {
-            if (ball == null) continue;
-            if (CheckAndStopBall(ball)) return false;
+            if (englishController != null)
+                englishController.UpdateEnglish(mouseX, mouseY);
+            return;
         }
-        return true;
-    }
 
-    private bool CheckAndStopBall(Rigidbody rb)
-    {
-        float speed = rb.linearVelocity.magnitude;
-        if (speed > 0 && speed < stopThreshold)
+        // CHẾ ĐỘ 2: XOAY NGẮM (Chuột trái)
+        if (Input.GetMouseButtonDown(0))
         {
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
+            lastMousePosition = Input.mousePosition;
+            isDraggingStick = true;
         }
-        return speed > stopThreshold;
-    }
 
-    public void NotifyFirstCollision(GameObject hitObject)
-    {
-        if (firstCollisionDetected || !hitPeriod) return;
-        if (hitObject.CompareTag("CueBall") || !hitObject.tag.StartsWith("BallNo.")) return;
+        if (Input.GetMouseButton(0) && isDraggingStick)
+        {
+            if (isOnTopCameraActive)
+            {
+                // Top-down rotation: Xoay dựa trên hướng chuột so với bi
+                Vector3 currentWorldPos = GetMouseWorldPosition();
+                Vector3 direction = currentWorldPos - cueStickPivot.position;
+                if (direction != Vector3.zero)
+                {
+                    float angle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
+                    cueStickPivot.rotation = Quaternion.Euler(0, angle, 0);
+                }
+            }
+            else
+            {
+                // FPS rotation: Xoay theo Delta X của chuột
+                float rotation = mouseX * camStickRotationSensitivity * Time.deltaTime;
+                cueStickPivot.Rotate(Vector3.up, rotation, Space.World);
+            }
+        }
 
-        firstCollisionDetected = true;
-        int hitBallNumber = 0;
-        if (hitObject.CompareTag("BallNo.9")) hitBallNumber = 9;
-        else int.TryParse(hitObject.tag.Replace("BallNo.", ""), out hitBallNumber);
-
-        hitTargetBallFirst = (hitBallNumber == pocketManager.targetBallNumber);
+        if (Input.GetMouseButtonUp(0)) isDraggingStick = false;
     }
 
     private IEnumerator HitCueBall()
@@ -148,134 +141,377 @@ public class CueStickController : MonoBehaviour
         hasProcessedShot = false;
         if (pocketManager != null) pocketManager.RegisterStartShot();
 
+        // Tính điểm chạm thực tế để áp dụng lực xoáy
+        Vector3 hitPoint = cueBall.position + (englishController != null ? englishController.GetHitOffset(cueStickPivot) : Vector3.zero);
+        hitPoint -= cueStickPivot.forward * (englishController != null ? englishController.ballRadius : 0.0285f);
+
+        // Hiệu ứng thụt cơ
         float elapsedTime = 0f;
+        Vector3 pullPos = stickTransform.localPosition;
+        Vector3 targetPos = stickOriginalPosition + cueStickPivot.InverseTransformDirection(englishController.GetHitOffset(cueStickPivot));
+
         while (elapsedTime < 1f)
         {
-            stickTransform.localPosition = Vector3.Lerp(stickPullBack, stickOriginalPosition, elapsedTime);
+            stickTransform.localPosition = Vector3.Lerp(pullPos, targetPos, elapsedTime);
             elapsedTime += Time.deltaTime * stickHitSpeed;
             yield return null;
         }
 
-        cueBall.AddForce(cueStickPivot.forward * sliderHitForce, ForceMode.Impulse);
+        // TÁC ĐỘNG VẬT LÝ
+        cueBall.AddForceAtPosition(cueStickPivot.forward * sliderHitForce, hitPoint, ForceMode.Impulse);
+
         hitPeriod = false;
     }
 
+    // --- CÁC HÀM CÒN LẠI GIỮ NGUYÊN NHƯ CŨ ---
     public void OnSliderValueChange()
     {
         if (isMoving || hitPeriod) return;
         sliderHitForce = hitForceAmount * powerSlider.value;
         float pullDistance = powerSlider.value * 0.8f;
-        stickTransform.localPosition = stickOriginalPosition + Vector3.back * pullDistance;
-        stickPullBack = stickTransform.localPosition;
+        stickTransform.localPosition = (stickOriginalPosition + Vector3.back * pullDistance) + cueStickPivot.InverseTransformDirection(englishController.GetHitOffset(cueStickPivot));
     }
 
     public void OnSliderReleased()
     {
         if (isMoving || hitPeriod) return;
-        if (sliderHitForce > 0.5f)
-        {
-            StartCoroutine(HitCueBall());
-            StartCoroutine(ResetSlider());
-        }
-        else
-        {
-            stickTransform.localPosition = stickOriginalPosition;
-        }
+        if (sliderHitForce > 0.5f) { StartCoroutine(HitCueBall()); StartCoroutine(ResetSlider()); }
+        else { stickTransform.localPosition = stickOriginalPosition + cueStickPivot.InverseTransformDirection(englishController.GetHitOffset(cueStickPivot)); }
     }
 
     private IEnumerator ResetSlider()
     {
-        while (powerSlider.value > 0)
-        {
-            powerSlider.value = Mathf.MoveTowards(powerSlider.value, 0, Time.deltaTime * 2f);
-            yield return null;
-        }
-    }
-
-    private void HandleMouseInput()
-    {
-        Camera activeCamera = mainCamera;
-        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-        Plane plane = new Plane(Vector3.up, cueStickPivot.position);
-
-        if (EventSystem.current.IsPointerOverGameObject()) return;
-        if (Input.GetMouseButtonDown(0))
-        {
-            lastMousePosition = GetMouseWorldPosition();
-
-            if (plane.Raycast(ray, out float distance))
-            {
-                Vector3 hitPoint = ray.GetPoint(distance);
-
-                lastMousePosition = isOnTopCameraActive ? GetMouseWorldPosition() : Input.mousePosition;
-                isDraggingStick = true;
-            }
-        }
-        if (Input.GetMouseButton(0))
-        {
-            if(isDraggingStick)
-            {
-                Vector3 currentMousePosition = isOnTopCameraActive ? GetMouseWorldPosition() : Input.mousePosition;
-
-                if(isOnTopCameraActive)
-                {
-                    Vector3 lastDirection = lastMousePosition - cueStickPivot.position;
-                    Vector3 currentDirection = currentMousePosition - cueStickPivot.position;
-
-                    float angle = Vector3.SignedAngle(lastMousePosition , currentMousePosition , Vector3.up);
-                    cueStickPivot.Rotate(Vector3.up, angle * topRotationSensitviity, Space.World);
-                }
-                else
-                {
-                    Vector3 mouseDelta = currentMousePosition - lastMousePosition;
-                    cueStickPivot.Rotate(Vector3.up, mouseDelta.x * camStickRotationSensitivity * Time.deltaTime, Space.Self);
-                }
-
-                lastMousePosition = currentMousePosition;
-            }
-            
-        }
-
-        if(Input.GetMouseButtonUp(0))
-        {
-            isDraggingStick = false;
-        }
+        while (powerSlider.value > 0) { powerSlider.value = Mathf.MoveTowards(powerSlider.value, 0, Time.deltaTime * 2f); yield return null; }
     }
 
     private Vector3 GetMouseWorldPosition()
     {
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         Plane plane = new Plane(Vector3.up, cueStickPivot.position);
-        
         return plane.Raycast(ray, out float dist) ? ray.GetPoint(dist) : Vector3.zero;
+    }
 
-        
+    public bool AreAllBallsStopped()
+    {
+        if (CheckAndStopBall(cueBall)) return false;
+        foreach (Rigidbody ball in balls) { if (ball != null && CheckAndStopBall(ball)) return false; }
+        return true;
+    }
+
+    private bool CheckAndStopBall(Rigidbody rb)
+    {
+        float speed = rb.linearVelocity.magnitude;
+        if (speed > 0 && speed < stopThreshold) { rb.linearVelocity = Vector3.zero; rb.angularVelocity = Vector3.zero; }
+        return speed > stopThreshold;
+    }
+
+    private void OnAllBallsStoppedAction()
+    {
+        if (hasProcessedShot) return;
+        if (pocketManager != null) pocketManager.HandleStrokeResult(hitTargetBallFirst);
+        hasProcessedShot = true; firstCollisionDetected = false; hitTargetBallFirst = false;
+    }
+
+    public void NotifyFirstCollision(GameObject hitObject)
+    {
+        if (firstCollisionDetected || !hitPeriod) return;
+        if (hitObject.CompareTag("CueBall") || !hitObject.tag.StartsWith("BallNo.")) return;
+        firstCollisionDetected = true;
+        int hitBallNumber = 0;
+        if (hitObject.CompareTag("BallNo.9")) hitBallNumber = 9;
+        else int.TryParse(hitObject.tag.Replace("BallNo.", ""), out hitBallNumber);
+        hitTargetBallFirst = (hitBallNumber == pocketManager.targetBallNumber);
+    }
+
+    private void SetStickVisibility(bool visible)
+    {
+        if (stickTransform.gameObject.activeSelf != visible) stickTransform.gameObject.SetActive(visible);
+        if (aimingLine != null && aimingLine.activeSelf != visible) aimingLine.SetActive(visible);
     }
 
     public void CameraTransition()
     {
         isOnTopCameraActive = !isOnTopCameraActive;
-
-        if(isOnTopCameraActive)
-        {
-            cameraOnTop.Priority = 10;
-            cameraOnStick.Priority = 1;
-
-            if (!gameManager.UpperUIAnimator) return;
-            gameManager.UpperUIAnimator.SetBool("IsIldePlace", false);
-            gameManager.UpperUIAnimator.SetBool("IsGoBack", false);
-        }
-        else
-        {
-            cameraOnTop.Priority = 1;
-            cameraOnStick.Priority = 10;
-
-
-            if (!gameManager.UpperUIAnimator) return;
-            gameManager.UpperUIAnimator.SetBool("IsIldePlace", true);
-            gameManager.UpperUIAnimator.SetBool("IsGoBack", false);
-        }
+        cameraOnTop.Priority = isOnTopCameraActive ? 20 : 1;
+        cameraOnStick.Priority = isOnTopCameraActive ? 1 : 20;
     }
+
+  
+
+    // Old Script 16/1/2026
+
+    //[Header("Dependencies")]
+    //public PocketTowPs pocketManager;
+    //public Camera mainCamera;
+    //public Rigidbody cueBall;
+    //public List<Rigidbody> balls;
+
+    //public GameObject aimingLine;
+
+    //[Header("Settings")]
+    //public float mouseSensitivity = 1.5f;
+    //public float hitForceAmount = 30f;
+    //public float stickHitSpeed = 10f;
+    //public float stickLeavingSpeed = 0.5f;
+    //public float stopThreshold = 0.15f;
+
+    //[Header("Logic State")]
+    //public bool isMoving = false;
+    //private bool firstCollisionDetected = false;
+    //private bool hitTargetBallFirst = false;
+    //private bool hasProcessedShot = true;
+
+    //private Transform cueStickPivot, stickTransform;
+    //private Vector3 lastMousePosition, stickPullBack;
+    //private Vector3 stickOriginalPosition;
+    //private Vector3 tableMinBounds = new Vector3(-3.5f, 0f, -1.7f),
+    //    tableMaxBounds =  new Vector3(3.5f, 0f, 1.7f);
+
+    //private float sliderHitForce;
+    //private bool hitPeriod = false;
+
+    //[Header("Camera")]
+    //public CinemachineCamera cameraOnTop, cameraOnStick;
+    //public bool isOnTopCameraActive = false, isDraggingStick = false, isDraggingCueBall = false, isMoveCueBallAllow = true, isInitialMoveCueBall = false;
+    //private float topRotationSensitviity = 0.8f, camStickRotationSensitivity = 5f;
+
+    //[Header("Slider")]
+    //public Slider powerSlider;
+    //[NonSerialized] public Animator powerSliderAnim;
+
+    //public GameManager gameManager;
+    //public CueBallEnglish englishController;
+    ////public PocketTowPs PocketTowPs;
+
+
+    //void Start()
+    //{
+    //    cueStickPivot = GetComponent<Transform>();
+    //    //gameManager = GetComponent<GameManager>();
+    //    //pocketManager = GetComponent<PocketTowPs>();
+    //    if (gameManager == null) gameManager = UnityEngine.Object.FindFirstObjectByType<GameManager>();
+    //    stickTransform = cueStickPivot.GetChild(0);
+    //    powerSliderAnim = powerSlider.GetComponent<Animator>();
+
+    //    stickOriginalPosition = stickTransform.localPosition;
+    //    if (pocketManager == null) pocketManager = UnityEngine.Object.FindFirstObjectByType<PocketTowPs>();
+    //    SetStickVisibility(true);
+
+    //    cameraOnTop.Priority = 10;
+    //    cameraOnStick.Priority = 20;
+
+    //    isMoveCueBallAllow = true;
+    //    isInitialMoveCueBall = true;
+    //}
+
+    //void Update()
+    //{
+    //    bool movingNow = !AreAllBallsStopped();
+
+    //    if (isMoving && !movingNow) OnAllBallsStoppedAction();
+
+    //    isMoving = movingNow;
+
+    //    if (!isMoving && !hitPeriod)
+    //    {
+    //        SetStickVisibility(true);
+    //        cueStickPivot.position = cueBall.position;
+    //        HandleMouseInput();
+    //    }
+    //    else
+    //    {
+    //        SetStickVisibility(false);
+    //    }
+    //}
+
+    //private void SetStickVisibility(bool visible)
+    //{
+    //    if (stickTransform.gameObject.activeSelf != visible) stickTransform.gameObject.SetActive(visible);
+    //    if (aimingLine != null && aimingLine.activeSelf != visible) aimingLine.SetActive(visible);
+    //}
+
+    //private void OnAllBallsStoppedAction()
+    //{
+    //    if (hasProcessedShot) return;
+    //    if (pocketManager != null) pocketManager.HandleStrokeResult(hitTargetBallFirst);
+    //    hasProcessedShot = true;
+    //    firstCollisionDetected = false;
+    //    hitTargetBallFirst = false;
+    //}
+
+    //public bool AreAllBallsStopped()
+    //{
+    //    // Kiểm tra và ép bi dừng nếu vận tốc quá nhỏ (Khắc phục lỗi bi trôi)
+    //    if (CheckAndStopBall(cueBall)) return false;
+    //    foreach (Rigidbody ball in balls)
+    //    {
+    //        if (ball == null) continue;
+    //        if (CheckAndStopBall(ball)) return false;
+    //    }
+    //    return true;
+    //}
+
+    //private bool CheckAndStopBall(Rigidbody rb)
+    //{
+    //    float speed = rb.linearVelocity.magnitude;
+    //    if (speed > 0 && speed < stopThreshold)
+    //    {
+    //        rb.linearVelocity = Vector3.zero;
+    //        rb.angularVelocity = Vector3.zero;
+    //    }
+    //    return speed > stopThreshold;
+    //}
+
+    //public void NotifyFirstCollision(GameObject hitObject)
+    //{
+    //    if (firstCollisionDetected || !hitPeriod) return;
+    //    if (hitObject.CompareTag("CueBall") || !hitObject.tag.StartsWith("BallNo.")) return;
+
+    //    firstCollisionDetected = true;
+    //    int hitBallNumber = 0;
+    //    if (hitObject.CompareTag("BallNo.9")) hitBallNumber = 9;
+    //    else int.TryParse(hitObject.tag.Replace("BallNo.", ""), out hitBallNumber);
+
+    //    hitTargetBallFirst = (hitBallNumber == pocketManager.targetBallNumber);
+    //}
+
+    //private IEnumerator HitCueBall()
+    //{
+    //    hitPeriod = true;
+    //    hasProcessedShot = false;
+    //    if (pocketManager != null) pocketManager.RegisterStartShot();
+
+    //    float elapsedTime = 0f;
+    //    while (elapsedTime < 1f)
+    //    {
+    //        stickTransform.localPosition = Vector3.Lerp(stickPullBack, stickOriginalPosition, elapsedTime);
+    //        elapsedTime += Time.deltaTime * stickHitSpeed;
+    //        yield return null;
+    //    }
+
+    //    cueBall.AddForce(cueStickPivot.forward * sliderHitForce, ForceMode.Impulse);
+    //    hitPeriod = false;
+    //}
+
+    //public void OnSliderValueChange()
+    //{
+    //    if (isMoving || hitPeriod) return;
+    //    sliderHitForce = hitForceAmount * powerSlider.value;
+    //    float pullDistance = powerSlider.value * 0.8f;
+    //    stickTransform.localPosition = stickOriginalPosition + Vector3.back * pullDistance;
+    //    stickPullBack = stickTransform.localPosition;
+    //}
+
+    //public void OnSliderReleased()
+    //{
+    //    if (isMoving || hitPeriod) return;
+    //    if (sliderHitForce > 0.5f)
+    //    {
+    //        StartCoroutine(HitCueBall());
+    //        StartCoroutine(ResetSlider());
+    //    }
+    //    else
+    //    {
+    //        stickTransform.localPosition = stickOriginalPosition;
+    //    }
+    //}
+
+    //private IEnumerator ResetSlider()
+    //{
+    //    while (powerSlider.value > 0)
+    //    {
+    //        powerSlider.value = Mathf.MoveTowards(powerSlider.value, 0, Time.deltaTime * 2f);
+    //        yield return null;
+    //    }
+    //}
+
+    //private void HandleMouseInput()
+    //{
+    //    Camera activeCamera = mainCamera;
+    //    Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+    //    Plane plane = new Plane(Vector3.up, cueStickPivot.position);
+
+    //    if (EventSystem.current.IsPointerOverGameObject()) return;
+    //    if (Input.GetMouseButtonDown(0))
+    //    {
+    //        lastMousePosition = GetMouseWorldPosition();
+
+    //        if (plane.Raycast(ray, out float distance))
+    //        {
+    //            Vector3 hitPoint = ray.GetPoint(distance);
+
+    //            lastMousePosition = isOnTopCameraActive ? GetMouseWorldPosition() : Input.mousePosition;
+    //            isDraggingStick = true;
+    //        }
+    //    }
+    //    if (Input.GetMouseButton(0))
+    //    {
+    //        if(isDraggingStick)
+    //        {
+    //            Vector3 currentMousePosition = isOnTopCameraActive ? GetMouseWorldPosition() : Input.mousePosition;
+
+    //            if(isOnTopCameraActive)
+    //            {
+    //                Vector3 lastDirection = lastMousePosition - cueStickPivot.position;
+    //                Vector3 currentDirection = currentMousePosition - cueStickPivot.position;
+
+    //                float angle = Vector3.SignedAngle(lastMousePosition , currentMousePosition , Vector3.up);
+    //                cueStickPivot.Rotate(Vector3.up, angle * topRotationSensitviity, Space.World);
+    //            }
+    //            else
+    //            {
+    //                Vector3 mouseDelta = currentMousePosition - lastMousePosition;
+    //                cueStickPivot.Rotate(Vector3.up, mouseDelta.x * camStickRotationSensitivity * Time.deltaTime, Space.Self);
+    //            }
+
+    //            lastMousePosition = currentMousePosition;
+    //        }
+
+    //    }
+
+    //    if(Input.GetMouseButtonUp(0))
+    //    {
+    //        isDraggingStick = false;
+    //    }
+    //}
+
+    //private Vector3 GetMouseWorldPosition()
+    //{
+    //    Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+    //    Plane plane = new Plane(Vector3.up, cueStickPivot.position);
+
+    //    return plane.Raycast(ray, out float dist) ? ray.GetPoint(dist) : Vector3.zero;
+
+
+    //}
+
+    //public void CameraTransition()
+    //{
+    //    isOnTopCameraActive = !isOnTopCameraActive;
+
+    //    if(isOnTopCameraActive)
+    //    {
+    //        cameraOnTop.Priority = 10;
+    //        cameraOnStick.Priority = 1;
+
+    //        if (!gameManager.UpperUIAnimator) return;
+    //        gameManager.UpperUIAnimator.SetBool("IsIldePlace", false);
+    //        gameManager.UpperUIAnimator.SetBool("IsGoBack", false);
+    //    }
+    //    else
+    //    {
+    //        cameraOnTop.Priority = 1;
+    //        cameraOnStick.Priority = 10;
+
+
+    //        if (!gameManager.UpperUIAnimator) return;
+    //        gameManager.UpperUIAnimator.SetBool("IsIldePlace", true);
+    //        gameManager.UpperUIAnimator.SetBool("IsGoBack", false);
+    //    }
+    //}
+
+
+    // Base Script 
 
     //public SkillSlowMotion skillManager; // 🚨 Kéo thả Game Manager vào đây! (Bắt buộc)
     //public Camera mainCamera;

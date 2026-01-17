@@ -71,6 +71,7 @@
     <Compile Include="Assets\Script\GameManager.cs" />
     <Compile Include="Assets\Script\Aiming.cs" />
     <Compile Include="Assets\Script\CueBallSensor.cs" />
+    <Compile Include="Assets\Script\CueBallEnglish.cs" />
     <Compile Include="Assets\Script\SkillSlowMotion.cs" />
   </ItemGroup>
   <ItemGroup>
