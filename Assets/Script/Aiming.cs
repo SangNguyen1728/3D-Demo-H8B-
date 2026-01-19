@@ -236,6 +236,8 @@ public class Aiming : MonoBehaviour
         imaginationBall.transform.position = hitPosition;
     }
 
+
+
     public static Vector2 To2D(Vector3 vec)
     {
         return new Vector2 (vec.x, vec.z);

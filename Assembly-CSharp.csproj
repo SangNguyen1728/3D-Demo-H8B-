@@ -67,12 +67,14 @@
     <Compile Include="Assets\Script\PocketDetector.cs" />
     <Compile Include="Assets\Script\Ball.cs" />
     <Compile Include="Assets\Script\PocketTrigger.cs" />
+    <Compile Include="Assets\PinePie\Simple Joystick\Core\Base\JoystickController.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\Script\GameManager.cs" />
     <Compile Include="Assets\Script\Aiming.cs" />
     <Compile Include="Assets\Script\CueBallSensor.cs" />
     <Compile Include="Assets\Script\CueBallEnglish.cs" />
     <Compile Include="Assets\Script\SkillSlowMotion.cs" />
+    <Compile Include="Assets\PinePie\Simple Joystick\Examples\demo script\MovementScript.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
