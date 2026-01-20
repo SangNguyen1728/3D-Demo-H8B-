@@ -7,12 +7,25 @@ public class CueBallEnglish : MonoBehaviour
     public float sensitivity = 0.5f;
 
     [Header("Current State")]
-    public Vector2 spinValues = Vector2.zero;
+    public Vector2 spinValues = Vector2.zero; // x: Side spin, y: Top/Bottom spin
 
+    // Dùng cho Chuột (Cộng dồn Delta)
     public void UpdateEnglish(float mouseX, float mouseY)
     {
         spinValues.x += mouseX * sensitivity;
         spinValues.y += mouseY * sensitivity;
+        LimitSpin();
+    }
+
+    // Dùng cho Joystick (Gán giá trị tuyệt đối)
+    public void SetEnglishExplicit(Vector2 input)
+    {
+        spinValues = input;
+        LimitSpin();
+    }
+
+    private void LimitSpin()
+    {
         if (spinValues.magnitude > 1f) spinValues = spinValues.normalized;
     }
 
@@ -20,9 +33,31 @@ public class CueBallEnglish : MonoBehaviour
 
     public Vector3 GetHitOffset(Transform pivot)
     {
-        // Trả về vị trí lệch dựa trên hệ trục của cây cơ
+        // Trả về vị trí lệch dựa trên hệ trục LOCAL của cây cơ (Phải và Lên)
         return (pivot.right * spinValues.x * ballRadius) + (pivot.up * spinValues.y * ballRadius);
     }
+
+    //[Header("Settings")]
+    //public float ballRadius = 0.0285f;
+    //public float sensitivity = 0.5f;
+
+    //[Header("Current State")]
+    //public Vector2 spinValues = Vector2.zero;
+
+    //public void UpdateEnglish(float mouseX, float mouseY)
+    //{
+    //    spinValues.x += mouseX * sensitivity;
+    //    spinValues.y += mouseY * sensitivity;
+    //    if (spinValues.magnitude > 1f) spinValues = spinValues.normalized;
+    //}
+
+    //public void ResetEnglish() { spinValues = Vector2.zero; }
+
+    //public Vector3 GetHitOffset(Transform pivot)
+    //{
+    //    // Trả về vị trí lệch dựa trên hệ trục của cây cơ
+    //    return (pivot.right * spinValues.x * ballRadius) + (pivot.up * spinValues.y * ballRadius);
+    //}
 
     //[Header("Settings")]
     //public float ballRadius = 0.0285f;

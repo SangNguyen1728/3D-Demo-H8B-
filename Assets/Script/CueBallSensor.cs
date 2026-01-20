@@ -9,6 +9,7 @@ public class CueBallSensor : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (controller != null) controller.NotifyFirstCollision(collision.gameObject);
+        //if (controller != null) controller.NotifyFirstCollision(collision.gameObject);
+        controller = UnityEngine.Object.FindFirstObjectByType<CueStickController>();
     }
 }

@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="Assets\Script\PocketTowPs.cs" />
     <Compile Include="Assets\Script\SkillButtonController.cs" />
+    <Compile Include="Assets\Script\CueStickInput.cs" />
     <Compile Include="Assets\Script\CueStickController.cs" />
     <Compile Include="Assets\Script\PocketDetector.cs" />
     <Compile Include="Assets\Script\Ball.cs" />
