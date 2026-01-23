@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour
 
     public CueStickController cueStickController;
 
+    public TargetBallFinder targetFinder;
+
 
     private void Start()
     {
@@ -32,6 +34,7 @@ public class GameManager : MonoBehaviour
         audioPanelAnim = audioPanel.GetComponent<Animator>();
         infoPanelAnim = infoPanel.GetComponent<Animator>();
         displayPanelAnim = displayPanel.GetComponent<Animator>();
+        targetFinder = targetFinder.GetComponent<TargetBallFinder>();
 
         if (cueStickController == null)
         {
@@ -280,5 +283,25 @@ public class GameManager : MonoBehaviour
     public void OnBackButtonClicked()
     {
         StartCoroutine(BackPanelActive());
+    }
+
+    public void PrepareNextTurn()
+    {
+        StartCoroutine(WaitAndSetupNextShot());
+    }
+
+    private IEnumerator WaitAndSetupNextShot()
+    {
+        // 1. Đợi một khoảng ngắn để đảm bảo các xử lý logic PocketManager đã xong
+        yield return new WaitForSeconds(0.5f);
+
+        // 2. Tìm bi mục tiêu mới
+        Transform target = targetFinder.GetTargetBallTransform();
+
+        // 3. Ra lệnh cho CueStickController xoay gậy
+        if (target != null)
+        {
+            cueStickController.PointAtTarget(target);
+        }
     }
 }

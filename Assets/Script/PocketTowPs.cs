@@ -11,18 +11,31 @@ public class PocketTowPs : MonoBehaviour
 
     private bool ballPottedThisTurn = false;
     private bool foulCommittedThisTurn = false;
+    private bool isNineBallPotted = false;
+    private bool hitTargetFirstFromController = false;
+
+    private List<int> pottedBalls = new List<int>();
     private StringBuilder shotReport = new StringBuilder();
-    private List<int> pottedBalls = new List<int>(); // Đã khởi tạo sẵn
+    private NineBallRules rules;
+
+    void Start()
+    {
+        rules = GetComponent<NineBallRules>();
+        if (rules == null) rules = gameObject.AddComponent<NineBallRules>();
+        UpdateNextTarget();
+    }
+
+    public void SetHitResult(bool isCorrectHit) => hitTargetFirstFromController = isCorrectHit;
 
     public void RegisterStartShot()
     {
         ballPottedThisTurn = false;
         foulCommittedThisTurn = false;
+        isNineBallPotted = false;
         shotReport.Clear();
         shotReport.AppendLine($"<color=white><b>--- LƯỢT PLAYER {currentPlayer} ---</b></color>");
     }
 
-    // Hàm public để script PocketDetector gọi tới
     public void OnBallEnteredPocket(Collider ball)
     {
         if (gameEnd) return;
@@ -43,39 +56,70 @@ public class PocketTowPs : MonoBehaviour
             ballPottedThisTurn = true;
             shotReport.AppendLine($"<color=yellow>  + Vào lỗ: Bi số {nr}</color>");
             if (!pottedBalls.Contains(nr)) pottedBalls.Add(nr);
-            if (nr == targetBallNumber) UpdateNextTarget();
-            if (nr == 9 && !foulCommittedThisTurn) gameEnd = true;
+            if (nr == 9) isNineBallPotted = true;
             Destroy(ball.gameObject);
         }
     }
 
-    public void HandleStrokeResult(bool hitTargetFirst)
+    public void HandleStrokeResult()
     {
-        if (gameEnd) { Debug.Log("<color=cyan>PLAYER " + currentPlayer + " THẮNG!</color>"); return; }
+        //if (gameEnd) return;
 
-        if (!hitTargetFirst)
+        //// 1. Kiểm tra lỗi chạm bi mục tiêu
+        //if (!hitTargetFirstFromController)
+        //{
+        //    foulCommittedThisTurn = true;
+        //    shotReport.AppendLine($"<color=red>  ! LỖI: Không chạm bi {targetBallNumber} đầu tiên</color>");
+        //}
+
+        //// 2. Kiểm tra điều kiện thắng bi 9
+        //if (isNineBallPotted && !foulCommittedThisTurn)
+        //{
+        //    gameEnd = true;
+        //    shotReport.AppendLine($"<color=cyan><b>*** PLAYER {currentPlayer} THẮNG TRẬN! ***</b></color>");
+        //    Debug.Log(shotReport.ToString());
+        //    return;
+        //}
+
+        //// 3. Logic đổi lượt hoặc tiếp tục
+        //if (!foulCommittedThisTurn && ballPottedThisTurn)
+        //{
+        //    shotReport.AppendLine($"<color=green>=> GIỮ LƯỢT.</color>");
+        //}
+        //else
+        //{
+        //    currentPlayer = (currentPlayer == 1) ? 2 : 1;
+        //    shotReport.AppendLine($"<color=orange>=> ĐỔI LƯỢT sang Player {currentPlayer}.</color>");
+        //}
+
+        //UpdateNextTarget();
+        //Debug.Log(shotReport.ToString());
+
+        if (gameEnd) return;
+
+        if (!hitTargetFirstFromController)
         {
             foulCommittedThisTurn = true;
-            shotReport.AppendLine($"<color=red>  ! LỖI: Không chạm bi mục tiêu {targetBallNumber} đầu tiên</color>");
+            shotReport.AppendLine("<color=red> ! LỖI: Chạm sai bi mục tiêu</color>");
         }
 
-        // ĐIỀU KIỆN GIỮ LƯỢT: Không lỗi VÀ có bi vào lỗ
-        if (!foulCommittedThisTurn && ballPottedThisTurn)
+        if (isNineBallPotted && !foulCommittedThisTurn)
         {
-            shotReport.AppendLine($"<color=green>=> GIỮ LƯỢT.</color>");
+            gameEnd = true;
+            shotReport.AppendLine("<color=cyan><b>PLAYER " + currentPlayer + " THẮNG!</b></color>");
         }
         else
         {
-            currentPlayer = (currentPlayer == 1) ? 2 : 1;
-            shotReport.AppendLine($"<color=orange>=> ĐỔI LƯỢT sang Player {currentPlayer}.</color>");
+            if (!foulCommittedThisTurn && ballPottedThisTurn) shotReport.AppendLine("=> GIỮ LƯỢT");
+            else currentPlayer = (currentPlayer == 1) ? 2 : 1;
         }
+        UpdateNextTarget();
         Debug.Log(shotReport.ToString());
     }
 
     private void UpdateNextTarget()
     {
-        targetBallNumber++;
-        while (targetBallNumber < 9 && pottedBalls.Contains(targetBallNumber)) targetBallNumber++;
+        targetBallNumber = rules != null ? rules.GetCurrentTargetBall(pottedBalls) : 1;
     }
 
     private int GetBallNumber(string tag)
@@ -84,6 +128,86 @@ public class PocketTowPs : MonoBehaviour
         if (tag.StartsWith("BallNo.") && int.TryParse(tag.Replace("BallNo.", ""), out int n)) return n;
         return 0;
     }
+
+    //public int currentPlayer = 1;
+    //public int targetBallNumber = 1;
+    //public bool gameEnd = false;
+
+    //private bool ballPottedThisTurn = false;
+    //private bool foulCommittedThisTurn = false;
+    //private StringBuilder shotReport = new StringBuilder();
+    //private List<int> pottedBalls = new List<int>(); // Đã khởi tạo sẵn
+
+    //public void RegisterStartShot()
+    //{
+    //    ballPottedThisTurn = false;
+    //    foulCommittedThisTurn = false;
+    //    shotReport.Clear();
+    //    shotReport.AppendLine($"<color=white><b>--- LƯỢT PLAYER {currentPlayer} ---</b></color>");
+    //}
+
+    //// Hàm public để script PocketDetector gọi tới
+    //public void OnBallEnteredPocket(Collider ball)
+    //{
+    //    if (gameEnd) return;
+
+    //    if (ball.CompareTag("CueBall"))
+    //    {
+    //        foulCommittedThisTurn = true;
+    //        shotReport.AppendLine("<color=red>  ! LỖI: Bi cái vào lỗ</color>");
+    //        ball.transform.position = new Vector3(-0.9f, 1.18f, -0.17f);
+    //        Rigidbody rb = ball.attachedRigidbody;
+    //        if (rb != null) { rb.linearVelocity = Vector3.zero; rb.angularVelocity = Vector3.zero; }
+    //        return;
+    //    }
+
+    //    int nr = GetBallNumber(ball.tag);
+    //    if (nr > 0)
+    //    {
+    //        ballPottedThisTurn = true;
+    //        shotReport.AppendLine($"<color=yellow>  + Vào lỗ: Bi số {nr}</color>");
+    //        if (!pottedBalls.Contains(nr)) pottedBalls.Add(nr);
+    //        if (nr == targetBallNumber) UpdateNextTarget();
+    //        if (nr == 9 && !foulCommittedThisTurn) gameEnd = true;
+    //        Destroy(ball.gameObject);
+    //    }
+    //}
+
+    //public void HandleStrokeResult(bool hitTargetFirst)
+    //{
+    //    if (gameEnd) { Debug.Log("<color=cyan>PLAYER " + currentPlayer + " THẮNG!</color>"); return; }
+
+    //    if (!hitTargetFirst)
+    //    {
+    //        foulCommittedThisTurn = true;
+    //        shotReport.AppendLine($"<color=red>  ! LỖI: Không chạm bi mục tiêu {targetBallNumber} đầu tiên</color>");
+    //    }
+
+    //    // ĐIỀU KIỆN GIỮ LƯỢT: Không lỗi VÀ có bi vào lỗ
+    //    if (!foulCommittedThisTurn && ballPottedThisTurn)
+    //    {
+    //        shotReport.AppendLine($"<color=green>=> GIỮ LƯỢT.</color>");
+    //    }
+    //    else
+    //    {
+    //        currentPlayer = (currentPlayer == 1) ? 2 : 1;
+    //        shotReport.AppendLine($"<color=orange>=> ĐỔI LƯỢT sang Player {currentPlayer}.</color>");
+    //    }
+    //    Debug.Log(shotReport.ToString());
+    //}
+
+    //private void UpdateNextTarget()
+    //{
+    //    targetBallNumber++;
+    //    while (targetBallNumber < 9 && pottedBalls.Contains(targetBallNumber)) targetBallNumber++;
+    //}
+
+    //private int GetBallNumber(string tag)
+    //{
+    //    if (tag == "BallNo.9") return 9;
+    //    if (tag.StartsWith("BallNo.") && int.TryParse(tag.Replace("BallNo.", ""), out int n)) return n;
+    //    return 0;
+    //}
 
     //[Header("Dependencies")]
     //public CueStickController cueStickController;

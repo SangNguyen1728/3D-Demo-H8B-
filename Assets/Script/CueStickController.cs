@@ -15,7 +15,7 @@ public class CueStickController : MonoBehaviour
     public Rigidbody cueBall;
     public List<Rigidbody> balls;
     public GameObject aimingLine;
-    public CueBallEnglish englishController;
+    public CueBallController englishController;
 
     [Header("Settings")]
     public float hitForceAmount = 30f;
@@ -42,15 +42,19 @@ public class CueStickController : MonoBehaviour
     private CueStickInput inputSystem;
 
     public Animator powerSliderAnim;
+    public TargetBallFinder targetFinder;
+
 
     void Start()
     {
         inputSystem = GetComponent<CueStickInput>();
         stickVisual = transform.GetChild(0);
         stickLocalOrigin = stickVisual.localPosition;
+        targetFinder = targetFinder.GetComponent<TargetBallFinder>();
+        englishController = cueBall.GetComponent<CueBallController>();
 
         if (pocketManager == null) pocketManager = GameObject.FindFirstObjectByType<PocketTowPs>();
-        if (englishController == null) englishController = cueBall.GetComponent<CueBallEnglish>();
+        if (englishController == null) englishController = cueBall.GetComponent<CueBallController>();
 
         cameraOnTop.Priority = 10;
         cameraOnStick.Priority = 20;
@@ -186,7 +190,8 @@ public class CueStickController : MonoBehaviour
         // 2. Gửi kết quả va chạm cho PocketManager xử lý luật chơi (Foul/Valid)
         if (pocketManager != null)
         {
-            pocketManager.HandleStrokeResult(hitTargetBallFirst);
+            pocketManager.SetHitResult(hitTargetBallFirst);
+            pocketManager.HandleStrokeResult();
         }
 
         // 3. RESET ÉP PHÊ (ENGLISH) VỀ TÂM BI
@@ -213,6 +218,8 @@ public class CueStickController : MonoBehaviour
 
         // 6. Đảm bảo gậy hiện lại đúng vị trí bi cái (do Update sẽ lo phần visual)
         transform.position = cueBall.position;
+        GameManager gm = GameObject.FindFirstObjectByType<GameManager>();
+        if (gm != null) gm.PrepareNextTurn();
 
         Debug.Log("<color=green>Sẵn sàng cho lượt đánh tiếp theo!</color>");
     }
@@ -235,6 +242,22 @@ public class CueStickController : MonoBehaviour
     {
         if (stickVisual.gameObject.activeSelf != visible) stickVisual.gameObject.SetActive(visible);
         if (aimingLine != null && aimingLine.activeSelf != visible) aimingLine.SetActive(visible);
+    }
+
+    public void PointAtTarget(Transform target)
+    {
+        if (target == null || cueBall == null) return;
+
+        // Tính toán hướng từ bi cái đến bi mục tiêu
+        Vector3 direction = target.position - cueBall.position;
+        direction.y = 0; // Giữ hướng xoay trên mặt phẳng ngang
+
+        if (direction != Vector3.zero)
+        {
+            // Xoay gậy hướng về bi mục tiêu
+            transform.rotation = Quaternion.LookRotation(direction);
+            Debug.Log($"Gậy đã tự động hướng vào bi số: {pocketManager.targetBallNumber}</color>");
+        }
     }
 
     //[Header("Dependencies")]

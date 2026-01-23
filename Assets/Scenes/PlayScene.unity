@@ -5112,6 +5112,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4491929870674011261, guid: 10d32b47a32e2624eaac71edcaaf92da, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1494089760}
+    - targetCorrespondingSourceObject: {fileID: 4491929870674011261, guid: 10d32b47a32e2624eaac71edcaaf92da, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1494089764}
   m_SourcePrefab: {fileID: 100100000, guid: 10d32b47a32e2624eaac71edcaaf92da, type: 3}
 --- !u!1 &543383031
 GameObject:
@@ -15415,6 +15418,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1455611371}
   - component: {fileID: 1455611370}
+  - component: {fileID: 1455611372}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -15450,6 +15454,7 @@ MonoBehaviour:
   displayPanel: {fileID: 1739114498}
   UpperUIShift: 1
   cueStickController: {fileID: 9187042310700018758}
+  targetFinder: {fileID: 1455611372}
 --- !u!4 &1455611371
 Transform:
   m_ObjectHideFlags: 0
@@ -15465,6 +15470,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1455611372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1455611369}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f056cab623f1b454aafc96b804d12339, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pocketManager: {fileID: 460737234}
 --- !u!1 &1463582396
 GameObject:
   m_ObjectHideFlags: 0
@@ -16153,7 +16171,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1494089755}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0b3f855414fad994382c07dfe693fd02, type: 3}
   m_Name: 
@@ -16165,13 +16183,28 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1494089755}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 92f952e7ff8624745bb31e4364fc8808, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ballRadius: 0.08
   sensitivity: 1.5
+  spinValues: {x: 0, y: 0}
+--- !u!114 &1494089764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1494089755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d1a87d13d76eff47a653f8e29b54653, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ballRadius: 0.08
+  sensitivity: 1.75
   spinValues: {x: 0, y: 0}
 --- !u!1 &1505269554
 GameObject:
@@ -25334,7 +25367,7 @@ MonoBehaviour:
   - {fileID: 1492858553}
   - {fileID: 783444865}
   aimingLine: {fileID: 2007217056}
-  englishController: {fileID: 1494089760}
+  englishController: {fileID: 0}
   hitForceAmount: 20
   stickHitSpeed: 5
   stopThreshold: 0.15
@@ -25345,6 +25378,7 @@ MonoBehaviour:
   isOnTopCameraActive: 0
   powerSlider: {fileID: 1487662658}
   powerSliderAnim: {fileID: 1487662660}
+  targetFinder: {fileID: 1455611372}
 --- !u!114 &9187042310700018759
 MonoBehaviour:
   m_ObjectHideFlags: 0
