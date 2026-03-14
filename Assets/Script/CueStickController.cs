@@ -6,6 +6,8 @@ using UnityEngine.EventSystems;
 using Unity.Cinemachine;
 using System;
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
+using System.Runtime.InteropServices;
 
 public class CueStickController : MonoBehaviour
 {
@@ -16,11 +18,17 @@ public class CueStickController : MonoBehaviour
     public List<Rigidbody> balls;
     public GameObject aimingLine;
     public CueBallController englishController;
+    public Transform cueStickPivot, stickTransform;
 
     [Header("Settings")]
     public float hitForceAmount = 30f;
     public float stickHitSpeed = 15f;
     public float stopThreshold = 0.15f;
+
+    private Vector3 tableMinBounds = new Vector3 (-3.5f, 0f, -1.7f),
+        tableMaxBounds = new Vector3(3.5f, 0f, 1.7f);
+
+    private float topRotationSensitivity = 0.8f, camStickRotationSensitivity = 5f;
 
     [Header("Logic State")]
     public bool isMoving = false;
@@ -34,7 +42,7 @@ public class CueStickController : MonoBehaviour
     public CinemachineCamera cameraOnStick;
     public bool isOnTopCameraActive = false;
     private Transform stickVisual;
-    private Vector3 stickLocalOrigin;
+    private Vector3 stickLocalOrigin, lastMousePosition,stickPullBack;
 
     [Header("UI")]
     public Slider powerSlider;
@@ -44,7 +52,12 @@ public class CueStickController : MonoBehaviour
     public Animator powerSliderAnim;
     public TargetBallFinder targetFinder;
 
+    public bool stopTimer = false;
 
+    public bool initialMoveCueBall = false, moveCueBallAllow = true;
+
+    public bool isDraggingStick = false, isDraggingCueBall = false;
+    private bool allowRotateStickWhileSlider;
     void Start()
     {
         inputSystem = GetComponent<CueStickInput>();
@@ -58,6 +71,9 @@ public class CueStickController : MonoBehaviour
 
         cameraOnTop.Priority = 10;
         cameraOnStick.Priority = 20;
+
+        initialMoveCueBall = true;
+        moveCueBallAllow = true;
     }
 
     void Update()
@@ -83,6 +99,105 @@ public class CueStickController : MonoBehaviour
         {
             SetStickVisibility(false);
         }
+    }
+
+    private void HandleMouseInput()
+    {
+        Camera activeCamera = mainCamera;
+
+        Plane plane = new Plane(Vector3.up, cueStickPivot.position);
+
+        if(Input.GetMouseButtonDown(0) && allowRotateStickWhileSlider)
+        {
+            Ray ray = activeCamera.ScreenPointToRay(Input.mousePosition);
+
+            if(plane.Raycast(ray, out float distance))
+            {
+                Vector3 hitPoint = ray.GetPoint(distance);
+
+                if(Physics.Raycast(ray, out RaycastHit hit) && hit.collider.CompareTag("CueBall"))
+                {
+                    lastMousePosition = hitPoint;
+                    isDraggingCueBall = true;
+                }
+                else
+                {
+                    lastMousePosition = isOnTopCameraActive ? GetMouseWorldPosition() : Input.mousePosition;
+                    isDraggingStick = true;
+                }
+            }
+        }
+        
+        if(Input.GetMouseButton(0))
+        {
+            if(isDraggingCueBall)
+            {
+                Ray ray = activeCamera.ScreenPointToRay(Input.mousePosition);
+                if(plane.Raycast(ray, out float distance))
+                {
+                    if(moveCueBallAllow)
+                    {
+                        Vector3 hitPoint = ray.GetPoint(distance);
+
+                        float tableMinBound = initialMoveCueBall ? 2f : tableMinBounds.x;
+
+                        float clampedX = Mathf.Clamp(hitPoint.x, tableMinBound, tableMaxBounds.x);
+                        float clampedZ = Mathf.Clamp(hitPoint.z, tableMinBounds.z, tableMaxBounds.z);
+
+                        cueBall.position = new Vector3(clampedX, cueBall.position.y, clampedZ);
+                    }
+                }
+                else
+                {
+                    Debug.Log("CueBall is not ready to move");
+                }
+            }
+        }
+        else if (isDraggingStick && allowRotateStickWhileSlider)
+        {
+            Vector3 currentMousePosition = isOnTopCameraActive ? GetMouseWorldPosition() : Input.mousePosition;
+           if(isOnTopCameraActive)
+            {
+                Vector3 lastDirection = lastMousePosition - cueStickPivot.position;
+                Vector3 currentDirection =  currentMousePosition - cueStickPivot.position;
+
+                float angle = Vector3.SignedAngle(lastDirection, currentDirection, Vector3.up);
+                cueStickPivot.Rotate(Vector3.up, angle * topRotationSensitivity, Space.World);
+            }
+           else
+            {
+                Vector3 mouseDelta = currentMousePosition - lastMousePosition;
+                cueStickPivot.Rotate(Vector3.up, mouseDelta.x * camStickRotationSensitivity * Time.deltaTime, Space.World);
+            }
+
+            lastMousePosition = currentMousePosition;
+        }
+
+        if(Input.GetMouseButtonUp(0))
+        {
+            isDraggingStick = false;
+            isDraggingCueBall = false;
+        }
+    }
+
+    private void AdjustStickPivotToCueBall()
+    {
+        if(AreAllBallsStopped())
+        {
+            cueStickPivot.position = Vector3.MoveTowards(cueStickPivot.position, cueBall.position, Time.deltaTime);
+
+            if(allowRotateStickWhileSlider)
+            {
+                stickTransform.localPosition = Vector3.MoveTowards(stickTransform.localPosition, stickLocalOrigin, Time.deltaTime);
+            }
+        }
+    }
+
+    private Vector3 GetMouseWorldPosition()
+    {
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        Plane plane = new Plane(Vector3.up, cueStickPivot.position);
+        return plane.Raycast(ray, out float dist) ? ray.GetPoint(dist) : Vector3.zero;
     }
 
     private void UpdateStickVisualPosition()
@@ -125,6 +240,8 @@ public class CueStickController : MonoBehaviour
         hasProcessedShot = false;
         firstCollisionDetected = false; // Reset trước khi đánh
         hitTargetBallFirst = false;
+        moveCueBallAllow = false;
+        initialMoveCueBall = false;
 
         if (pocketManager != null) pocketManager.RegisterStartShot();
 
@@ -161,7 +278,11 @@ public class CueStickController : MonoBehaviour
     public void OnSliderReleased()
     {
         if (isMoving || hitPeriod) return;
-        if (sliderHitForce > 0.5f) { StartCoroutine(HitCueBall()); StartCoroutine(ResetSlider()); }
+        if (sliderHitForce > 0.5f)
+        { StartCoroutine(HitCueBall());
+          StartCoroutine(ResetSlider());
+          stopTimer = true;
+        }
     }
 
     private IEnumerator ResetSlider()

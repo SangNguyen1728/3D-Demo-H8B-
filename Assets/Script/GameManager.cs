@@ -23,6 +23,8 @@ public class GameManager : MonoBehaviour
 
     public TargetBallFinder targetFinder;
 
+    public GameObject winPanel;
+
 
     private void Start()
     {
@@ -303,5 +305,18 @@ public class GameManager : MonoBehaviour
         {
             cueStickController.PointAtTarget(target);
         }
+    }
+
+    private IEnumerator WinPanel()
+    {
+        Time.timeScale = 0f;
+        winPanel.SetActive(true);
+        backGround.SetActive(true);
+        yield return null;
+    }
+
+    public void ShowWinPanel()
+    {
+        StartCoroutine(WinPanel());
     }
 }

@@ -2,12 +2,28 @@
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+
 
 public class PocketTowPs : MonoBehaviour
 {
+    public CueStickController cueStickController;
+    public GameManager gameManager;
+    public Aiming aiming;
+
+    public TextMeshProUGUI assignBallDisplayText_1, assignBallDisplayText_2, foulText, selectedGroupText, winPlayerText, bottomMessagerText; //losePlayerText,
+    public TextMeshProUGUI targetBallID_1, targetBallID_2;
+    public GameObject noGroupImage_01, noGroupImage_02, stripesImage_01, stripesImage_02, solidImage_01,solidImage_02, nineBalls_01, nineBalls_02;
+
+    public Animator bottomMessagerAnimator;
+
+    public Image playerID_01, playerID_02;
+   // public Sprite activeSprite, simpleSprite;
+
     public int currentPlayer = 1;
     public int targetBallNumber = 1;
-    public bool gameEnd = false;
+    public bool gameEnd = false, groupAssigned = false, correctBallPotted = false;
 
     private bool ballPottedThisTurn = false;
     private bool foulCommittedThisTurn = false;
@@ -18,13 +34,313 @@ public class PocketTowPs : MonoBehaviour
     private StringBuilder shotReport = new StringBuilder();
     private NineBallRules rules;
 
+    private List<Collider> player01PottedBalls = new List<Collider> ();
+    private List<Collider> player02PottedBalls = new List<Collider> ();
+
+    public string player01Name, player02Name;
+    private string player01Group = "", player02Group = "";
+    public TextMeshProUGUI player01NameText, player02NameText, totalTimetext;
+    public Slider highlightSlider_01, highlightSlider_02;
+
+    public int totalPottedBallsCount, totalRacksCount;
+
+    public float totalTimeInput, timeRemaining;
+
+    public TextMeshProUGUI currentPottedText01, currentPottedText02, player01NameInWinPanel, player02NameInWinPanel, totalPottedBallText, totalRackText;
+
     void Start()
     {
+        //cueStickController = GetComponent<CueStickController>();
+        //gameManager = GetComponent<GameManager>();
+        //aiming = gameManager.GetComponent<Aiming>();
+
+        //bottomMessagerText = bottomMessagerAnimator.gameObject.GetComponentInChildren<TextMeshProUGUI>();
+
+        //noGroupImage_01.SetActive(true);
+        //solidImage_01.SetActive(false);
+        //stripesImage_01.SetActive(false);
+        //nineBalls_01.SetActive(false);
+
+        //noGroupImage_02.SetActive(true);
+        //solidImage_02.SetActive(false);
+        //stripesImage_02.SetActive(false);
+        //nineBalls_02.SetActive(false);
+
+        //bottomMessagerAnimator.gameObject.SetActive(true);
+        //foulText.gameObject.SetActive(true);
+        //selectedGroupText.gameObject.SetActive(true);
+        //winPlayerText.gameObject.SetActive(false);
+
+        //rules = GetComponent<NineBallRules>();
+        //if (rules == null) rules = gameObject.AddComponent<NineBallRules>();
+
+        //LoadPlayersInfoData();
+        //ResetGame();
+        //LoadRacksAndBallsCount();
+        //UpdateNextTarget();
+
+        if (gameManager == null)
+            Debug.LogError("GameManager not assigned!");
+
+        if (cueStickController == null)
+            Debug.LogError("CueStickController not assigned!");
+
+        if (aiming == null && gameManager != null)
+            aiming = gameManager.GetComponent<Aiming>();
+
+        if (bottomMessagerAnimator != null)
+            bottomMessagerText = bottomMessagerAnimator.GetComponentInChildren<TextMeshProUGUI>();
+
+        noGroupImage_01.SetActive(true);
+        solidImage_01.SetActive(false);
+        stripesImage_01.SetActive(false);
+        nineBalls_01.SetActive(false);
+
+        noGroupImage_02.SetActive(true);
+        solidImage_02.SetActive(false);
+        stripesImage_02.SetActive(false);
+        nineBalls_02.SetActive(false);
+
+        //bottomMessagerAnimator.gameObject.SetActive(true);
+        //foulText.gameObject.SetActive(true);
+        //selectedGroupText.gameObject.SetActive(true);
+        //winPlayerText.gameObject.SetActive(false);
+
+        ResetUI();
+
         rules = GetComponent<NineBallRules>();
-        if (rules == null) rules = gameObject.AddComponent<NineBallRules>();
+        if (rules == null)
+            rules = gameObject.AddComponent<NineBallRules>();
+
+        LoadPlayersInfoData();
+        ResetGame();
+        LoadRacksAndBallsCount();
         UpdateNextTarget();
     }
 
+    private void Update()
+    {
+        if(currentPlayer == 1)
+        {
+            highlightSlider_01.gameObject.SetActive(true);
+            highlightSlider_02.gameObject.SetActive(false);
+        }
+        else if(currentPlayer == 2)
+        {
+            highlightSlider_01.gameObject.SetActive(false);
+            highlightSlider_02.gameObject.SetActive(true);
+        }
+
+        UpdateTimer();
+    }
+    private void ResetUI()
+    {
+        bottomMessagerAnimator.gameObject.SetActive(true);
+
+        foulText.gameObject.SetActive(false);
+        selectedGroupText.gameObject.SetActive(false);
+        winPlayerText.gameObject.SetActive(false);
+    }
+    private void ResetGame()
+    {
+        groupAssigned = false;
+        correctBallPotted = false;
+        currentPlayer = 1;
+        player01Group = "";
+        player02Group = "";
+        player01PottedBalls.Clear();
+        player02PottedBalls.Clear();
+
+        highlightSlider_01.gameObject.SetActive(true);
+        highlightSlider_02.gameObject.SetActive(false);
+
+        targetBallID_1.text = "Target Balls";
+        targetBallID_2.text = "Target Balls";
+
+        timeRemaining = totalTimeInput;
+        cueStickController.stopTimer = false;
+    }
+
+    public void LoadPlayersInfoData()
+    {
+        player01Name = "PLAYER 1";
+        player02Name = "PLAYER 2";
+        totalTimeInput = 30;
+
+        player01NameText.text = player01Name;
+        player02NameText.text = player02Name;
+        totalTimetext.text = totalTimeInput.ToString();
+
+        player01NameInWinPanel .text = player01Name;
+        player02NameInWinPanel .text = player02Name;
+    }
+
+    private void LoadRacksAndBallsCount()
+    {
+        totalPottedBallsCount = PlayerPrefs.GetInt("PottedBallsSaveed", 0);
+        totalRacksCount = PlayerPrefs.GetInt("RacksCountSaved", 0);
+
+        totalPottedBallText.text = totalPottedBallsCount.ToString();
+        totalRackText.text = totalRackText.ToString();  
+    }
+
+    private void UpdateTimer()
+    {
+        if (cueStickController.stopTimer) return;
+
+        if (currentPlayer == 1)
+            highlightSlider_01.value = timeRemaining / totalTimeInput;
+        if (currentPlayer == 2)
+            highlightSlider_02.value = timeRemaining / totalTimeInput;
+
+        if(timeRemaining > 0)
+        {
+            timeRemaining -= Time.deltaTime;
+        }
+        else
+        {
+            timeRemaining = 0;
+            SwitchTurn();    
+        }
+
+        int seconds = Mathf.Clamp(Mathf.FloorToInt(timeRemaining), 0, 99);
+
+        totalTimetext.text = string.Format("{0:00}", seconds);
+    }
+    public void SavePocketedBalls()
+    {
+        totalPottedBallsCount += player01PottedBalls.Count + player02PottedBalls.Count;
+        PlayerPrefs.SetInt("PocketedBallsSaved", totalPottedBallsCount);
+        LoadRacksAndBallsCount();
+    }
+    private IEnumerator OnTriggerEnter(Collider ball)
+    {
+        //string ballTag = ball.tag;
+
+        //// Handle Cue Ball 
+        //if (ballTag == "CueBall");
+        //{
+        //    ball.transform.position = new Vector3(2, 2.57469f, 0);
+        //    ball.attachedRigidbody.angularVelocity = Vector3.zero;
+        //    yield break;
+        //}
+
+        string ballTag = ball.tag;
+
+        // Đã xóa dấu ";" dư thừa sau câu lệnh if
+        if (ballTag == "CueBall")
+        {
+            // Reset bi cái về vị trí chỉ định khi rơi xuống lỗ
+            ball.transform.position = new Vector3(-0.9f, 1.18f, 0);
+            //ball.transform.position = new Vector3(2, 1.57469f, 0);
+            ball.attachedRigidbody.linearVelocity = Vector3.zero;
+            ball.attachedRigidbody.angularVelocity = Vector3.zero;
+            StartCoroutine(HandleCueBallPotted());
+            foulCommittedThisTurn = true; // Ghi nhận lỗi
+            yield break;
+        }
+
+        if(ballTag == "BallNo.9")
+        {
+            StartCoroutine(HandleNineBallPottedRoutine());
+            HandlePottedBall(ball, (currentPlayer == 1 )? player01PottedBalls : player02PottedBalls);
+            yield break;
+        }
+
+        // if no group have been assigned yet
+        if(!groupAssigned)
+        {
+            selectedGroupText.GetComponent<Animator>().SetTrigger("ShowTrigger");
+            AssignGroup(ballTag);
+        }
+
+        if(groupAssigned)
+        {
+            if (currentPlayer == 1 && ballTag == player01Group + "Ball")
+            {
+                HandlePottedBall (ball, player01PottedBalls);
+                correctBallPotted = true;
+            }
+            else if(currentPlayer == 2 && ballTag == player02Group + "Ball")
+            {
+                 HandlePottedBall(ball, player02PottedBalls);
+                correctBallPotted = true;
+            }
+            else
+            {
+                while (bottomMessagerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Button Mesage In") && bottomMessagerAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
+                {
+                    yield return null;
+                }
+
+                bottomMessagerAnimator.SetTrigger("ShowTrigger");
+                bottomMessagerText.text = "Turn to Oppement";
+
+                HandlePottedBall(ball, (currentPlayer == 1) ? player02PottedBalls : player01PottedBalls);
+            }
+
+            assignBallDisplayText_1.text = player01PottedBalls.Count + "9";
+            assignBallDisplayText_2.text = player02PottedBalls.Count + "9";
+        }
+        
+    }
+
+    private void AssignGroup(string ballTag)
+    {
+        groupAssigned = true;
+        Debug.Log("Group Assigned: " + ballTag);
+
+    }
+
+    private void HandlePottedBall(Collider ball, List<Collider> pocketBalls)
+    {
+        cueStickController.balls.Remove(ball.attachedRigidbody);
+        aiming.ballObjects.Remove(ball.gameObject);
+        pocketBalls.Add(ball);
+        Destroy(ball.gameObject);
+    }
+    private IEnumerator HandleNineBallPotted()
+    {
+        if(currentPlayer  == 1)
+        {
+            if(player01PottedBalls.Count  == 9)
+            {
+                winPlayerText.text = player01Name + "WON THE MATCH";
+            }
+            else
+            {
+                winPlayerText.text = player02Name + "WON THE MATCH";
+            }
+        }
+        else if(currentPlayer == 2)
+        {
+            if (player02PottedBalls.Count == 9)
+            {
+                winPlayerText.text = player02Name + "WON THE MATCH";
+            }
+            else
+            {
+                winPlayerText.text = player01Name + "WON THE MATCH";
+            }
+        }
+
+        winPlayerText.gameObject.SetActive(true);
+        gameEnd = true;
+        cueStickController.stopTimer = true;
+        gameManager.cameraButtonAnim.SetBool("IsGoBack", true);
+        gameManager.buttonPauseAnim.SetBool("IsGoBack", true);
+        cueStickController.powerSliderAnim.SetBool("IsGoBack", true);
+
+        yield return new WaitForSecondsRealtime(3.3f);
+        gameManager.ShowWinPanel();
+        currentPottedText01.text = player01PottedBalls.Count.ToString();
+        currentPottedText02.text = player02PottedBalls.Count.ToString();
+
+        totalPottedBallsCount += player01PottedBalls.Count + player02PottedBalls.Count;
+        totalRacksCount++;
+        PlayerPrefs.SetInt("PocketdBallsSaved", totalPottedBallsCount);
+        PlayerPrefs.SetInt("RacksCountSaved", totalRacksCount);
+    }
     public void SetHitResult(bool isCorrectHit) => hitTargetFirstFromController = isCorrectHit;
 
     public void RegisterStartShot()
@@ -61,6 +377,37 @@ public class PocketTowPs : MonoBehaviour
         }
     }
 
+    private IEnumerator HandleNineBallPottedRoutine()
+    {
+        // Đợi một chút để xem bi cái có rơi xuống lỗ sau bi 9 không
+        yield return new WaitForSeconds(1.5f);
+
+        // Kiểm tra: Nếu bi 9 vào lỗ mà KHÔNG phạm lỗi
+        if (!foulCommittedThisTurn && hitTargetFirstFromController)
+        {
+            gameEnd = true;
+
+            // Hiển thị UI thắng cuộc
+            winPlayerText.text = (currentPlayer == 1 ? player01Name : player02Name) + " CHIẾN THẮNG!";
+            winPlayerText.gameObject.SetActive(true);
+
+            // Lưu dữ liệu
+            SavePocketedBalls();
+
+            Debug.Log($"*********** Player {currentPlayer} ĐÃ THẮNG (Bi 9 hợp lệ)! ***********");
+        }
+        else
+        {
+            // TRƯỜNG HỢP LỖI: Bi 9 vào nhưng phạm lỗi
+            shotReport.AppendLine("<color=red>! Bi 9 vào lỗ nhưng PHẠM LỖI.</color>");
+
+            // Theo luật chuẩn: Bi 9 vào lỗ mà lỗi thì bi 9 được đặt lại điểm cuối bàn (Foot Spot)
+            // Hoặc đơn giản là chuyển lượt cho đối thủ (Ball-in-hand)
+            isNineBallPotted = false; // Reset trạng thái để game tiếp tục
+
+            SwitchTurn(); // Đổi lượt sang người kia
+        }
+    }
     public void HandleStrokeResult()
     {
         //if (gameEnd) return;
@@ -95,28 +442,102 @@ public class PocketTowPs : MonoBehaviour
         //UpdateNextTarget();
         //Debug.Log(shotReport.ToString());
 
+        // đoạn chỉnh sửa 
+        //if (gameEnd) return;
+
+        //if (!hitTargetFirstFromController)
+        //{
+        //    foulCommittedThisTurn = true;
+        //    shotReport.AppendLine("<color=red> ! LỖI: Chạm sai bi mục tiêu</color>");
+        //}
+
+        //if (isNineBallPotted && !foulCommittedThisTurn)
+        //{
+        //    gameEnd = true;
+        //    shotReport.AppendLine("<color=cyan><b>PLAYER " + currentPlayer + " THẮNG!</b></color>");
+        //}
+        //else
+        //{
+        //    if (!foulCommittedThisTurn && ballPottedThisTurn) shotReport.AppendLine("=> GIỮ LƯỢT");
+        //    else currentPlayer = (currentPlayer == 1) ? 2 : 1;
+        //}
+        //UpdateNextTarget();
+        //Debug.Log(shotReport.ToString());
+
         if (gameEnd) return;
 
+        // 1. Kiểm tra lỗi chạm bi (giữ nguyên logic của bạn)
         if (!hitTargetFirstFromController)
         {
             foulCommittedThisTurn = true;
-            shotReport.AppendLine("<color=red> ! LỖI: Chạm sai bi mục tiêu</color>");
+            shotReport.AppendLine("<color=red> ! LỖI: Chạm sai bi mục tiêu đầu tiên</color>");
         }
 
-        if (isNineBallPotted && !foulCommittedThisTurn)
+        // 2. Xử lý bi 9 (Gọi hàm mới ở đây)
+        if (isNineBallPotted)
         {
-            gameEnd = true;
-            shotReport.AppendLine("<color=cyan><b>PLAYER " + currentPlayer + " THẮNG!</b></color>");
+            StartCoroutine(HandleNineBallPottedRoutine());
+            return; // Dừng hàm ở đây để Coroutine xử lý tiếp
+        }
+
+        // 3. Nếu không phải bi 9, xử lý lượt đánh bình thường
+        if (!foulCommittedThisTurn && ballPottedThisTurn)
+        {
+            shotReport.AppendLine("=> GIỮ LƯỢT");
+            timeRemaining = totalTimeInput;
         }
         else
         {
-            if (!foulCommittedThisTurn && ballPottedThisTurn) shotReport.AppendLine("=> GIỮ LƯỢT");
-            else currentPlayer = (currentPlayer == 1) ? 2 : 1;
+            SwitchTurn();
         }
+
         UpdateNextTarget();
         Debug.Log(shotReport.ToString());
+
     }
 
+    public IEnumerator HandleCueBallPotted()
+    {
+        cueStickController.moveCueBallAllow = true;
+
+        if(selectedGroupText.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).normalizedTime > 1.0f)
+        {
+            foulText.GetComponent<Animator>().SetTrigger("ShowTrigger");
+        }
+
+        while (bottomMessagerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Button Mesage In") && bottomMessagerAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
+        {
+            yield return null;
+        }
+
+        bottomMessagerAnimator.SetTrigger("ShowTrigger");
+        bottomMessagerText.text = "Drag the cue ball to position it anywhere on the table";
+    }
+    public IEnumerator CannotMoveCueBall()
+    {
+        while (bottomMessagerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Button Mesage In") &&  bottomMessagerAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
+        {
+            yield break ;
+        }
+
+        bottomMessagerAnimator.SetTrigger("ShowTrigger");
+        bottomMessagerText.text = "The Cue Ball is not ready to be move";
+    }
+    private void SwitchTurn()
+    {
+        // 1. Đổi ID người chơi (Nếu là 1 thì thành 2, nếu là 2 thì thành 1)
+        currentPlayer = (currentPlayer == 1) ? 2 : 1;
+        Debug.Log(currentPlayer + "is Playing now");
+        // 2. Reset lại thời gian cho lượt mới
+        timeRemaining = totalTimeInput;
+
+        // 3. Cập nhật UI: Bật/Tắt thanh Slider hiển thị lượt của mỗi người
+        highlightSlider_01.gameObject.SetActive(currentPlayer == 1);
+        highlightSlider_02.gameObject.SetActive(currentPlayer == 2);
+
+        // 4. Thông báo vào báo cáo lượt đánh
+        shotReport.AppendLine($"<color=orange>=> ĐỔI LƯỢT sang Player {currentPlayer}.</color>");
+    }
     private void UpdateNextTarget()
     {
         targetBallNumber = rules != null ? rules.GetCurrentTargetBall(pottedBalls) : 1;
