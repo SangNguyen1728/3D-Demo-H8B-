@@ -4,88 +4,127 @@ public class SkillController : MonoBehaviour
 {
     private CueStickController cueStick;
 
-    [Header("TEST MODE")]
-    public bool ignoreCondition = true; // bật lên để test nhanh
-
     void Start()
     {
-        // Tự tìm trong scene
-        cueStick = Object.FindFirstObjectByType<CueStickController>();
-
-        if (cueStick == null)
-        {
-            Debug.LogWarning("Không tìm thấy CueStickController → sẽ dùng TEST MODE");
-        }
+        cueStick = FindFirstObjectByType<CueStickController>();
     }
-
-    // =========================
-    // 🎮 BUTTON UI
-    // =========================
 
     public void UI_ActivateSkill1()
     {
-        Debug.Log("Nhấn Skill 1");
+        Debug.Log("CLICK SKILL 1");
 
         if (CanUseSkill())
         {
-            if (SkillManager.Instance != null)
-            {
-                SkillManager.Instance.UseSkillSlot1();
-            }
-            else
-            {
-                Debug.LogError("SkillManager Instance NULL!");
-            }
+            SkillManager.Instance.UseSkillSlot1();
+        }
+        else
+        {
+            Debug.LogWarning("Không thể dùng skill!");
         }
     }
 
     public void UI_ActivateSkill2()
     {
-        Debug.Log("Nhấn Skill 2");
+        Debug.Log("CLICK SKILL 2");
 
         if (CanUseSkill())
         {
-            if (SkillManager.Instance != null)
-            {
-                SkillManager.Instance.UseSkillSlot2();
-            }
-            else
-            {
-                Debug.LogError("SkillManager Instance NULL!");
-            }
+            SkillManager.Instance.UseSkillSlot2();
         }
     }
 
-    // =========================
-    // 🔒 CHECK ĐIỀU KIỆN
-    // =========================
-
+    // 🔥 TEST: tạm thời cho luôn true
     private bool CanUseSkill()
     {
-        // 👉 TEST NHANH (bỏ qua điều kiện)
-        if (ignoreCondition)
-            return true;
-
-        if (cueStick == null)
-        {
-            Debug.LogWarning("CueStick NULL!");
-            return false;
-        }
-
-        if (cueStick.isMoving)
-        {
-            Debug.Log("Không dùng skill: bi đang chạy");
-            return false;
-        }
-
-        if (cueStick.hitPeriod)
-        {
-            Debug.Log("Không dùng skill: đang đánh");
-            return false;
-        }
-
         return true;
+        // Sau này dùng lại:
+        // return !cueStick.isMoving && !cueStick.hitPeriod;
     }
+
+    //private CueStickController cueStick;
+
+    //[Header("TEST MODE")]
+    //public bool ignoreCondition = true; // bật lên để test nhanh
+
+    //void Start()
+    //{
+    //    // Tự tìm trong scene
+    //    cueStick = Object.FindFirstObjectByType<CueStickController>();
+
+    //    if (cueStick == null)
+    //    {
+    //        Debug.LogWarning("Không tìm thấy CueStickController → sẽ dùng TEST MODE");
+    //    }
+    //}
+
+    //// =========================
+    //// 🎮 BUTTON UI
+    //// =========================
+
+    //public void UI_ActivateSkill1()
+    //{
+    //    Debug.Log("Nhấn Skill 1");
+
+    //    if (CanUseSkill())
+    //    {
+    //        if (SkillManager.Instance != null)
+    //        {
+    //            SkillManager.Instance.UseSkillSlot1();
+    //        }
+    //        else
+    //        {
+    //            Debug.LogError("SkillManager Instance NULL!");
+    //        }
+    //    }
+    //}
+
+    //public void UI_ActivateSkill2()
+    //{
+    //    Debug.Log("Nhấn Skill 2");
+
+    //    if (CanUseSkill())
+    //    {
+    //        if (SkillManager.Instance != null)
+    //        {
+    //            SkillManager.Instance.UseSkillSlot2();
+    //        }
+    //        else
+    //        {
+    //            Debug.LogError("SkillManager Instance NULL!");
+    //        }
+    //    }
+    //}
+
+    //// =========================
+    //// 🔒 CHECK ĐIỀU KIỆN
+    //// =========================
+
+    //private bool CanUseSkill()
+    //{
+    //    // 👉 TEST NHANH (bỏ qua điều kiện)
+    //    if (ignoreCondition)
+    //        return true;
+
+    //    if (cueStick == null)
+    //    {
+    //        Debug.LogWarning("CueStick NULL!");
+    //        return false;
+    //    }
+
+    //    if (cueStick.isMoving)
+    //    {
+    //        Debug.Log("Không dùng skill: bi đang chạy");
+    //        return false;
+    //    }
+
+    //    if (cueStick.hitPeriod)
+    //    {
+    //        Debug.Log("Không dùng skill: đang đánh");
+    //        return false;
+    //    }
+
+    //    return true;
+    //}
 
     //private CueStickController cueStick;
 

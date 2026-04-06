@@ -2,64 +2,129 @@
 
 public class HoleLogic : MonoBehaviour
 {
-    public int rewardAmount;
-    public bool isHealthReward = false;
+    private bool destroyOnBallEnter;
+    private bool ballEntered = false;
 
-    private bool destroyOnBallEnter = false;
-    private bool isActive = false;
-
-    // 🔥 Init từ SkillManager
     public void Init(bool onBallEnter)
     {
         destroyOnBallEnter = onBallEnter;
-        isActive = true;
-
-        //destroyOnBallEnter = onBallEnter;
-        //isActive = true;
+        ballEntered = false;
     }
-
-
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!isActive) return;
+        BallNo ball = other.GetComponent<BallNo>();
 
-        if (other.CompareTag("Ball"))
+        if (ball != null)
         {
-            Debug.Log("Ball vào lỗ!");
+            Debug.Log("Ball vào hole: " + ball.ballNumber);
 
-            ApplyReward();
+            if (ball.isCueBall)
+            {
+                Debug.Log("Bi trắng vào lỗ!");
+            }
 
-            // 🟢 Ý tưởng 1: biến mất khi ăn bi
             if (destroyOnBallEnter)
             {
-                DisableHole();
+                ballEntered = true;
             }
         }
+
+        //    if (other.CompareTag("Ball"))
+        //{
+        //    Debug.Log("Ball vào hole");
+
+        //    if (destroyOnBallEnter)
+        //    {
+        //        ballEntered = true;
+        //        Debug.Log("SET ballEntered = TRUE"); // 🔥 thêm dòng này
+        //    }
+        //}
     }
 
-    public void DisableHole()
+    public bool HasBallEntered()
     {
-        isActive = false;
-
-        CancelInvoke();
-
-        // ❗ KHÔNG destroy nữa
-        gameObject.SetActive(false);
+        return ballEntered;
     }
 
-    // 🔵 Ý tưởng 2: tự biến mất sau thời gian
-    public void AutoDisable(float delay)
-    {
-        Invoke(nameof(DisableHole), delay);
+    //private bool destroyOnBallEnter;
 
-        //Invoke(nameof(DisableHole), delay);
-    }
+    //public void Init(bool onBallEnter)
+    //{
+    //    destroyOnBallEnter = onBallEnter;
+    //}
 
-    void ApplyReward()
-    {
-        // tạm bỏ qua theo yêu cầu
-    }
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (other.CompareTag("Ball"))
+    //    {
+    //        Debug.Log("Ball vào hole");
+
+    //        if (destroyOnBallEnter)
+    //        {
+    //            gameObject.SetActive(false);
+    //        }
+    //    }
+    //}
+
+    //public int rewardAmount;
+    //public bool isHealthReward = false;
+
+    //private bool destroyOnBallEnter = false;
+    //private bool isActive = false;
+
+    //// 🔥 Init từ SkillManager
+    //public void Init(bool onBallEnter)
+    //{
+    //    destroyOnBallEnter = onBallEnter;
+    //    isActive = true;
+
+    //    //destroyOnBallEnter = onBallEnter;
+    //    //isActive = true;
+    //}
+
+
+
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (!isActive) return;
+
+    //    if (other.CompareTag("Ball"))
+    //    {
+    //        Debug.Log("Ball vào lỗ!");
+
+    //        ApplyReward();
+
+    //        // 🟢 Ý tưởng 1: biến mất khi ăn bi
+    //        if (destroyOnBallEnter)
+    //        {
+    //            DisableHole();
+    //        }
+    //    }
+    //}
+
+    //public void DisableHole()
+    //{
+    //    isActive = false;
+
+    //    CancelInvoke();
+
+    //    // ❗ KHÔNG destroy nữa
+    //    gameObject.SetActive(false);
+    //}
+
+    //// 🔵 Ý tưởng 2: tự biến mất sau thời gian
+    //public void AutoDisable(float delay)
+    //{
+    //    Invoke(nameof(DisableHole), delay);
+
+    //    //Invoke(nameof(DisableHole), delay);
+    //}
+
+    //void ApplyReward()
+    //{
+    //    // tạm bỏ qua theo yêu cầu
+    //}
 
     // PHẢI ĐỂ PUBLIC để script RewardSkill có thể gán giá trị
     //public int rewardAmount;

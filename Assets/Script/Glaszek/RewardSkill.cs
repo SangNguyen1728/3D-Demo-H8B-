@@ -4,31 +4,72 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Reward Skill", menuName = "Skills/Reward")]
 public class RewardSkill : BaseSkills
 {
-    private bool isEdge = false;
+    private GameObject currentHole; // 🔥 lưu hole
 
     public override void Activate(GameObject player, SkillManager manager)
     {
-        // 🟢 Skill 2.0
-        if (skillID == 3)
+        bool isEdge = false;
+
+        if (skillID == 3) // 🔵 2.0
         {
-            manager.ActivateHoleWithLogic(isEdge, true, 5f);
+            currentHole = manager.ActivateHole(isEdge, false);
         }
-        // 🔵 Skill 2.1
-        else if (skillID == 4)
+        else if (skillID == 4) // 🟢 2.1
         {
-            manager.ActivateHoleWithLogic(isEdge, false, -1f);
+            currentHole = manager.ActivateHole(isEdge, true);
         }
     }
 
     public override void OnTurnEnd(SkillManager manager)
     {
-        if (skillID == 4)
-        {
-            Debug.Log("Skill 2.1 → bắt đầu đếm 5s");
+        if(currentHole == null) return;
 
-            manager.DisableHolesAfterDelay(isEdge, 5f);
+        HoleLogic logic = currentHole.GetComponent<HoleLogic>();
+
+        // 🔵 2.0
+        if (skillID == 3)
+        {
+            manager.DisableHoleAfterDelay(currentHole, 5f);
         }
+
+        // 🟢 2.1
+        if (skillID == 4 && logic != null && logic.HasBallEntered())
+        {
+            Debug.Log("Skill 2.1 → đã ăn bi → 5s biến mất");
+            manager.DisableHoleAfterDelay(currentHole, 5f);
+        }
+
+        //if (skillID == 3 && currentHole != null)
+        //{
+        //    Debug.Log("Skill 2.0 → 5s biến mất");
+        //    manager.DisableHoleAfterDelay(currentHole, 5f);
+        //}
     }
+
+    //private bool isEdge = false;
+
+    //public override void Activate(GameObject player, SkillManager manager)
+    //{
+    //    // Skill 2.0
+    //    if (skillID == 3)
+    //    {
+    //        manager.ActivateHole(isEdge, true);
+    //    }
+    //    // Skill 2.1
+    //    else if (skillID == 4)
+    //    {
+    //        manager.ActivateHole(isEdge, false);
+    //    }
+    //}
+
+    //public override void OnTurnEnd(SkillManager manager)
+    //{
+    //    // 🔥 CẢ 2 SKILL đều delay 5s sau khi bi dừng
+    //    if (skillID == 3 || skillID == 4)
+    //    {
+    //        manager.DisableHolesAfterDelay(isEdge, 5f);
+    //    }
+    //}
 
     //[Header("Setup Prefab")]
     //public GameObject rewardHolePrefab; // Kéo file Prefab cái lỗ từ cửa sổ Project vào đây

@@ -1,207 +1,310 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class SkillManager : MonoBehaviour
 {
-
     public static SkillManager Instance;
 
-    [Header("Current Active Skills")]
+    [Header("Skills")]
     public BaseSkills slot1;
     public BaseSkills slot2;
 
-    [Header("Holes Setup Sẵn")]
-    public List<GameObject> edgeHoles;     // 6 lỗ cạnh
-    public List<GameObject> middleHoles;   // 4 lỗ giữa
+    [Header("Hole Groups")]
+    public List<GameObject> edgeHoles;
+    public List<GameObject> middleHoles;
 
     void Awake()
     {
         Instance = this;
     }
 
-    private void Start()
+    // =========================
+    // 🎯 SPAWN HOLE
+    // =========================
+    public GameObject ActivateHole(bool isEdge, bool destroyOnBallEnter)
     {
+        Debug.Log("ActivateHole CALLED");
+
         TurnOffAllHoles();
+
+        List<GameObject> targetList = isEdge ? edgeHoles : middleHoles;
+
+        if (targetList == null || targetList.Count == 0)
+        {
+            Debug.LogError("List hole rỗng!");
+            return null;
+        }
+
+        int index = Random.Range(0, targetList.Count);
+        GameObject hole = targetList[index];
+
+        hole.SetActive(true);
+
+        Debug.Log("Spawn: " + hole.name);
+
+        HoleLogic logic = hole.GetComponent<HoleLogic>();
+        if (logic != null)
+        {
+            logic.Init(destroyOnBallEnter);
+        }
+
+        return hole; // 🔥 QUAN TRỌNG
     }
 
     // =========================
-    // SKILL
+    // 🎯 DELAY DISABLE (FIX CHUẨN)
     // =========================
-
-    public void LoadCharacterSkills(BaseSkills s1, BaseSkills s2)
+    public void DisableHoleAfterDelay(GameObject hole, float delay)
     {
-        slot1 = s1;
-        slot2 = s2;
+        StartCoroutine(DisableCoroutine(hole, delay));
     }
 
+    IEnumerator DisableCoroutine(GameObject hole, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        if (hole != null && hole.activeSelf)
+        {
+            Debug.Log("Disable hole: " + hole.name);
+            hole.SetActive(false);
+        }
+    }
+
+    // =========================
+    void TurnOffAllHoles()
+    {
+        foreach (var h in edgeHoles)
+            if (h != null) h.SetActive(false);
+
+        foreach (var h in middleHoles)
+            if (h != null) h.SetActive(false);
+    }
+
+    // =========================
     public void UseSkillSlot1()
     {
-        if (slot1) slot1.Activate(this.gameObject, this);
+        Debug.Log("Use Skill 1");
 
-        // TEST: bật lỗ cạnh
-        ActivateRandomHole(true);
+        if (slot1 != null)
+            slot1.Activate(gameObject, this);
     }
 
     public void UseSkillSlot2()
     {
-        if (slot2) slot2.Activate(this.gameObject, this);
+        Debug.Log("Use Skill 2");
 
-        // TEST: bật lỗ giữa
-        ActivateRandomHole(false);
+        if (slot2 != null)
+            slot2.Activate(gameObject, this);
     }
 
+    // =========================
     public void NotifyBallStopped()
     {
-        if (slot1) slot1.OnTurnEnd(this);
-        if (slot2) slot2.OnTurnEnd(this);
+        Debug.Log("=== BI ĐÃ DỪNG ===");
+
+        if (slot1 != null) slot1.OnTurnEnd(this);
+        if (slot2 != null) slot2.OnTurnEnd(this);
     }
 
-    // =========================
-    // 🎯 LOGIC MỚI (KHÔNG SPAWN)
-    // =========================
+    //public static SkillManager Instance;
 
-    public void ActivateRandomHole(bool isEdge)
-    {
-        List<GameObject> targetList = isEdge ? edgeHoles : middleHoles;
+    //[Header("Current Active Skills")]
+    //public BaseSkills slot1;
+    //public BaseSkills slot2;
 
-        if (targetList == null || targetList.Count == 0)
-        {
-            Debug.LogError("List rỗng!");
-            return;
-        }
+    //[Header("Holes Setup Sẵn")]
+    //public List<GameObject> edgeHoles;     // 6 lỗ cạnh
+    //public List<GameObject> middleHoles;   // 4 lỗ giữa
 
-        // ✅ chỉ tắt nhóm này
-        TurnOffGroup(targetList);
+    //void Awake()
+    //{
+    //    Instance = this;
+    //}
 
-        int index = Random.Range(0, targetList.Count);
-        GameObject selectedHole = targetList[index];
+    //private void Start()
+    //{
+    //    TurnOffAllHoles();
+    //}
 
-        if (selectedHole.transform.parent != null)
-        {
-            selectedHole.transform.parent.gameObject.SetActive(true);
-        }
+    //// =========================
+    //// SKILL
+    //// =========================
 
-        selectedHole.SetActive(true);
+    //public void LoadCharacterSkills(BaseSkills s1, BaseSkills s2)
+    //{
+    //    slot1 = s1;
+    //    slot2 = s2;
+    //}
 
-        Debug.Log("Bật: " + selectedHole.name);
+    //public void UseSkillSlot1()
+    //{
+    //    if (slot1) slot1.Activate(this.gameObject, this);
 
-        //List<GameObject> targetList = isEdge ? edgeHoles : middleHoles;
+    //    // TEST: bật lỗ cạnh
+    //    ActivateRandomHole(true);
+    //}
 
-        //if (targetList == null || targetList.Count == 0)
-        //{
-        //    Debug.LogWarning("Danh sách lỗ rỗng!");
-        //    return;
-        //}
+    //public void UseSkillSlot2()
+    //{
+    //    if (slot2) slot2.Activate(this.gameObject, this);
 
-        //// TẮT HẾT
-        //foreach (GameObject hole in targetList)
-        //{
-        //    if (hole != null)
-        //        hole.SetActive(false);
-        //}
+    //    // TEST: bật lỗ giữa
+    //    ActivateRandomHole(false);
+    //}
 
-        //// RANDOM
-        //int randomIndex = Random.Range(0, targetList.Count);
+    //public void NotifyBallStopped()
+    //{
+    //    if (slot1) slot1.OnTurnEnd(this);
+    //    if (slot2) slot2.OnTurnEnd(this);
+    //}
 
-        //GameObject selectedHole = targetList[randomIndex];
+    //// =========================
+    //// 🎯 LOGIC MỚI (KHÔNG SPAWN)
+    //// =========================
 
-        //// BẬT LỖ
-        //if (selectedHole != null)
-        //{
-        //    selectedHole.SetActive(true);
-        //    Debug.Log("Đã bật lỗ: " + selectedHole.name);
-        //}
+    //public void ActivateRandomHole(bool isEdge)
+    //{
+    //    List<GameObject> targetList = isEdge ? edgeHoles : middleHoles;
 
-        //Debug.Log("ActivateRandomHole chạy");
-    }
+    //    if (targetList == null || targetList.Count == 0)
+    //    {
+    //        Debug.LogError("List rỗng!");
+    //        return;
+    //    }
 
-    // =========================
-    // 🧪 BUTTON TEST
-    // =========================
+    //    // ✅ chỉ tắt nhóm này
+    //    TurnOffGroup(targetList);
 
-    private void TurnOffGroup(List<GameObject> list)
-    {
-        foreach (var hole in list)
-        {
-            if (hole != null)
-                hole.SetActive(false);
-        }
-    }
+    //    int index = Random.Range(0, targetList.Count);
+    //    GameObject selectedHole = targetList[index];
 
-    private void TurnOffAllHoles()
-    {
-        foreach (var hole in edgeHoles)
-        {
-            if (hole != null)
-                hole.SetActive(false);
-        }
+    //    if (selectedHole.transform.parent != null)
+    //    {
+    //        selectedHole.transform.parent.gameObject.SetActive(true);
+    //    }
 
-        foreach (var hole in middleHoles)
-        {
-            if (hole != null)
-                hole.SetActive(false);
-        }
-    }
+    //    selectedHole.SetActive(true);
 
-    public void ActivateHoleWithLogic(bool isEdge, bool destroyOnBallEnter, float autoDisableTime)
-    {
-        List<GameObject> targetList = isEdge ? edgeHoles : middleHoles;
+    //    Debug.Log("Bật: " + selectedHole.name);
 
-        if (targetList == null || targetList.Count == 0)
-        {
-            Debug.LogError("List rỗng!");
-            return;
-        }
+    //    //List<GameObject> targetList = isEdge ? edgeHoles : middleHoles;
 
-        TurnOffGroup(targetList);
+    //    //if (targetList == null || targetList.Count == 0)
+    //    //{
+    //    //    Debug.LogWarning("Danh sách lỗ rỗng!");
+    //    //    return;
+    //    //}
 
-        int index = Random.Range(0, targetList.Count);
-        GameObject selectedHole = targetList[index];
+    //    //// TẮT HẾT
+    //    //foreach (GameObject hole in targetList)
+    //    //{
+    //    //    if (hole != null)
+    //    //        hole.SetActive(false);
+    //    //}
 
-        selectedHole.SetActive(true);
+    //    //// RANDOM
+    //    //int randomIndex = Random.Range(0, targetList.Count);
 
-        HoleLogic logic = selectedHole.GetComponent<HoleLogic>();
+    //    //GameObject selectedHole = targetList[randomIndex];
 
-        if (logic != null)
-        {
-            logic.Init(destroyOnBallEnter);
+    //    //// BẬT LỖ
+    //    //if (selectedHole != null)
+    //    //{
+    //    //    selectedHole.SetActive(true);
+    //    //    Debug.Log("Đã bật lỗ: " + selectedHole.name);
+    //    //}
 
-            // 🔥 chỉ auto nếu có time
-            if (autoDisableTime > 0)
-            {
-                logic.AutoDisable(autoDisableTime);
-            }
-        }
-    }
+    //    //Debug.Log("ActivateRandomHole chạy");
+    //}
 
-    public void DisableHolesAfterDelay(bool isEdge, float delay)
-    {
-        List<GameObject> targetList = isEdge ? edgeHoles : middleHoles;
+    //// =========================
+    //// 🧪 BUTTON TEST
+    //// =========================
 
-        foreach (var hole in targetList)
-        {
-            if (hole != null && hole.activeSelf)
-            {
-                HoleLogic logic = hole.GetComponent<HoleLogic>();
-                if (logic != null)
-                {
-                    logic.AutoDisable(delay);
-                }
-            }
-        }
-    }
+    //private void TurnOffGroup(List<GameObject> list)
+    //{
+    //    foreach (var hole in list)
+    //    {
+    //        if (hole != null)
+    //            hole.SetActive(false);
+    //    }
+    //}
+
+    //private void TurnOffAllHoles()
+    //{
+    //    foreach (var hole in edgeHoles)
+    //    {
+    //        if (hole != null)
+    //            hole.SetActive(false);
+    //    }
+
+    //    foreach (var hole in middleHoles)
+    //    {
+    //        if (hole != null)
+    //            hole.SetActive(false);
+    //    }
+    //}
+
+    //public void ActivateHoleWithLogic(bool isEdge, bool destroyOnBallEnter, float autoDisableTime)
+    //{
+    //    List<GameObject> targetList = isEdge ? edgeHoles : middleHoles;
+
+    //    if (targetList == null || targetList.Count == 0)
+    //    {
+    //        Debug.LogError("List rỗng!");
+    //        return;
+    //    }
+
+    //    TurnOffGroup(targetList);
+
+    //    int index = Random.Range(0, targetList.Count);
+    //    GameObject selectedHole = targetList[index];
+
+    //    selectedHole.SetActive(true);
+
+    //    HoleLogic logic = selectedHole.GetComponent<HoleLogic>();
+
+    //    if (logic != null)
+    //    {
+    //        logic.Init(destroyOnBallEnter);
+
+    //        // 🔥 chỉ auto nếu có time
+    //        if (autoDisableTime > 0)
+    //        {
+    //            logic.AutoDisable(autoDisableTime);
+    //        }
+    //    }
+    //}
+
+    //public void DisableHolesAfterDelay(bool isEdge, float delay)
+    //{
+    //    List<GameObject> targetList = isEdge ? edgeHoles : middleHoles;
+
+    //    foreach (var hole in targetList)
+    //    {
+    //        if (hole != null && hole.activeSelf)
+    //        {
+    //            HoleLogic logic = hole.GetComponent<HoleLogic>();
+    //            if (logic != null)
+    //            {
+    //                logic.AutoDisable(delay);
+    //            }
+    //        }
+    //    }
+    //}
 
 
 
-    public void OnClickSpawnEdgeHole()
-    {
-        ActivateRandomHole(true);
-    }
+    //public void OnClickSpawnEdgeHole()
+    //{
+    //    ActivateRandomHole(true);
+    //}
 
-    public void OnClickSpawnMiddleHole()
-    {
-        ActivateRandomHole(false);
-    }
+    //public void OnClickSpawnMiddleHole()
+    //{
+    //    ActivateRandomHole(false);
+    //}
 
     //public static SkillManager Instance;
 

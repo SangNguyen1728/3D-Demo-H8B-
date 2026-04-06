@@ -4,34 +4,77 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Hole Skill", menuName = "Skills/Hole Spawn")]
 public class HoleSpawnSkill : BaseSkills
 {
-    private bool isEdge;
+    private GameObject currentHole;
 
     public override void Activate(GameObject player, SkillManager manager)
     {
-        isEdge = (skillID < 2);
+        Debug.Log("HoleSpawnSkill Activated");
 
-        // 🟢 Skill 1.0 → ăn bi + auto 5s
-        if (skillID == 1)
+        bool isEdge = (skillID == 1 || skillID == 2);
+
+        if (skillID == 1) // 🔵 1.0
         {
-            manager.ActivateHoleWithLogic(isEdge, true, 5f);
+            currentHole = manager.ActivateHole(isEdge, false);
         }
-        // 🔵 Skill 1.1 → chỉ tồn tại đến hết lượt
-        else if (skillID == 2)
+        else if (skillID == 2) // 🟢 1.1
         {
-            manager.ActivateHoleWithLogic(isEdge, false, -1f);
+            currentHole = manager.ActivateHole(isEdge, true);
         }
     }
 
     public override void OnTurnEnd(SkillManager manager)
     {
-        // 🔵 Skill 1.1 → sau khi bi dừng → 5s
-        if (skillID == 2)
-        {
-            Debug.Log("Skill 1.1 → bắt đầu đếm 5s");
+        if (currentHole == null) return;
 
-            manager.DisableHolesAfterDelay(isEdge, 5f);
+        HoleLogic logic = currentHole.GetComponent<HoleLogic>();
+
+        // 🔵 Skill 1.0
+        if (skillID == 1)
+        {
+            manager.DisableHoleAfterDelay(currentHole, 5f);
         }
+
+        // 🟢 Skill 1.1
+        if (skillID == 2 && logic != null && logic.HasBallEntered())
+        {
+            Debug.Log("Skill 1.1 → đã ăn bi → 5s biến mất");
+            manager.DisableHoleAfterDelay(currentHole, 5f);
+        }
+
+        //// 🔥 chỉ skill 1.0
+        //if (skillID == 1 && currentHole != null)
+        //{
+        //    Debug.Log("Skill 1.0 → 5s biến mất");
+        //    manager.DisableHoleAfterDelay(currentHole, 5f);
+        //}
     }
+
+    //private bool isEdge;
+
+    //public override void Activate(GameObject player, SkillManager manager)
+    //{
+    //    isEdge = (skillID < 2);
+
+    //    // Skill 1.0 → ăn bi
+    //    if (skillID == 1)
+    //    {
+    //        manager.ActivateHole(isEdge, true);
+    //    }
+    //    // Skill 1.1 → không ăn bi
+    //    else if (skillID == 2)
+    //    {
+    //        manager.ActivateHole(isEdge, false);
+    //    }
+    //}
+
+    //public override void OnTurnEnd(SkillManager manager)
+    //{
+    //    // 🔥 CẢ 2 SKILL đều biến mất sau 5s khi bi dừng
+    //    if (skillID == 1 || skillID == 2)
+    //    {
+    //        manager.DisableHolesAfterDelay(isEdge, 5f);
+    //    }
+    //}
 
     //public GameObject holePrefab; // Kéo Prefab lỗ vào đây
     //public Vector3 spawnPosition; // Vị trí (Cạnh hoặc Giữa bàn)
