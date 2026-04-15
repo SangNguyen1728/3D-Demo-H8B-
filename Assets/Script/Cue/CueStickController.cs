@@ -63,7 +63,11 @@ public class CueStickController : MonoBehaviour
         inputSystem = GetComponent<CueStickInput>();
         stickVisual = transform.GetChild(0);
         stickLocalOrigin = stickVisual.localPosition;
-        targetFinder = targetFinder.GetComponent<TargetBallFinder>();
+        //targetFinder = targetFinder.GetComponent<TargetBallFinder>();
+
+        if (targetFinder == null)
+            targetFinder = GetComponent<TargetBallFinder>();
+
         englishController = cueBall.GetComponent<CueBallController>();
 
         if (pocketManager == null) pocketManager = GameObject.FindFirstObjectByType<PocketTowPs>();
@@ -214,21 +218,48 @@ public class CueStickController : MonoBehaviour
         if (firstCollisionDetected || !hitPeriod) return;
 
         // Bỏ qua nếu chạm vào chính bi cái hoặc vật không phải bi mục tiêu
-        if (hitObject.CompareTag("CueBall") || !hitObject.tag.StartsWith("BallNo.")) return;
+        
+
 
         firstCollisionDetected = true;
         int hitBallNumber = 0;
 
-        if (hitObject.CompareTag("BallNo.9")) hitBallNumber = 9;
-        else
-        {
-            string num = hitObject.tag.Replace("BallNo.", "");
-            int.TryParse(num, out hitBallNumber);
-        }
+        //if (hitObject.CompareTag("CueBall") || !hitObject.tag.StartsWith("BallNo.")) return;
 
-        // Kiểm tra xem bi chạm trúng có phải bi mục tiêu hiện tại của luật chơi không
+        //if (hitObject.CompareTag("BallNo.9")) hitBallNumber = 9;
+        //else
+        //{
+        //    string num = hitObject.tag.Replace("BallNo.", "");
+        //    int.TryParse(num, out hitBallNumber);
+        //}
+
+        BallNo ball = hitObject.GetComponent<BallNo>();
+
+        // Không phải bi → bỏ
+        if (ball == null) return;
+
+        // Nếu là bi trắng → bỏ
+        if (ball.isCueBall) return;
+
+        firstCollisionDetected = true;
+
+        int hitBallNumberA = ball.ballNumber;
+
+        //if (pocketManager != null)
+        //{
+        //    hitTargetBallFirst = (hitBallNumberA == pocketManager.targetBallNumber);
+        //}
+
+        //// Kiểm tra xem bi chạm trúng có phải bi mục tiêu hiện tại của luật chơi không
+        //if (pocketManager != null)
+        //{
+        //    hitTargetBallFirst = (hitBallNumber == pocketManager.targetBallNumber);
+        //}
+
         if (pocketManager != null)
         {
+            //pocketManager.SetHitResult(hitTargetBallFirst);
+            //pocketManager.HandleStrokeResult();
             hitTargetBallFirst = (hitBallNumber == pocketManager.targetBallNumber);
         }
     }

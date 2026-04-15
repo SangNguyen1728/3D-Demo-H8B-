@@ -1455,6 +1455,10 @@
       <Project>{889EB133-CF5D-5EBF-CEFA-DD23F5E4796E}</Project>
       <Name>Unity.VisualScripting.State</Name>
     </ProjectReference>
+    <ProjectReference Include="Unity.2D.Sprite.Editor.csproj">
+      <Project>{DE24C2B3-7147-0A02-1C24-A8A1163D0645}</Project>
+      <Name>Unity.2D.Sprite.Editor</Name>
+    </ProjectReference>
     <ProjectReference Include="Unity.AI.Navigation.Editor.ConversionSystem.csproj">
       <Project>{3E3CA4DF-F20F-B9DE-2F5A-FCA07D797265}</Project>
       <Name>Unity.AI.Navigation.Editor.ConversionSystem</Name>

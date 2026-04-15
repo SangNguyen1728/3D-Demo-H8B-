@@ -63,10 +63,12 @@
   <ItemGroup>
     <Compile Include="Assets\Script\SkillButtonController.cs" />
     <Compile Include="Assets\Script\Glaszek\BaseSkills.cs" />
+    <Compile Include="Assets\Script\TakeDamage\BallHealth.cs" />
     <Compile Include="Assets\Script\Glaszek\SkillManager.cs" />
     <Compile Include="Assets\Script\Cue\CueStickController.cs" />
     <Compile Include="Assets\Script\Pocket\PocketTrigger.cs" />
     <Compile Include="Assets\Script\SkillController.cs" />
+    <Compile Include="Assets\Script\HPBarCamera.cs" />
     <Compile Include="Assets\Script\Cue\CueBallController.cs" />
     <Compile Include="Assets\Script\Ball.cs" />
     <Compile Include="Assets\Script\Cue\CueStickInput.cs" />
@@ -74,12 +76,15 @@
     <Compile Include="Assets\Script\BallNo.cs" />
     <Compile Include="Assets\PinePie\Simple Joystick\Core\Base\JoystickController.cs" />
     <Compile Include="Assets\Script\NineBallRules.cs" />
+    <Compile Include="Assets\Script\TakeDamage\BallCollisionDamage.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\Script\GameManager.cs" />
     <Compile Include="Assets\Script\Cue\CueBallEnglish.cs" />
+    <Compile Include="Assets\Script\BallCollisionNotifier.cs" />
     <Compile Include="Assets\Script\Glaszek\RewardSkill.cs" />
     <Compile Include="Assets\Script\Glaszek\HoleLogic.cs" />
     <Compile Include="Assets\Script\Aiming.cs" />
+    <Compile Include="Assets\Script\TakeDamage\IDamageable.cs" />
     <Compile Include="Assets\Script\SkillSlowMotion.cs" />
     <Compile Include="Assets\Script\Cue\CueBallSensor.cs" />
     <Compile Include="Assets\Script\Pocket\PocketDetector.cs" />
@@ -1314,6 +1319,10 @@
     <ProjectReference Include="Unity.VisualScripting.State.csproj">
       <Project>{889EB133-CF5D-5EBF-CEFA-DD23F5E4796E}</Project>
       <Name>Unity.VisualScripting.State</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.2D.Sprite.Editor.csproj">
+      <Project>{DE24C2B3-7147-0A02-1C24-A8A1163D0645}</Project>
+      <Name>Unity.2D.Sprite.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.AI.Navigation.Editor.ConversionSystem.csproj">
       <Project>{3E3CA4DF-F20F-B9DE-2F5A-FCA07D797265}</Project>

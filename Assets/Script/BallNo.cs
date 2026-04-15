@@ -9,4 +9,8 @@ public class BallNo : MonoBehaviour
     {
         return ballNumber == target;
     }
+    public bool IsCueBall()
+    {
+        return isCueBall;
+    }
 }

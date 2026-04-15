@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 3450609630763422218}
   - component: {fileID: 55876619811758902}
   - component: {fileID: 758852944330385469}
+  - component: {fileID: 5542446541658083031}
+  - component: {fileID: -2428612292021125126}
   m_Layer: 0
   m_Name: Ball1 1
   m_TagString: Untagged
@@ -136,3 +138,32 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &5542446541658083031
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6159817449048835214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11694c2e48a6b314ba85e05d4f529a89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageMultiplier: 0.02
+  minDamageThreshold: 0.2
+--- !u!114 &-2428612292021125126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6159817449048835214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e487c4e716e6bd4eb2abd2375e6d444, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 1000
+  healthFill: {fileID: 0}
+  smoothSpeed: 8
