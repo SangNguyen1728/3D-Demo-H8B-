@@ -8,18 +8,16 @@ public class HoleSpawnSkill : BaseSkills
 
     public override void Activate(GameObject player, SkillManager manager)
     {
-        Debug.Log("HoleSpawnSkill Activated");
-
         bool isEdge = (skillID == 1 || skillID == 2);
 
-        if (skillID == 1) // 🔵 1.0
-        {
-            currentHole = manager.ActivateHole(isEdge, false);
-        }
-        else if (skillID == 2) // 🟢 1.1
-        {
-            currentHole = manager.ActivateHole(isEdge, true);
-        }
+        currentHole = manager.ActivateHole(isEdge, skillID == 2);
+
+        manager.StartCoroutine(WaitPlacementDone());
+    }
+
+    System.Collections.IEnumerator WaitPlacementDone()
+    {
+        yield return new WaitUntil(() => !HolePlacementController.Instance.IsPlacing);
     }
 
     public override void OnTurnEnd(SkillManager manager)
@@ -28,26 +26,64 @@ public class HoleSpawnSkill : BaseSkills
 
         HoleLogic logic = currentHole.GetComponent<HoleLogic>();
 
-        // 🔵 Skill 1.0
+        // 1.0
         if (skillID == 1)
         {
             manager.DisableHoleAfterDelay(currentHole, 5f);
         }
 
-        // 🟢 Skill 1.1
+        // 1.1
         if (skillID == 2 && logic != null && logic.HasBallEntered())
         {
-            Debug.Log("Skill 1.1 → đã ăn bi → 5s biến mất");
+            Debug.Log("Skill 1.1 OK");
             manager.DisableHoleAfterDelay(currentHole, 5f);
         }
-
-        //// 🔥 chỉ skill 1.0
-        //if (skillID == 1 && currentHole != null)
-        //{
-        //    Debug.Log("Skill 1.0 → 5s biến mất");
-        //    manager.DisableHoleAfterDelay(currentHole, 5f);
-        //}
     }
+
+    //private GameObject currentHole;
+
+    //public override void Activate(GameObject player, SkillManager manager)
+    //{
+    //    Debug.Log("HoleSpawnSkill Activated");
+
+    //    bool isEdge = (skillID == 1 || skillID == 2);
+
+    //    if (skillID == 1) // 🔵 1.0
+    //    {
+    //        currentHole = manager.ActivateHole(isEdge, false);
+    //    }
+    //    else if (skillID == 2) // 🟢 1.1
+    //    {
+    //        currentHole = manager.ActivateHole(isEdge, true);
+    //    }
+    //}
+
+    //public override void OnTurnEnd(SkillManager manager)
+    //{
+    //    if (currentHole == null) return;
+
+    //    HoleLogic logic = currentHole.GetComponent<HoleLogic>();
+
+    //    // 🔵 Skill 1.0
+    //    if (skillID == 1)
+    //    {
+    //        manager.DisableHoleAfterDelay(currentHole, 5f);
+    //    }
+
+    //    // 🟢 Skill 1.1
+    //    if (skillID == 2 && logic != null && logic.HasBallEntered())
+    //    {
+    //        Debug.Log("Skill 1.1 → đã ăn bi → 5s biến mất");
+    //        manager.DisableHoleAfterDelay(currentHole, 5f);
+    //    }
+
+    //    //// 🔥 chỉ skill 1.0
+    //    //if (skillID == 1 && currentHole != null)
+    //    //{
+    //    //    Debug.Log("Skill 1.0 → 5s biến mất");
+    //    //    manager.DisableHoleAfterDelay(currentHole, 5f);
+    //    //}
+    //}
 
     //private bool isEdge;
 

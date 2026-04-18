@@ -361,6 +361,16 @@ public class CueStickController : MonoBehaviour
             pocketManager.HandleStrokeResult();
         }
 
+        if (targetFinder != null)
+        {
+            targetFinder.UpdateTargetBall();
+        }
+
+        if (targetFinder != null && targetFinder.currentTarget != null)
+        {
+            PointAtTarget(targetFinder.currentTarget);
+        }
+
         // 3. RESET ÉP PHÊ (ENGLISH) VỀ TÂM BI
         if (englishController != null)
         {
@@ -389,6 +399,8 @@ public class CueStickController : MonoBehaviour
         if (gm != null) gm.PrepareNextTurn();
 
         Debug.Log("<color=green>Sẵn sàng cho lượt đánh tiếp theo!</color>");
+
+        TriggerExplodeBalls();
     }
 
     public bool AreAllBallsStopped()
@@ -426,6 +438,18 @@ public class CueStickController : MonoBehaviour
             Debug.Log($"Gậy đã tự động hướng vào bi số: {pocketManager.targetBallNumber}</color>");
         }
     }
+
+    private void TriggerExplodeBalls()
+    {
+        BallHealth[] balls = FindObjectsOfType<BallHealth>();
+
+        foreach (BallHealth b in balls)
+        {
+            b.Explode();
+        }
+    }
+}
+    
 
     //[Header("Dependencies")]
     //public PocketTowPs pocketManager;
@@ -1600,4 +1624,4 @@ public class CueStickController : MonoBehaviour
     //    return Vector3.zero;
     //}
 
-}
+

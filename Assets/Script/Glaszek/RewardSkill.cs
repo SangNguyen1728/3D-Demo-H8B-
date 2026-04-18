@@ -4,47 +4,83 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Reward Skill", menuName = "Skills/Reward")]
 public class RewardSkill : BaseSkills
 {
-    private GameObject currentHole; // 🔥 lưu hole
+    private GameObject currentHole;
 
     public override void Activate(GameObject player, SkillManager manager)
     {
         bool isEdge = false;
 
-        if (skillID == 3) // 🔵 2.0
-        {
-            currentHole = manager.ActivateHole(isEdge, false);
-        }
-        else if (skillID == 4) // 🟢 2.1
-        {
-            currentHole = manager.ActivateHole(isEdge, true);
-        }
+        currentHole = manager.ActivateHole(isEdge, skillID == 4);
+
+        manager.StartCoroutine(WaitPlacementDone());
+    }
+
+    System.Collections.IEnumerator WaitPlacementDone()
+    {
+        yield return new WaitUntil(() => !HolePlacementController.Instance.IsPlacing);
     }
 
     public override void OnTurnEnd(SkillManager manager)
     {
-        if(currentHole == null) return;
+        if (currentHole == null) return;
 
         HoleLogic logic = currentHole.GetComponent<HoleLogic>();
 
-        // 🔵 2.0
+        // 2.0
         if (skillID == 3)
         {
             manager.DisableHoleAfterDelay(currentHole, 5f);
         }
 
-        // 🟢 2.1
+        // 2.1
         if (skillID == 4 && logic != null && logic.HasBallEntered())
         {
-            Debug.Log("Skill 2.1 → đã ăn bi → 5s biến mất");
+            Debug.Log("Skill 2.1 OK");
             manager.DisableHoleAfterDelay(currentHole, 5f);
         }
-
-        //if (skillID == 3 && currentHole != null)
-        //{
-        //    Debug.Log("Skill 2.0 → 5s biến mất");
-        //    manager.DisableHoleAfterDelay(currentHole, 5f);
-        //}
     }
+
+    //private GameObject currentHole; // 🔥 lưu hole
+
+    //public override void Activate(GameObject player, SkillManager manager)
+    //{
+    //    bool isEdge = false;
+
+    //    if (skillID == 3) // 🔵 2.0
+    //    {
+    //        currentHole = manager.ActivateHole(isEdge, false);
+    //    }
+    //    else if (skillID == 4) // 🟢 2.1
+    //    {
+    //        currentHole = manager.ActivateHole(isEdge, true);
+    //    }
+    //}
+
+    //public override void OnTurnEnd(SkillManager manager)
+    //{
+    //    if(currentHole == null) return;
+
+    //    HoleLogic logic = currentHole.GetComponent<HoleLogic>();
+
+    //    // 🔵 2.0
+    //    if (skillID == 3)
+    //    {
+    //        manager.DisableHoleAfterDelay(currentHole, 5f);
+    //    }
+
+    //    // 🟢 2.1
+    //    if (skillID == 4 && logic != null && logic.HasBallEntered())
+    //    {
+    //        Debug.Log("Skill 2.1 → đã ăn bi → 5s biến mất");
+    //        manager.DisableHoleAfterDelay(currentHole, 5f);
+    //    }
+
+    //    //if (skillID == 3 && currentHole != null)
+    //    //{
+    //    //    Debug.Log("Skill 2.0 → 5s biến mất");
+    //    //    manager.DisableHoleAfterDelay(currentHole, 5f);
+    //    //}
+    //}
 
     //private bool isEdge = false;
 

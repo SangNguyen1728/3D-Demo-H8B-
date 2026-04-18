@@ -19,6 +19,13 @@ public class BallHealth : MonoBehaviour, IDamageable
     private float targetFill = 1f;
     private float currentFill = 1f;
 
+    [Header("Low HP Blink")]
+    public float lowHpThreshold = 0.25f;
+    public float blinkSpeed = 5f;
+
+    private bool isBlinking = false;
+    private bool isDead = false;
+
     void Start()
     {
         currentHealth = maxHealth;
@@ -28,18 +35,63 @@ public class BallHealth : MonoBehaviour, IDamageable
 
     void Update()
     {
-        // Làm mượt thanh máu
+        //// Làm mượt thanh máu
+        //currentFill = Mathf.Lerp(currentFill, targetFill, Time.deltaTime * smoothSpeed);
+        //healthFill.fillAmount = currentFill;
+
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    TakeDamage(100);
+        //}
+
+        // smooth fill
         currentFill = Mathf.Lerp(currentFill, targetFill, Time.deltaTime * smoothSpeed);
         healthFill.fillAmount = currentFill;
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        // 🔥 BLINK khi low HP
+        float percent = currentHealth / maxHealth;
+
+        if (percent <= lowHpThreshold && currentHealth > 0)
         {
-            TakeDamage(100);
+            if (!isBlinking)
+                isBlinking = true;
+
+            float alpha = Mathf.Abs(Mathf.Sin(Time.time * blinkSpeed));
+            Color c = healthFill.color;
+            c.a = alpha;
+            healthFill.color = c;
+        }
+        else
+        {
+            if (isBlinking)
+            {
+                isBlinking = false;
+
+                Color c = healthFill.color;
+                c.a = 1f;
+                healthFill.color = c;
+            }
         }
     }
 
     public void TakeDamage(float damage)
     {
+        //currentHealth -= damage;
+        //currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+
+        //float percent = currentHealth / maxHealth;
+        //targetFill = percent;
+
+        //UpdateColor(percent);
+        //StartCoroutine(Flash()); // hiệu ứng hit
+
+        //if (currentHealth <= 0)
+        //{
+        //    Die();
+        //}
+
+        if (isDead) return;
+
         currentHealth -= damage;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
 
@@ -47,11 +99,10 @@ public class BallHealth : MonoBehaviour, IDamageable
         targetFill = percent;
 
         UpdateColor(percent);
-        StartCoroutine(Flash()); // hiệu ứng hit
 
         if (currentHealth <= 0)
         {
-            Die();
+            isDead = true; // ❗ KHÔNG DIE NGAY
         }
     }
 
@@ -85,17 +136,58 @@ public class BallHealth : MonoBehaviour, IDamageable
 
     void Die()
     {
-        Debug.Log(gameObject.name + " đã hết máu!");
+        //Debug.Log(gameObject.name + " đã hết máu!");
 
-        // 1. Tắt collider (không va chạm nữa)
+        //// 1. Tắt collider (không va chạm nữa)
+        //Collider col = GetComponent<Collider>();
+        //if (col != null) col.enabled = false;
+
+        //// 2. Tắt rigidbody (dừng vật lý)
+        //Rigidbody rb = GetComponent<Rigidbody>();
+        //if (rb != null) rb.linearVelocity = Vector3.zero;
+
+        //// 3. Ẩn object
+        //gameObject.SetActive(false);
+
+        Debug.Log(gameObject.name + " chết!");
+
+        // 🔥 CHỈ disable, KHÔNG xử lý target ở đây
         Collider col = GetComponent<Collider>();
         if (col != null) col.enabled = false;
 
-        // 2. Tắt rigidbody (dừng vật lý)
         Rigidbody rb = GetComponent<Rigidbody>();
-        if (rb != null) rb.linearVelocity = Vector3.zero;
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
 
-        // 3. Ẩn object
+        gameObject.SetActive(false);
+
+    }
+
+    public void Explode()
+    {
+        if (!isDead) return;
+
+        Debug.Log(gameObject.name + " nổ!");
+
+        StartCoroutine(ExplodeRoutine());
+    }
+
+    private IEnumerator ExplodeRoutine()
+    {
+        // scale nhỏ dần
+        float t = 0;
+        Vector3 startScale = transform.localScale;
+
+        while (t < 1f)
+        {
+            transform.localScale = Vector3.Lerp(startScale, Vector3.zero, t);
+            t += Time.deltaTime * 4f;
+            yield return null;
+        }
+
         gameObject.SetActive(false);
     }
 

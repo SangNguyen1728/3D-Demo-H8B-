@@ -2837,7 +2837,7 @@ GameObject:
   - component: {fileID: 171972023}
   - component: {fileID: 171972022}
   - component: {fileID: 171972021}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cylinder (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3041,7 +3041,7 @@ GameObject:
   - component: {fileID: 196442293}
   - component: {fileID: 196442297}
   - component: {fileID: 196442298}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: HoleTopLeft
   m_TagString: TablePocket
   m_Icon: {fileID: 0}
@@ -3271,7 +3271,7 @@ GameObject:
   - component: {fileID: 208594660}
   - component: {fileID: 208594659}
   - component: {fileID: 208594658}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: TopRightCushion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4379,7 +4379,7 @@ GameObject:
   - component: {fileID: 289392141}
   - component: {fileID: 289392140}
   - component: {fileID: 289392139}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube (2)
   m_TagString: Table
   m_Icon: {fileID: 0}
@@ -4487,7 +4487,7 @@ GameObject:
   - component: {fileID: 292745564}
   - component: {fileID: 292745563}
   - component: {fileID: 292745562}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: TopLeftCushion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5012,7 +5012,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 337655118}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: HolesManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5483,7 +5483,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 381788872}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Table
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6366,7 +6366,7 @@ GameObject:
   m_Component:
   - component: {fileID: 460737233}
   - component: {fileID: 460737234}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: AllHoles
   m_TagString: TablePocket
   m_Icon: {fileID: 0}
@@ -8180,7 +8180,7 @@ GameObject:
   - component: {fileID: 591006732}
   - component: {fileID: 591006731}
   - component: {fileID: 591006730}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ButtomCushion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8956,6 +8956,55 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &665416496
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 665416498}
+  - component: {fileID: 665416497}
+  m_Layer: 6
+  m_Name: HolePlacementController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &665416497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 665416496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fdf5de4852abc447a1972e8e2b21d9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tableLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  minDistanceFromBall: 0.5
+  minDistanceBetweenHoles: 1
+--- !u!4 &665416498
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 665416496}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.205, y: 1.878, z: -0.125}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &668030900
 GameObject:
   m_ObjectHideFlags: 0
@@ -9089,7 +9138,7 @@ GameObject:
   - component: {fileID: 672247401}
   - component: {fileID: 672247400}
   - component: {fileID: 672247399}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube
   m_TagString: Table
   m_Icon: {fileID: 0}
@@ -9996,7 +10045,7 @@ GameObject:
   - component: {fileID: 715427430}
   - component: {fileID: 715427429}
   - component: {fileID: 715427428}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: TopCushion
   m_TagString: Table
   m_Icon: {fileID: 0}
@@ -10671,7 +10720,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 758695327}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cushion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11097,7 +11146,7 @@ GameObject:
   - component: {fileID: 779396981}
   - component: {fileID: 779396985}
   - component: {fileID: 779396986}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: HoleLeft
   m_TagString: TablePocket
   m_Icon: {fileID: 0}
@@ -12927,7 +12976,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 903617718}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Frames
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12965,7 +13014,7 @@ GameObject:
   - component: {fileID: 904009183}
   - component: {fileID: 904009182}
   - component: {fileID: 904009181}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ButtomRightCushion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13073,7 +13122,7 @@ GameObject:
   - component: {fileID: 904265907}
   - component: {fileID: 904265906}
   - component: {fileID: 904265905}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ButtomCushion
   m_TagString: Table
   m_Icon: {fileID: 0}
@@ -13899,7 +13948,7 @@ GameObject:
   - component: {fileID: 955573560}
   - component: {fileID: 955573559}
   - component: {fileID: 955573558}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: TopLeftCushion
   m_TagString: Table
   m_Icon: {fileID: 0}
@@ -14007,7 +14056,7 @@ GameObject:
   - component: {fileID: 955608626}
   - component: {fileID: 955608625}
   - component: {fileID: 955608624}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: BottomFrame
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -14191,7 +14240,7 @@ GameObject:
   - component: {fileID: 978976270}
   - component: {fileID: 978976269}
   - component: {fileID: 978976268}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Pocket
   m_TagString: TablePocket
   m_Icon: {fileID: 0}
@@ -14839,7 +14888,7 @@ GameObject:
   - component: {fileID: 1029913329}
   - component: {fileID: 1029913333}
   - component: {fileID: 1029913334}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: HoleRight
   m_TagString: TablePocket
   m_Icon: {fileID: 0}
@@ -15104,7 +15153,7 @@ GameObject:
   - component: {fileID: 1051095855}
   - component: {fileID: 1051095854}
   - component: {fileID: 1051095853}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ButtomLeftCushion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15348,7 +15397,7 @@ GameObject:
   - component: {fileID: 1069406042}
   - component: {fileID: 1069406041}
   - component: {fileID: 1069406040}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: TopCushion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15456,7 +15505,7 @@ GameObject:
   - component: {fileID: 1079655168}
   - component: {fileID: 1079655167}
   - component: {fileID: 1079655166}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cylinder (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15566,7 +15615,7 @@ GameObject:
   - component: {fileID: 1085575527}
   - component: {fileID: 1085575526}
   - component: {fileID: 1085575525}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: LeftFrame
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -15932,7 +15981,7 @@ GameObject:
   - component: {fileID: 1106544826}
   - component: {fileID: 1106544825}
   - component: {fileID: 1106544824}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ButtomLeftCushion
   m_TagString: Table
   m_Icon: {fileID: 0}
@@ -17764,7 +17813,7 @@ GameObject:
   - component: {fileID: 1301226335}
   - component: {fileID: 1301226334}
   - component: {fileID: 1301226333}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: RightFrame
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -18010,7 +18059,7 @@ GameObject:
   - component: {fileID: 1327707940}
   - component: {fileID: 1327707939}
   - component: {fileID: 1327707938}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18488,7 +18537,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1433327118}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Rail
   m_TagString: Table
   m_Icon: {fileID: 0}
@@ -19045,6 +19094,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pocketManager: {fileID: 460737234}
+  currentTarget: {fileID: 0}
 --- !u!114 &1455611373
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19367,7 +19417,7 @@ GameObject:
   - component: {fileID: 1469345349}
   - component: {fileID: 1469345348}
   - component: {fileID: 1469345347}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: TopRightCushion
   m_TagString: Table
   m_Icon: {fileID: 0}
@@ -19979,7 +20029,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1505269555}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: FullTable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20167,7 +20217,7 @@ GameObject:
   - component: {fileID: 1528196295}
   - component: {fileID: 1528196294}
   - component: {fileID: 1528196293}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cylinder (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20516,7 +20566,7 @@ GameObject:
   - component: {fileID: 1548749172}
   - component: {fileID: 1548749171}
   - component: {fileID: 1548749170}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube (1)
   m_TagString: Table
   m_Icon: {fileID: 0}
@@ -22266,7 +22316,7 @@ GameObject:
   - component: {fileID: 1681092823}
   - component: {fileID: 1681092822}
   - component: {fileID: 1681092821}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ButtomRightCushion
   m_TagString: Table
   m_Icon: {fileID: 0}
@@ -23361,7 +23411,7 @@ GameObject:
   - component: {fileID: 1715723080}
   - component: {fileID: 1715723084}
   - component: {fileID: 1715723085}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: HoleBottomLeft
   m_TagString: TablePocket
   m_Icon: {fileID: 0}
@@ -24160,7 +24210,7 @@ GameObject:
   - component: {fileID: 1749219101}
   - component: {fileID: 1749219100}
   - component: {fileID: 1749219099}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube (3)
   m_TagString: Table
   m_Icon: {fileID: 0}
@@ -25289,7 +25339,7 @@ GameObject:
   - component: {fileID: 1824987044}
   - component: {fileID: 1824987048}
   - component: {fileID: 1824987049}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: HoleBottomRight
   m_TagString: TablePocket
   m_Icon: {fileID: 0}
@@ -25553,7 +25603,7 @@ GameObject:
   - component: {fileID: 1830413365}
   - component: {fileID: 1830413364}
   - component: {fileID: 1830413363}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: TopFrame
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -26492,7 +26542,7 @@ GameObject:
   - component: {fileID: 1892665459}
   - component: {fileID: 1892665463}
   - component: {fileID: 1892665464}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: HoleTopRight
   m_TagString: TablePocket
   m_Icon: {fileID: 0}
@@ -26839,7 +26889,7 @@ GameObject:
   - component: {fileID: 1903153959}
   - component: {fileID: 1903153958}
   - component: {fileID: 1903153961}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube
   m_TagString: Table
   m_Icon: {fileID: 0}
@@ -30059,7 +30109,7 @@ GameObject:
   - component: {fileID: 7323709798279075183}
   - component: {fileID: 2996454795137416887}
   - component: {fileID: 8486808437161165302}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: MiddlePoints (2)
   m_TagString: TablePocket
   m_Icon: {fileID: 0}
@@ -30946,7 +30996,7 @@ GameObject:
   - component: {fileID: 5633668517368830595}
   - component: {fileID: 8060932112734553319}
   - component: {fileID: 1051069110683206811}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: RailHoles (3)
   m_TagString: TablePocket
   m_Icon: {fileID: 0}
@@ -31045,7 +31095,7 @@ GameObject:
   - component: {fileID: 7100909003753023781}
   - component: {fileID: 7516358316425556153}
   - component: {fileID: 3440319404883617044}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: MiddlePoints
   m_TagString: TablePocket
   m_Icon: {fileID: 0}
@@ -31236,7 +31286,7 @@ GameObject:
   - component: {fileID: 8890855697802214666}
   - component: {fileID: 4998350602111563712}
   - component: {fileID: 2452273077181135034}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: MiddlePoints (3)
   m_TagString: TablePocket
   m_Icon: {fileID: 0}
@@ -31258,7 +31308,7 @@ GameObject:
   - component: {fileID: 2290040532867136842}
   - component: {fileID: 3080061946076310116}
   - component: {fileID: 7945762114543748646}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: MiddlePoints (1)
   m_TagString: TablePocket
   m_Icon: {fileID: 0}
@@ -31539,7 +31589,7 @@ GameObject:
   - component: {fileID: 1558905648781248370}
   - component: {fileID: 4294027451951974511}
   - component: {fileID: 8273433889817609783}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: RailHoles (2)
   m_TagString: TablePocket
   m_Icon: {fileID: 0}
@@ -31755,7 +31805,7 @@ GameObject:
   - component: {fileID: 8910561523140990038}
   - component: {fileID: 3389558802999773502}
   - component: {fileID: 289614179897937404}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: RailHoles (1)
   m_TagString: TablePocket
   m_Icon: {fileID: 0}
@@ -31873,7 +31923,7 @@ GameObject:
   - component: {fileID: 2403345958016234839}
   - component: {fileID: 5342492155685789728}
   - component: {fileID: 6090512059196042425}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: RailHoles
   m_TagString: TablePocket
   m_Icon: {fileID: 0}
@@ -31987,7 +32037,7 @@ GameObject:
   - component: {fileID: 2382010911952261412}
   - component: {fileID: 5675206776068832034}
   - component: {fileID: 3141587857039176741}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: RailHoles (4)
   m_TagString: TablePocket
   m_Icon: {fileID: 0}
@@ -32075,7 +32125,7 @@ GameObject:
   - component: {fileID: 1785678005934289818}
   - component: {fileID: 3908133411205227816}
   - component: {fileID: 3586112253897036696}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: RailHoles (5)
   m_TagString: TablePocket
   m_Icon: {fileID: 0}
@@ -32181,3 +32231,4 @@ SceneRoots:
   - {fileID: 1282438171}
   - {fileID: 1455611371}
   - {fileID: 816451757}
+  - {fileID: 665416498}

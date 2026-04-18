@@ -71,6 +71,7 @@
     <Compile Include="Assets\Script\HPBarCamera.cs" />
     <Compile Include="Assets\Script\Cue\CueBallController.cs" />
     <Compile Include="Assets\Script\Ball.cs" />
+    <Compile Include="Assets\Script\Glaszek\HolePlacementController.cs" />
     <Compile Include="Assets\Script\Cue\CueStickInput.cs" />
     <Compile Include="Assets\Script\Pocket\PocketTowPs.cs" />
     <Compile Include="Assets\Script\BallNo.cs" />

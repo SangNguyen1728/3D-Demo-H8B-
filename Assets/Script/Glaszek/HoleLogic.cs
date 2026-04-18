@@ -5,15 +5,27 @@ public class HoleLogic : MonoBehaviour
     private bool destroyOnBallEnter;
     private bool ballEntered = false;
 
+    private bool isActive = false;
+
     public void Init(bool onBallEnter)
     {
+        //destroyOnBallEnter = onBallEnter;
+        //ballEntered = false;
+
         destroyOnBallEnter = onBallEnter;
         ballEntered = false;
+        isActive = false; // chưa hoạt động
+    }
+    public void ActivateHole()
+    {
+        isActive = true;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        BallNo ball = other.GetComponent<BallNo>();
+        if (!isActive) return; // 🔥 CHẶN
+
+        BallNo ball = other.GetComponentInParent<BallNo>();
 
         if (ball != null)
         {
@@ -29,23 +41,57 @@ public class HoleLogic : MonoBehaviour
                 ballEntered = true;
             }
         }
-
-        //    if (other.CompareTag("Ball"))
-        //{
-        //    Debug.Log("Ball vào hole");
-
-        //    if (destroyOnBallEnter)
-        //    {
-        //        ballEntered = true;
-        //        Debug.Log("SET ballEntered = TRUE"); // 🔥 thêm dòng này
-        //    }
-        //}
     }
 
     public bool HasBallEntered()
     {
         return ballEntered;
     }
+
+    //private bool destroyOnBallEnter;
+    //private bool ballEntered = false;
+
+    //public void Init(bool onBallEnter)
+    //{
+    //    destroyOnBallEnter = onBallEnter;
+    //    ballEntered = false;
+    //}
+
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    BallNo ball = other.GetComponent<BallNo>();
+
+    //    if (ball != null)
+    //    {
+    //        Debug.Log("Ball vào hole: " + ball.ballNumber);
+
+    //        if (ball.isCueBall)
+    //        {
+    //            Debug.Log("Bi trắng vào lỗ!");
+    //        }
+
+    //        if (destroyOnBallEnter)
+    //        {
+    //            ballEntered = true;
+    //        }
+    //    }
+
+    //    //    if (other.CompareTag("Ball"))
+    //    //{
+    //    //    Debug.Log("Ball vào hole");
+
+    //    //    if (destroyOnBallEnter)
+    //    //    {
+    //    //        ballEntered = true;
+    //    //        Debug.Log("SET ballEntered = TRUE"); // 🔥 thêm dòng này
+    //    //    }
+    //    //}
+    //}
+
+    //public bool HasBallEntered()
+    //{
+    //    return ballEntered;
+    //}
 
     //private bool destroyOnBallEnter;
 
