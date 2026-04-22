@@ -4,42 +4,110 @@ public class HoleLogic : MonoBehaviour
 {
     private bool destroyOnBallEnter;
     private bool ballEntered = false;
-
     private bool isActive = false;
 
-    public void Init(bool onBallEnter)
-    {
-        //destroyOnBallEnter = onBallEnter;
-        //ballEntered = false;
+    // HP SYSTEM
+    private bool useHP = false;
+    private float currentHP = 0;
+    private float maxHP = 0;
 
+    private Collider[] colliders;
+
+    // 🎨 RENDER
+    private Renderer holeRenderer;
+
+    void Awake()
+    {
+        colliders = GetComponentsInChildren<Collider>();
+        holeRenderer = GetComponentInChildren<Renderer>();
+    }
+
+    public void Init(bool onBallEnter, bool useHP = false, float hp = 0)
+    {
         destroyOnBallEnter = onBallEnter;
         ballEntered = false;
-        isActive = false; // chưa hoạt động
+        isActive = false;
+
+        this.useHP = useHP;
+        currentHP = hp;
+        maxHP = hp;
+
+        SetCollider(false);
+
+        // 🎨 reset màu
+        UpdateColor();
+
+        Debug.Log($"{name} INIT | HP: {currentHP}");
     }
+
     public void ActivateHole()
     {
         isActive = true;
+        SetCollider(true);
+
+        Debug.Log(name + " → ACTIVE");
+    }
+
+    void SetCollider(bool state)
+    {
+        foreach (var c in colliders)
+            c.enabled = state;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!isActive) return; // 🔥 CHẶN
+        if (!isActive) return;
 
         BallNo ball = other.GetComponentInParent<BallNo>();
+        if (ball == null) return;
 
-        if (ball != null)
+        Debug.Log("🎯 Ball vào hole: " + ball.ballNumber);
+
+        // 🟢 Skill 1.1 / 2.1
+        if (destroyOnBallEnter)
         {
-            Debug.Log("Ball vào hole: " + ball.ballNumber);
+            ballEntered = true;
+        }
 
-            if (ball.isCueBall)
-            {
-                Debug.Log("Bi trắng vào lỗ!");
-            }
+        // 🔥 Skill 1.2 / 2.2 (HP)
+        if (useHP)
+        {
+            float damage = 500f;
+            currentHP -= damage;
 
-            if (destroyOnBallEnter)
+            Debug.Log($"💥 Hole HP: {currentHP}");
+
+            UpdateColor(); // 🎨 update màu mỗi lần bị hit
+
+            if (currentHP <= 0)
             {
+                Debug.Log("🔥 Hole hết HP");
                 ballEntered = true;
             }
+        }
+    }
+
+    // 🎨 COLOR LOGIC
+    void UpdateColor()
+    {
+        if (!useHP || holeRenderer == null) return;
+
+        float percent = currentHP / maxHP;
+
+        if (percent > 0.5f)
+        {
+            // 🟡 Vàng
+            holeRenderer.material.color = Color.yellow;
+        }
+        else if (percent > 0.15f)
+        {
+            // 🟣 Tím đậm
+            holeRenderer.material.color = new Color(0.4f, 0f, 0.6f);
+        }
+        else
+        {
+            // 🟠 Cam đậm
+            holeRenderer.material.color = new Color(1f, 0.4f, 0f);
         }
     }
 
@@ -47,6 +115,199 @@ public class HoleLogic : MonoBehaviour
     {
         return ballEntered;
     }
+
+    //// ALL SKILLS DONE
+    //private bool destroyOnBallEnter;
+    //private bool ballEntered = false;
+    //private bool isActive = false;
+
+    //// 🆕 HP SYSTEM
+    //private bool useHP = false;
+    //private float currentHP = 0;
+
+    //private Collider[] colliders;
+
+    //void Awake()
+    //{
+    //    colliders = GetComponentsInChildren<Collider>();
+    //}
+
+    //public void Init(bool onBallEnter, bool useHP = false, float hp = 0)
+    //{
+    //    destroyOnBallEnter = onBallEnter;
+    //    ballEntered = false;
+    //    isActive = false;
+
+    //    // 🆕 HP
+    //    this.useHP = useHP;
+    //    currentHP = hp;
+
+    //    SetCollider(false);
+
+    //    Debug.Log($"{name} INIT | HP: {currentHP}");
+    //}
+
+    //public void ActivateHole()
+    //{
+    //    isActive = true;
+    //    SetCollider(true);
+
+    //    Debug.Log(name + " → ACTIVE");
+    //}
+
+    //void SetCollider(bool state)
+    //{
+    //    foreach (var c in colliders)
+    //        c.enabled = state;
+    //}
+
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (!isActive) return;
+
+    //    BallNo ball = other.GetComponentInParent<BallNo>();
+    //    if (ball == null) return;
+
+    //    Debug.Log("🎯 Ball vào hole: " + ball.ballNumber);
+
+    //    // =========================
+    //    // 🟢 SKILL 1.1 / 2.1
+    //    // =========================
+    //    if (destroyOnBallEnter)
+    //    {
+    //        ballEntered = true;
+    //    }
+
+    //    // =========================
+    //    // 🔥 SKILL 1.2 / 2.2 (HP)
+    //    // =========================
+    //    if (useHP)
+    //    {
+    //        float damage = 500f; // 👉 mỗi bi trừ 500 (bạn chỉnh tùy ý)
+
+    //        currentHP -= damage;
+
+    //        Debug.Log($"💥 Hole HP: {currentHP}");
+
+    //        if (currentHP <= 0)
+    //        {
+    //            Debug.Log("🔥 Hole hết HP");
+    //            ballEntered = true; // reuse logic cũ
+    //        }
+    //    }
+    //}
+
+    //public bool HasBallEntered()
+    //{
+    //    return ballEntered;
+    //}
+    ///
+    //private bool destroyOnBallEnter;
+    //private bool ballEntered = false;
+    //private bool isActive = false;
+
+    //private Collider[] colliders;
+
+    //void Awake()
+    //{
+    //    colliders = GetComponentsInChildren<Collider>(); // 🔥 lấy TẤT CẢ
+    //}
+
+    //public void Init(bool onBallEnter)
+    //{
+    //    destroyOnBallEnter = onBallEnter;
+    //    ballEntered = false;
+    //    isActive = false;
+
+    //    SetCollider(false);
+
+    //    Debug.Log(name + " INIT → collider OFF");
+    //}
+
+    //public void ActivateHole()
+    //{
+    //    isActive = true;
+
+    //    SetCollider(true);
+
+    //    Debug.Log(name + " → ACTIVE");
+    //}
+
+    //void SetCollider(bool state)
+    //{
+    //    foreach (var c in colliders)
+    //    {
+    //        c.enabled = state;
+    //    }
+    //}
+
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (!isActive) return;
+
+    //    BallNo ball = other.GetComponentInParent<BallNo>();
+
+    //    if (ball != null)
+    //    {
+    //        Debug.Log("🎯 Ball vào hole: " + ball.ballNumber);
+
+    //        if (destroyOnBallEnter)
+    //        {
+    //            ballEntered = true;
+    //        }
+    //    }
+    //}
+
+    //public bool HasBallEntered()
+    //{
+    //    return ballEntered;
+    //}
+
+    //private bool destroyOnBallEnter;
+    //private bool ballEntered = false;
+
+    //private bool isActive = false;
+
+    //public void Init(bool onBallEnter)
+    //{
+    //    //destroyOnBallEnter = onBallEnter;
+    //    //ballEntered = false;
+
+    //    destroyOnBallEnter = onBallEnter;
+    //    ballEntered = false;
+    //    isActive = false; // chưa hoạt động
+    //}
+    //public void ActivateHole()
+    //{
+    //    isActive = true;
+    //}
+
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (!isActive) return; // 🔥 CHẶN
+
+    //    BallNo ball = other.GetComponentInParent<BallNo>();
+
+    //    if (ball != null)
+    //    {
+    //        Debug.Log("Ball vào hole: " + ball.ballNumber);
+
+    //        if (ball.isCueBall)
+    //        {
+    //            Debug.Log("Bi trắng vào lỗ!");
+    //        }
+
+    //        if (destroyOnBallEnter)
+    //        {
+    //            ballEntered = true;
+    //        }
+    //    }
+    //}
+
+    //public bool HasBallEntered()
+    //{
+    //    return ballEntered;
+    //}
 
     //private bool destroyOnBallEnter;
     //private bool ballEntered = false;

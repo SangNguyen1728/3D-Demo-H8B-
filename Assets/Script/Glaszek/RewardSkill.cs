@@ -8,9 +8,30 @@ public class RewardSkill : BaseSkills
 
     public override void Activate(GameObject player, SkillManager manager)
     {
+        //bool isEdge = false;
+
+        //currentHole = manager.ActivateHole(isEdge, skillID == 4);
+
+        //manager.StartCoroutine(WaitPlacementDone());
+
         bool isEdge = false;
 
-        currentHole = manager.ActivateHole(isEdge, skillID == 4);
+        // 🔵 2.0
+        if (skillID == 3)
+            currentHole = manager.ActivateHole(isEdge, false);
+
+        // 🟢 2.1
+        else if (skillID == 4)
+            currentHole = manager.ActivateHole(isEdge, true);
+
+        // 🔥 2.2 (HP)
+        else if (skillID == 6)
+        {
+            currentHole = manager.ActivateHole(isEdge, false);
+
+            HoleLogic logic = currentHole.GetComponent<HoleLogic>();
+            logic.Init(false, true, 2500f);
+        }
 
         manager.StartCoroutine(WaitPlacementDone());
     }
@@ -36,6 +57,13 @@ public class RewardSkill : BaseSkills
         if (skillID == 4 && logic != null && logic.HasBallEntered())
         {
             Debug.Log("Skill 2.1 OK");
+            manager.DisableHoleAfterDelay(currentHole, 5f);
+        }
+
+        // 🔥 2.2
+        if (skillID == 6 && logic != null && logic.HasBallEntered())
+        {
+            Debug.Log("Skill 2.2 → hết HP → 5s biến mất");
             manager.DisableHoleAfterDelay(currentHole, 5f);
         }
     }

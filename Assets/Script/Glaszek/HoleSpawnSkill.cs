@@ -8,9 +8,30 @@ public class HoleSpawnSkill : BaseSkills
 
     public override void Activate(GameObject player, SkillManager manager)
     {
-        bool isEdge = (skillID == 1 || skillID == 2);
+        //bool isEdge = (skillID == 1 || skillID == 2);
 
-        currentHole = manager.ActivateHole(isEdge, skillID == 2);
+        //currentHole = manager.ActivateHole(isEdge, skillID == 2);
+
+        //manager.StartCoroutine(WaitPlacementDone());
+
+        bool isEdge = (skillID == 1 || skillID == 2 || skillID == 5);
+
+        // 🔵 1.0
+        if (skillID == 1)
+            currentHole = manager.ActivateHole(isEdge, false);
+
+        // 🟢 1.1
+        else if (skillID == 2)
+            currentHole = manager.ActivateHole(isEdge, true);
+
+        // 🔥 1.2 (HP)
+        else if (skillID == 5)
+        {
+            currentHole = manager.ActivateHole(isEdge, false);
+
+            HoleLogic logic = currentHole.GetComponent<HoleLogic>();
+            logic.Init(false, true, 2500f); // 🆕 HP MODE
+        }
 
         manager.StartCoroutine(WaitPlacementDone());
     }
@@ -36,6 +57,13 @@ public class HoleSpawnSkill : BaseSkills
         if (skillID == 2 && logic != null && logic.HasBallEntered())
         {
             Debug.Log("Skill 1.1 OK");
+            manager.DisableHoleAfterDelay(currentHole, 5f);
+        }
+
+        //1.2
+        if (skillID == 5 && logic != null && logic.HasBallEntered())
+        {
+            Debug.Log("Skill 1.2 → hết HP → 5s biến mất");
             manager.DisableHoleAfterDelay(currentHole, 5f);
         }
     }

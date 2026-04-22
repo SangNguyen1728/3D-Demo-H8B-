@@ -294,6 +294,11 @@ public class CueStickController : MonoBehaviour
         worldHitPoint -= transform.forward * (englishController != null ? englishController.ballRadius : 0.0285f);
         cueBall.AddForceAtPosition(transform.forward * sliderHitForce, worldHitPoint, ForceMode.Impulse);
 
+        if (SkillManager.Instance != null)
+        {
+            SkillManager.Instance.NotifyShotStarted();
+        }
+
         // Chờ một chút để bi cái rời gậy trước khi kết thúc "hitPeriod" visual
         yield return new WaitForSeconds(0.1f);
         hitPeriod = false;

@@ -72,9 +72,20 @@ public class HolePlacementController : MonoBehaviour
 
             // 🔥 KÍCH HOẠT HOLE
             HoleLogic logic = currentHole.GetComponent<HoleLogic>();
-            if (logic != null)
+            //if (logic != null)
+            //{
+            //    logic.ActivateHole();
+            //}
+
+            if (Input.GetMouseButtonDown(0))
             {
-                logic.ActivateHole();
+                if (!IsValidPosition()) return;
+
+                Debug.Log("Đặt lỗ thành công");
+
+                isPlacing = false;
+
+                currentHole = null; // 🔥 khóa luôn reference
             }
         }
     }

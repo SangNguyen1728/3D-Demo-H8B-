@@ -26,39 +26,60 @@ public class SkillManager : MonoBehaviour
     // =========================
     public GameObject ActivateHole(bool isEdge, bool destroyOnBallEnter)
     {
-        Debug.Log("ActivateHole CALLED");
-
         TurnOffAllHoles();
 
         List<GameObject> targetList = isEdge ? edgeHoles : middleHoles;
-
-        if (targetList == null || targetList.Count == 0)
-        {
-            Debug.LogError("List hole rỗng!");
-            return null;
-        }
 
         int index = Random.Range(0, targetList.Count);
         GameObject hole = targetList[index];
 
         hole.SetActive(true);
 
-        // 🔥 Đặt vị trí ban đầu (ĐỨNG YÊN)
-        Vector3 startPos = GetDefaultSpawnPosition(isEdge);
-        hole.transform.position = startPos;
-
-        // 🔥 Delay rồi mới cho kéo
-        StartCoroutine(StartPlacingDelay(hole, isEdge));
-
-        Debug.Log("Spawn: " + hole.name);
-
         HoleLogic logic = hole.GetComponent<HoleLogic>();
+
         if (logic != null)
         {
-            logic.Init(destroyOnBallEnter);
+            // 🔥 luôn reset về default
+            logic.Init(destroyOnBallEnter, false, 0);
         }
 
+        HolePlacementController.Instance.StartPlacing(hole, isEdge);
+
         return hole;
+
+        //Debug.Log("ActivateHole CALLED");
+
+        //TurnOffAllHoles();
+
+        //List<GameObject> targetList = isEdge ? edgeHoles : middleHoles;
+
+        //if (targetList == null || targetList.Count == 0)
+        //{
+        //    Debug.LogError("List hole rỗng!");
+        //    return null;
+        //}
+
+        //int index = Random.Range(0, targetList.Count);
+        //GameObject hole = targetList[index];
+
+        //hole.SetActive(true);
+
+        //// 🔥 Đặt vị trí ban đầu (ĐỨNG YÊN)
+        //Vector3 startPos = GetDefaultSpawnPosition(isEdge);
+        //hole.transform.position = startPos;
+
+        //// 🔥 Delay rồi mới cho kéo
+        //StartCoroutine(StartPlacingDelay(hole, isEdge));
+
+        //Debug.Log("Spawn: " + hole.name);
+
+        //HoleLogic logic = hole.GetComponent<HoleLogic>();
+        //if (logic != null)
+        //{
+        //    logic.Init(destroyOnBallEnter);
+        //}
+
+        //return hole;
 
         //Debug.Log("ActivateHole CALLED");
 
@@ -186,6 +207,21 @@ public class SkillManager : MonoBehaviour
 
         if (slot1 != null) slot1.OnTurnEnd(this);
         if (slot2 != null) slot2.OnTurnEnd(this);
+    }
+
+    public void NotifyShotStarted()
+    {
+        Debug.Log("=== SHOT START ===");
+
+        HoleLogic[] holes = FindObjectsOfType<HoleLogic>();
+
+        foreach (var h in holes)
+        {
+            if (h.gameObject.activeSelf)
+            {
+                h.ActivateHole(); // 🔥 CHỈ Ở ĐÂY
+            }
+        }
     }
 
     //public static SkillManager Instance;

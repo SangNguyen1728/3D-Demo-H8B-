@@ -8990,6 +8990,12 @@ MonoBehaviour:
     m_Bits: 64
   minDistanceFromBall: 0.5
   minDistanceBetweenHoles: 1
+  isEdgeMode: 0
+  tableMinX: -2
+  tableMaxX: 2
+  tableMinZ: -1
+  tableMaxZ: 1
+  edgeThickness: 0.3
 --- !u!4 &665416498
 Transform:
   m_ObjectHideFlags: 0
@@ -19119,8 +19125,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef7ddca2b8362724da1b9a8e32e7d533, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slot1: {fileID: 11400000, guid: 5cc8420fc3df9be469e0a72006a1ab10, type: 2}
-  slot2: {fileID: 11400000, guid: 0cb9de25234355e45a0b55efc3846fc3, type: 2}
+  slot1: {fileID: 11400000, guid: cf62b41008571da44bd2ea81879d84af, type: 2}
+  slot2: {fileID: 11400000, guid: 61293543f81422c4f8cecfd9f6e0860e, type: 2}
   edgeHoles:
   - {fileID: 9128698684142656415}
   - {fileID: 7773543212870115437}
