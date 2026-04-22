@@ -64,7 +64,7 @@
     <Compile Include="Assets\Script\SkillButtonController.cs" />
     <Compile Include="Assets\Script\Glaszek\BaseSkills.cs" />
     <Compile Include="Assets\Script\TakeDamage\BallHealth.cs" />
-    <Compile Include="Assets\Script\Glaszek\SkillManager.cs" />
+    <Compile Include="Assets\Script\Glaszek\FixedShieldSkill.cs" />
     <Compile Include="Assets\Script\Cue\CueStickController.cs" />
     <Compile Include="Assets\Script\Pocket\PocketTrigger.cs" />
     <Compile Include="Assets\Script\SkillController.cs" />
@@ -78,6 +78,7 @@
     <Compile Include="Assets\PinePie\Simple Joystick\Core\Base\JoystickController.cs" />
     <Compile Include="Assets\Script\NineBallRules.cs" />
     <Compile Include="Assets\Script\TakeDamage\BallCollisionDamage.cs" />
+    <Compile Include="Assets\Script\Glaszek\GlaszekManager.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\Script\GameManager.cs" />
     <Compile Include="Assets\Script\Cue\CueBallEnglish.cs" />

@@ -294,9 +294,9 @@ public class CueStickController : MonoBehaviour
         worldHitPoint -= transform.forward * (englishController != null ? englishController.ballRadius : 0.0285f);
         cueBall.AddForceAtPosition(transform.forward * sliderHitForce, worldHitPoint, ForceMode.Impulse);
 
-        if (SkillManager.Instance != null)
+        if (GlaszekManager.Instance != null)
         {
-            SkillManager.Instance.NotifyShotStarted();
+            GlaszekManager.Instance.NotifyShotStarted();
         }
 
         // Chờ một chút để bi cái rời gậy trước khi kết thúc "hitPeriod" visual
@@ -344,7 +344,13 @@ public class CueStickController : MonoBehaviour
 
         Debug.Log("<color=cyan>Tất cả bi đã dừng. Đang xử lý kết quả lượt đánh...</color>");
 
-        if (SkillManager.Instance != null) SkillManager.Instance.NotifyBallStopped();
+        if (GlaszekManager.Instance != null) GlaszekManager.Instance.NotifyBallStopped();
+
+        FixedShieldSkill shield = FindFirstObjectByType<FixedShieldSkill>();
+        if (shield != null)
+        {
+            shield.OnTurnEnd();
+        }
         // --------------------------------------------------------------------------
 
         //if (pocketManager != null)
@@ -375,6 +381,8 @@ public class CueStickController : MonoBehaviour
         {
             PointAtTarget(targetFinder.currentTarget);
         }
+
+       
 
         // 3. RESET ÉP PHÊ (ENGLISH) VỀ TÂM BI
         if (englishController != null)

@@ -6,7 +6,7 @@ public class HoleSpawnSkill : BaseSkills
 {
     private GameObject currentHole;
 
-    public override void Activate(GameObject player, SkillManager manager)
+    public override void Activate(GameObject player, GlaszekManager manager)
     {
         //bool isEdge = (skillID == 1 || skillID == 2);
 
@@ -41,7 +41,7 @@ public class HoleSpawnSkill : BaseSkills
         yield return new WaitUntil(() => !HolePlacementController.Instance.IsPlacing);
     }
 
-    public override void OnTurnEnd(SkillManager manager)
+    public override void OnTurnEnd(GlaszekManager manager)
     {
         if (currentHole == null) return;
 

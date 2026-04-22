@@ -26,6 +26,9 @@ public class BallHealth : MonoBehaviour, IDamageable
     private bool isBlinking = false;
     private bool isDead = false;
 
+    public bool isImmune = false;
+    private int immuneTurns = 0;
+
     void Start()
     {
         currentHealth = maxHealth;
@@ -89,6 +92,12 @@ public class BallHealth : MonoBehaviour, IDamageable
         //{
         //    Die();
         //}
+
+        if (isImmune)
+        {
+            Debug.Log(gameObject.name + " miễn nhiễm damage!");
+            return;
+        }
 
         if (isDead) return;
 
@@ -189,6 +198,46 @@ public class BallHealth : MonoBehaviour, IDamageable
         }
 
         gameObject.SetActive(false);
+    }
+
+    // 🔥 KÍCH HOẠT IMMUNE
+    public void ActivateImmunity(int turns)
+    {
+        isImmune = true;
+        immuneTurns = turns;
+
+        Debug.Log(gameObject.name + " được miễn damage trong " + turns + " lượt");
+
+        // 👉 đổi màu để nhận biết
+        if (healthFill != null)
+        {
+            healthFill.color = Color.cyan;
+        }
+    }
+
+    // 🔥 GIẢM TURN
+    public void ReduceTurn()
+    {
+        if (!isImmune) return;
+
+        immuneTurns--;
+
+        Debug.Log(gameObject.name + " còn " + immuneTurns + " lượt miễn damage");
+
+        if (immuneTurns <= 0)
+        {
+            isImmune = false;
+
+            Debug.Log(gameObject.name + " hết miễn nhiễm");
+
+            // reset màu
+            UpdateColor(currentHealth / maxHealth);
+        }
+    }
+
+    public bool IsImmune()
+    {
+        return isImmune;
     }
 
     //[Header("Health")]

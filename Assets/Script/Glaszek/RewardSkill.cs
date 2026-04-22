@@ -6,7 +6,7 @@ public class RewardSkill : BaseSkills
 {
     private GameObject currentHole;
 
-    public override void Activate(GameObject player, SkillManager manager)
+    public override void Activate(GameObject player, GlaszekManager manager)
     {
         //bool isEdge = false;
 
@@ -41,7 +41,7 @@ public class RewardSkill : BaseSkills
         yield return new WaitUntil(() => !HolePlacementController.Instance.IsPlacing);
     }
 
-    public override void OnTurnEnd(SkillManager manager)
+    public override void OnTurnEnd(GlaszekManager manager)
     {
         if (currentHole == null) return;
 

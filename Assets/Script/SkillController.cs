@@ -15,7 +15,7 @@ public class SkillController : MonoBehaviour
 
         if (CanUseSkill())
         {
-            SkillManager.Instance.UseSkillSlot1();
+            GlaszekManager.Instance.UseSkillSlot1();
         }
         else
         {
@@ -29,7 +29,7 @@ public class SkillController : MonoBehaviour
 
         if (CanUseSkill())
         {
-            SkillManager.Instance.UseSkillSlot2();
+            GlaszekManager.Instance.UseSkillSlot2();
         }
     }
 
