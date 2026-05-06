@@ -111,6 +111,13 @@ public class HoleLogic : MonoBehaviour
         }
     }
 
+    public void EnableTrigger()
+    {
+        Collider col = GetComponent<Collider>();
+        if (col != null)
+            col.enabled = true;
+    }
+
     public bool HasBallEntered()
     {
         return ballEntered;
