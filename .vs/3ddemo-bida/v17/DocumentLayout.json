@@ -3,12 +3,32 @@
   "WorkspaceRootPath": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\assets\\script\\pocket\\pockettowps.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|c:\\users\\sangnguyen\\desktop\\3ddemo-bida\\assets\\script\\pocket\\pockettowps.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\pocket\\pockettowps.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\assets\\script\\cue\\cuestickcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\cue\\cuestickcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\assets\\script\\takedamage\\ballhealth.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\takedamage\\ballhealth.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\assets\\script\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\assets\\script\\takedamage\\ballcollisiondamage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\takedamage\\ballcollisiondamage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\assets\\script\\targetballfinder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\targetballfinder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\assets\\script\\glaszek\\glaszekmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\glaszek\\glaszekmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\assets\\script\\glaszek\\holeplacementcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -19,28 +39,12 @@
       "RelativeMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\glaszek\\holelogic.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|c:\\users\\sangnguyen\\desktop\\3ddemo-bida\\assets\\script\\glaszek\\rewardskill.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\assets\\script\\glaszek\\rewardskill.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\glaszek\\rewardskill.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\assets\\script\\cue\\cuestickcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\cue\\cuestickcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\assets\\script\\glaszek\\fixedshieldskill.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\glaszek\\fixedshieldskill.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\assets\\script\\takedamage\\ballhealth.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\takedamage\\ballhealth.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\assets\\script\\glaszek\\glaszekmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\glaszek\\glaszekmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\assets\\script\\takedamage\\ballcollisiondamage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\takedamage\\ballcollisiondamage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\assets\\script\\takedamage\\idamageable.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -57,10 +61,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\assets\\script\\cue\\cueballcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\cue\\cueballcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\assets\\script\\targetballfinder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\targetballfinder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{89E864E8-7561-DB00-6303-2413115BF394}|Assembly-CSharp.csproj|C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\assets\\script\\ballcollisionnotifier.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -141,21 +141,8 @@
       "DocumentGroups": [
         {
           "DockedHeight": 197,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 0,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "HolePlacementController.cs",
-              "DocumentMoniker": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\Glaszek\\HolePlacementController.cs",
-              "RelativeDocumentMoniker": "Assets\\Script\\Glaszek\\HolePlacementController.cs",
-              "ToolTip": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\Glaszek\\HolePlacementController.cs",
-              "RelativeToolTip": "Assets\\Script\\Glaszek\\HolePlacementController.cs",
-              "ViewState": "AgIAALcAAAAAAAAAAAAUwMkAAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-18T12:05:45.826Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
@@ -164,33 +151,46 @@
               "RelativeDocumentMoniker": "Assets\\Script\\Pocket\\PocketTowPs.cs",
               "ToolTip": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\Pocket\\PocketTowPs.cs",
               "RelativeToolTip": "Assets\\Script\\Pocket\\PocketTowPs.cs",
-              "ViewState": "AgIAAEAAAAAAAAAAAAAQwD4AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAHECAAAAAAAAAAAvwHoCAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-03T10:11:46.842Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "HoleLogic.cs",
-              "DocumentMoniker": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\Glaszek\\HoleLogic.cs",
-              "RelativeDocumentMoniker": "Assets\\Script\\Glaszek\\HoleLogic.cs",
-              "ToolTip": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\Glaszek\\HoleLogic.cs",
-              "RelativeToolTip": "Assets\\Script\\Glaszek\\HoleLogic.cs",
-              "ViewState": "AgIAAGEAAAAAAAAAAAAcwHAAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "CueStickController.cs",
+              "DocumentMoniker": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\Cue\\CueStickController.cs",
+              "RelativeDocumentMoniker": "Assets\\Script\\Cue\\CueStickController.cs",
+              "ToolTip": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\Cue\\CueStickController.cs",
+              "RelativeToolTip": "Assets\\Script\\Cue\\CueStickController.cs",
+              "ViewState": "AgIAAKwBAAAAAAAAAAAvwLwBAAAOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-30T11:52:09.485Z",
+              "WhenOpened": "2026-03-30T13:02:56.595Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
+              "Title": "BallHealth.cs",
+              "DocumentMoniker": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\TakeDamage\\BallHealth.cs",
+              "RelativeDocumentMoniker": "Assets\\Script\\TakeDamage\\BallHealth.cs",
+              "ToolTip": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\TakeDamage\\BallHealth.cs",
+              "RelativeToolTip": "Assets\\Script\\TakeDamage\\BallHealth.cs",
+              "ViewState": "AgIAAEIAAAAAAAAAAAAAwNYAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-13T12:08:53.018Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "GameManager.cs",
               "DocumentMoniker": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\GameManager.cs",
               "RelativeDocumentMoniker": "Assets\\Script\\GameManager.cs",
               "ToolTip": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\GameManager.cs",
               "RelativeToolTip": "Assets\\Script\\GameManager.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAF0BAAAAAAAAAADwv3ABAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-12-29T14:16:41.824Z",
               "EditorCaption": ""
@@ -198,6 +198,69 @@
             {
               "$type": "Document",
               "DocumentIndex": 4,
+              "Title": "BallCollisionDamage.cs",
+              "DocumentMoniker": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\TakeDamage\\BallCollisionDamage.cs",
+              "RelativeDocumentMoniker": "Assets\\Script\\TakeDamage\\BallCollisionDamage.cs",
+              "ToolTip": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\TakeDamage\\BallCollisionDamage.cs",
+              "RelativeToolTip": "Assets\\Script\\TakeDamage\\BallCollisionDamage.cs",
+              "ViewState": "AgIAAHMAAAAAAAAAAAAkwIoAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-13T12:15:44.703Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "TargetBallFinder.cs",
+              "DocumentMoniker": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\TargetBallFinder.cs",
+              "RelativeDocumentMoniker": "Assets\\Script\\TargetBallFinder.cs",
+              "ToolTip": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\TargetBallFinder.cs",
+              "RelativeToolTip": "Assets\\Script\\TargetBallFinder.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-22T10:48:51.432Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "GlaszekManager.cs",
+              "DocumentMoniker": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\Glaszek\\GlaszekManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Script\\Glaszek\\GlaszekManager.cs",
+              "ToolTip": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\Glaszek\\GlaszekManager.cs",
+              "RelativeToolTip": "Assets\\Script\\Glaszek\\GlaszekManager.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-30T11:44:19.746Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "HoleLogic.cs",
+              "DocumentMoniker": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\Glaszek\\HoleLogic.cs",
+              "RelativeDocumentMoniker": "Assets\\Script\\Glaszek\\HoleLogic.cs",
+              "ToolTip": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\Glaszek\\HoleLogic.cs",
+              "RelativeToolTip": "Assets\\Script\\Glaszek\\HoleLogic.cs",
+              "ViewState": "AgIAAGEAAAAAAAAAAAAcwHAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-30T11:52:09.485Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "HolePlacementController.cs",
+              "DocumentMoniker": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\Glaszek\\HolePlacementController.cs",
+              "RelativeDocumentMoniker": "Assets\\Script\\Glaszek\\HolePlacementController.cs",
+              "ToolTip": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\Glaszek\\HolePlacementController.cs",
+              "RelativeToolTip": "Assets\\Script\\Glaszek\\HolePlacementController.cs",
+              "ViewState": "AgIAALcAAAAAAAAAAAAUwMkAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-18T12:05:45.826Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
               "Title": "RewardSkill.cs",
               "DocumentMoniker": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\Glaszek\\RewardSkill.cs",
               "RelativeDocumentMoniker": "Assets\\Script\\Glaszek\\RewardSkill.cs",
@@ -205,60 +268,11 @@
               "RelativeToolTip": "Assets\\Script\\Glaszek\\RewardSkill.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAEMAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-30T11:49:48.256Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-30T11:49:48.256Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "BallCollisionDamage.cs",
-              "DocumentMoniker": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\TakeDamage\\BallCollisionDamage.cs",
-              "RelativeDocumentMoniker": "Assets\\Script\\TakeDamage\\BallCollisionDamage.cs",
-              "ToolTip": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\TakeDamage\\BallCollisionDamage.cs",
-              "RelativeToolTip": "Assets\\Script\\TakeDamage\\BallCollisionDamage.cs",
-              "ViewState": "AgIAAGcAAAAAAAAAAAAkwHgAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-13T12:15:44.703Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "CueStickController.cs",
-              "DocumentMoniker": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\Cue\\CueStickController.cs",
-              "RelativeDocumentMoniker": "Assets\\Script\\Cue\\CueStickController.cs",
-              "ToolTip": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\Cue\\CueStickController.cs",
-              "RelativeToolTip": "Assets\\Script\\Cue\\CueStickController.cs",
-              "ViewState": "AgIAAE8BAAAAAAAAAIA5wGABAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-30T13:02:56.595Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "GlaszekManager.cs",
-              "DocumentMoniker": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\Glaszek\\GlaszekManager.cs",
-              "RelativeDocumentMoniker": "Assets\\Script\\Glaszek\\GlaszekManager.cs",
-              "ToolTip": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\Glaszek\\GlaszekManager.cs",
-              "RelativeToolTip": "Assets\\Script\\Glaszek\\GlaszekManager.cs",
-              "ViewState": "AgIAAMEAAAAAAAAAAADwvwQAAAAbAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-30T11:44:19.746Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "BallHealth.cs",
-              "DocumentMoniker": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\TakeDamage\\BallHealth.cs",
-              "RelativeDocumentMoniker": "Assets\\Script\\TakeDamage\\BallHealth.cs",
-              "ToolTip": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\TakeDamage\\BallHealth.cs",
-              "RelativeToolTip": "Assets\\Script\\TakeDamage\\BallHealth.cs",
-              "ViewState": "AgIAANYAAAAAAAAAAADgv9oAAAAEAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-13T12:08:53.018Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 10,
               "Title": "FixedShieldSkill.cs",
               "DocumentMoniker": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\Glaszek\\FixedShieldSkill.cs",
               "RelativeDocumentMoniker": "Assets\\Script\\Glaszek\\FixedShieldSkill.cs",
@@ -270,7 +284,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 11,
               "Title": "IDamageable.cs",
               "DocumentMoniker": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\TakeDamage\\IDamageable.cs",
               "RelativeDocumentMoniker": "Assets\\Script\\TakeDamage\\IDamageable.cs",
@@ -282,7 +296,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 12,
               "Title": "Aiming.cs",
               "DocumentMoniker": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\Aiming.cs",
               "RelativeDocumentMoniker": "Assets\\Script\\Aiming.cs",
@@ -294,7 +308,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 13,
               "Title": "HoleSpawnSkill.cs",
               "DocumentMoniker": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\Glaszek\\HoleSpawnSkill.cs",
               "RelativeDocumentMoniker": "Assets\\Script\\Glaszek\\HoleSpawnSkill.cs",
@@ -306,7 +320,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 14,
               "Title": "CueBallController.cs",
               "DocumentMoniker": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\Cue\\CueBallController.cs",
               "RelativeDocumentMoniker": "Assets\\Script\\Cue\\CueBallController.cs",
@@ -315,18 +329,6 @@
               "ViewState": "AgIAAB0AAAAAAAAAAAAgwDMAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-30T12:16:28.399Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "TargetBallFinder.cs",
-              "DocumentMoniker": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\TargetBallFinder.cs",
-              "RelativeDocumentMoniker": "Assets\\Script\\TargetBallFinder.cs",
-              "ToolTip": "C:\\Users\\SangNguyen\\Desktop\\3ddemo-bida\\Assets\\Script\\TargetBallFinder.cs",
-              "RelativeToolTip": "Assets\\Script\\TargetBallFinder.cs",
-              "ViewState": "AgIAAAgAAAAAAAAAAAAUwCYAAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-22T10:48:51.432Z"
             },
             {
               "$type": "Document",

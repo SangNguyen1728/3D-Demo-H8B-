@@ -30,20 +30,45 @@ public class GameManager : MonoBehaviour
     {
         //cueStickController = GetComponent<CueStickController>();
 
+        //pausePanelAnim = pausePanel.GetComponent<Animator>();
+        //backButtonAnim = backButton.GetComponent<Animator>();
+        //settingPanelAnim = settingPanel.GetComponent<Animator>();
+        //audioPanelAnim = audioPanel.GetComponent<Animator>();
+        //infoPanelAnim = infoPanel.GetComponent<Animator>();
+        //displayPanelAnim = displayPanel.GetComponent<Animator>();
+        //targetFinder = targetFinder.GetComponent<TargetBallFinder>();
+
+        //if (cueStickController == null)
+        //{
+        //    //cueStickController = FindObjectOfType<CueStickController>();
+        //    cueStickController = GetComponent<CueStickController>();
+        //}
+
+        //pausePanel.SetActive(false);
+        //backGround.SetActive(false);
+        //backButton.SetActive(false);
+
+        //settingPanel.SetActive(false);
+        //audioPanel.SetActive(false);
+        //displayPanel.SetActive(false);
+        //infoPanel.SetActive(false);
+
+        //UpperUIAnimator.SetBool("IsIldePlace", true);
+        //UpperUIAnimator.SetBool("IsGoBack", false);
+
         pausePanelAnim = pausePanel.GetComponent<Animator>();
         backButtonAnim = backButton.GetComponent<Animator>();
         settingPanelAnim = settingPanel.GetComponent<Animator>();
         audioPanelAnim = audioPanel.GetComponent<Animator>();
         infoPanelAnim = infoPanel.GetComponent<Animator>();
         displayPanelAnim = displayPanel.GetComponent<Animator>();
+
         targetFinder = targetFinder.GetComponent<TargetBallFinder>();
 
         if (cueStickController == null)
-        {
-            //cueStickController = FindObjectOfType<CueStickController>();
             cueStickController = GetComponent<CueStickController>();
-        }
 
+        // ===== DEFAULT (GIỮ NGUYÊN) =====
         pausePanel.SetActive(false);
         backGround.SetActive(false);
         backButton.SetActive(false);
@@ -55,6 +80,27 @@ public class GameManager : MonoBehaviour
 
         UpperUIAnimator.SetBool("IsIldePlace", true);
         UpperUIAnimator.SetBool("IsGoBack", false);
+
+        // 🔥🔥🔥 FIX: đảm bảo UI chính HIỆN
+        ForceShowMainUI();
+    }
+    private void ForceShowMainUI()
+    {
+        Debug.Log("FORCE MAIN UI");
+
+        // đảm bảo Animator không ẩn UI
+        if (UpperUIAnimator != null)
+        {
+            UpperUIAnimator.enabled = false;
+        }
+
+        // nếu bạn có panel HUD thì bật ở đây
+        // ví dụ:
+        // if(hudPanel) hudPanel.SetActive(true);
+
+        // đảm bảo win panel đang tắt
+        if (winPanel != null)
+            winPanel.SetActive(false);
     }
 
     public void OnPauseButtonClicked()

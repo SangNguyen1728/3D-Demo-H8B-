@@ -260,7 +260,8 @@ public class CueStickController : MonoBehaviour
         {
             //pocketManager.SetHitResult(hitTargetBallFirst);
             //pocketManager.HandleStrokeResult();
-            hitTargetBallFirst = (hitBallNumber == pocketManager.targetBallNumber);
+            //hitTargetBallFirst = (hitBallNumber == pocketManager.targetBallNumber);
+            hitTargetBallFirst = (hitBallNumberA == pocketManager.targetBallNumber);
         }
     }
 
@@ -366,11 +367,11 @@ public class CueStickController : MonoBehaviour
         }
 
         // 2. Gửi kết quả va chạm cho PocketManager xử lý luật chơi (Foul/Valid)
-        if (pocketManager != null)
-        {
-            pocketManager.SetHitResult(hitTargetBallFirst);
-            pocketManager.HandleStrokeResult();
-        }
+        //if (pocketManager != null)
+        //{
+        //    pocketManager.SetHitResult(hitTargetBallFirst);
+        //    pocketManager.HandleStrokeResult();
+        //}
 
         if (targetFinder != null)
         {
@@ -406,6 +407,8 @@ public class CueStickController : MonoBehaviour
         firstCollisionDetected = false;    // Reset cảm biến va chạm cho lần sau
         hitTargetBallFirst = false;        // Reset cờ kiểm tra mục tiêu
 
+        stopTimer = false;
+
         // 6. Đảm bảo gậy hiện lại đúng vị trí bi cái (do Update sẽ lo phần visual)
         transform.position = cueBall.position;
         GameManager gm = GameObject.FindFirstObjectByType<GameManager>();
@@ -413,13 +416,29 @@ public class CueStickController : MonoBehaviour
 
         Debug.Log("<color=green>Sẵn sàng cho lượt đánh tiếp theo!</color>");
 
-        TriggerExplodeBalls();
+        //TriggerExplodeBalls();
     }
 
     public bool AreAllBallsStopped()
     {
         if (CheckAndStopBall(cueBall)) return false;
-        foreach (Rigidbody ball in balls) { if (ball != null && CheckAndStopBall(ball)) return false; }
+        //foreach (Rigidbody ball in balls) { if (ball != null && CheckAndStopBall(ball)) return false; }
+
+        for (int i = balls.Count - 1; i >= 0; i--)
+        {
+            Rigidbody ball = balls[i];
+
+            // 🔥 remove null / inactive
+            if (ball == null || !ball.gameObject.activeInHierarchy)
+            {
+                balls.RemoveAt(i);
+                continue;
+            }
+
+            if (CheckAndStopBall(ball))
+                return false;
+        }
+
         return true;
     }
 
@@ -452,15 +471,15 @@ public class CueStickController : MonoBehaviour
         }
     }
 
-    private void TriggerExplodeBalls()
-    {
-        BallHealth[] balls = FindObjectsOfType<BallHealth>();
+    //private void TriggerExplodeBalls()
+    //{
+    //    BallHealth[] balls = FindObjectsOfType<BallHealth>();
 
-        foreach (BallHealth b in balls)
-        {
-            b.Explode();
-        }
-    }
+    //    foreach (BallHealth b in balls)
+    //    {
+    //        b.Explode();
+    //    }
+    //}
 }
     
 

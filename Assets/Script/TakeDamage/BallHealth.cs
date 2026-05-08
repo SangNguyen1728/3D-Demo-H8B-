@@ -111,7 +111,13 @@ public class BallHealth : MonoBehaviour, IDamageable
 
         if (currentHealth <= 0)
         {
-            isDead = true; // ❗ KHÔNG DIE NGAY
+            //isDead = true; // ❗ KHÔNG DIE NGAY
+
+            if (isDead) return;
+
+            isDead = true;
+
+            Die();
         }
     }
 
@@ -145,57 +151,108 @@ public class BallHealth : MonoBehaviour, IDamageable
 
     void Die()
     {
-        //Debug.Log(gameObject.name + " đã hết máu!");
+        ////Debug.Log(gameObject.name + " đã hết máu!");
 
-        //// 1. Tắt collider (không va chạm nữa)
+        ////// 1. Tắt collider (không va chạm nữa)
+        ////Collider col = GetComponent<Collider>();
+        ////if (col != null) col.enabled = false;
+
+        ////// 2. Tắt rigidbody (dừng vật lý)
+        ////Rigidbody rb = GetComponent<Rigidbody>();
+        ////if (rb != null) rb.linearVelocity = Vector3.zero;
+
+        ////// 3. Ẩn object
+        ////gameObject.SetActive(false);
+
+        //Debug.Log(gameObject.name + " chết!");
+
+        //// 🔥 CHỈ disable, KHÔNG xử lý target ở đây
         //Collider col = GetComponent<Collider>();
         //if (col != null) col.enabled = false;
 
-        //// 2. Tắt rigidbody (dừng vật lý)
         //Rigidbody rb = GetComponent<Rigidbody>();
-        //if (rb != null) rb.linearVelocity = Vector3.zero;
+        //if (rb != null)
+        //{
+        //    rb.linearVelocity = Vector3.zero;
+        //    rb.angularVelocity = Vector3.zero;
+        //}
 
-        //// 3. Ẩn object
         //gameObject.SetActive(false);
 
         Debug.Log(gameObject.name + " chết!");
 
-        // 🔥 CHỈ disable, KHÔNG xử lý target ở đây
-        Collider col = GetComponent<Collider>();
-        if (col != null) col.enabled = false;
+        // báo cho PocketManager
+        PocketTowPs pocket = FindFirstObjectByType<PocketTowPs>();
 
+        if (pocket != null)
+        {
+            pocket.OnBallDestroyed(gameObject);
+        }
+
+        // disable collider
+        Collider col = GetComponent<Collider>();
+
+        if (col != null)
+            col.enabled = false;
+
+        // stop rigidbody
         Rigidbody rb = GetComponent<Rigidbody>();
+
         if (rb != null)
         {
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
+
+            // 🔥 QUAN TRỌNG
+            rb.isKinematic = true;
         }
 
-        gameObject.SetActive(false);
+        // 🔥 KHÔNG setActive false ở đây nữa
+        // gameObject.SetActive(false);
 
-    }
-
-    public void Explode()
-    {
-        if (!isDead) return;
-
-        Debug.Log(gameObject.name + " nổ!");
-
+        // 🔥 GỌI explode luôn
         StartCoroutine(ExplodeRoutine());
     }
 
+    //public void Explode()
+    //{
+    //    if (!isDead) return;
+
+    //    Debug.Log(gameObject.name + " nổ!");
+
+    //    StartCoroutine(ExplodeRoutine());
+    //}
+
     private IEnumerator ExplodeRoutine()
     {
-        // scale nhỏ dần
-        float t = 0;
+        //// scale nhỏ dần
+        //float t = 0;
+        //Vector3 startScale = transform.localScale;
+
+        //while (t < 1f)
+        //{
+        //    transform.localScale = Vector3.Lerp(startScale, Vector3.zero, t);
+        //    t += Time.deltaTime * 4f;
+        //    yield return null;
+        //}
+
+        //gameObject.SetActive(false);
+
+        float t = 0f;
+
         Vector3 startScale = transform.localScale;
 
         while (t < 1f)
         {
-            transform.localScale = Vector3.Lerp(startScale, Vector3.zero, t);
+            transform.localScale =
+                Vector3.Lerp(startScale, Vector3.zero, t);
+
             t += Time.deltaTime * 4f;
+
             yield return null;
         }
+
+        transform.localScale = Vector3.zero;
 
         gameObject.SetActive(false);
     }
