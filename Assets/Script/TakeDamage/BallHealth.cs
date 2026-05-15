@@ -179,23 +179,51 @@ public class BallHealth : MonoBehaviour, IDamageable
 
         //gameObject.SetActive(false);
 
+        //Debug.Log(gameObject.name + " chết!");
+
+        //// báo cho PocketManager
+        //PocketTowPs pocket = FindFirstObjectByType<PocketTowPs>();
+
+        //if (pocket != null)
+        //{
+        //    pocket.OnBallDestroyed(gameObject);
+        //}
+
+        //// disable collider
+        //Collider col = GetComponent<Collider>();
+
+        //if (col != null)
+        //    col.enabled = false;
+
+        //// stop rigidbody
+        //Rigidbody rb = GetComponent<Rigidbody>();
+
+        //if (rb != null)
+        //{
+        //    rb.linearVelocity = Vector3.zero;
+        //    rb.angularVelocity = Vector3.zero;
+
+        //    // 🔥 QUAN TRỌNG
+        //    rb.isKinematic = true;
+        //}
+
+        //// 🔥 KHÔNG setActive false ở đây nữa
+        //// gameObject.SetActive(false);
+
+        //// 🔥 GỌI explode luôn
+        //StartCoroutine(ExplodeRoutine());
+
+        if (isDead) return;
+
+        isDead = true;
+
         Debug.Log(gameObject.name + " chết!");
 
-        // báo cho PocketManager
-        PocketTowPs pocket = FindFirstObjectByType<PocketTowPs>();
-
-        if (pocket != null)
-        {
-            pocket.OnBallDestroyed(gameObject);
-        }
-
-        // disable collider
         Collider col = GetComponent<Collider>();
 
         if (col != null)
             col.enabled = false;
 
-        // stop rigidbody
         Rigidbody rb = GetComponent<Rigidbody>();
 
         if (rb != null)
@@ -203,25 +231,35 @@ public class BallHealth : MonoBehaviour, IDamageable
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
 
-            // 🔥 QUAN TRỌNG
             rb.isKinematic = true;
         }
 
-        // 🔥 KHÔNG setActive false ở đây nữa
-        // gameObject.SetActive(false);
-
-        // 🔥 GỌI explode luôn
-        StartCoroutine(ExplodeRoutine());
+        StartCoroutine(DeathRoutine());
     }
 
-    //public void Explode()
-    //{
-    //    if (!isDead) return;
+    private IEnumerator DeathRoutine()
+    {
+        // Chờ damage chain settle
+        yield return new WaitForSeconds(0.25f);
 
-    //    Debug.Log(gameObject.name + " nổ!");
+        PocketTowPs pocket =
+            FindFirstObjectByType<PocketTowPs>();
 
-    //    StartCoroutine(ExplodeRoutine());
-    //}
+        if (pocket != null)
+        {
+            pocket.OnBallDestroyed(gameObject);
+        }
+
+        yield return StartCoroutine(ExplodeRoutine());
+    }
+    public void Explode()
+    {
+        if (!isDead) return;
+
+        Debug.Log(gameObject.name + " nổ!");
+
+        StartCoroutine(ExplodeRoutine());
+    }
 
     private IEnumerator ExplodeRoutine()
     {
