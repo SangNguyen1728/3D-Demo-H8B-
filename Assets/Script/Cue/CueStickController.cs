@@ -35,7 +35,7 @@ public class CueStickController : MonoBehaviour
     [Header("Settings")]
     public float hitForceAmount = 30f;
     public float stickHitSpeed = 15f;
-    public float stopThreshold = 0.15f;
+    public float stopThreshold = 0.08f;
 
     private Vector3 tableMinBounds = new Vector3 (-3.5f, 0f, -1.7f),
         tableMaxBounds = new Vector3(3.5f, 0f, 1.7f);
@@ -214,7 +214,16 @@ public class CueStickController : MonoBehaviour
             }
             else
             {
-                stableTimer += Time.deltaTime;
+                // stableTimer += Time.deltaTime;
+                // còn event đang xử lý
+                if (pocket.HasPendingEvents())
+                {
+                    stableTimer = 0f;
+                }
+                else
+                {
+                    stableTimer += Time.deltaTime;
+                }
             }
 
             yield return null;
@@ -226,7 +235,12 @@ public class CueStickController : MonoBehaviour
 
         OnAllBallsStoppedAction();
 
-        shotState = ShotState.Idle;
+        yield return null;
+        //shotState = ShotState.Idle;
+        if (shotState == ShotState.Resolving)
+        {
+            shotState = ShotState.Idle;
+        }
 
         Debug.Log("<color=green>SHOT COMPLETELY RESOLVED</color>");
 
@@ -426,7 +440,12 @@ public class CueStickController : MonoBehaviour
         //    );
         //}
 
-        if (!hitPeriod) return;
+        //if (!hitPeriod) return;
+
+        if ( shotState != ShotState.Shooting && shotState != ShotState.BallsMoving)
+        {
+            return;
+        }
 
         // Đã detect bi đầu tiên rồi
         if (firstCollisionDetected) return;
@@ -468,6 +487,10 @@ public class CueStickController : MonoBehaviour
     {
         hitPeriod = true;
         hasProcessedShot = false;
+        if (pocketManager != null)
+        {
+            pocketManager.shotAlreadyResolved = false;
+        }
         waitingShotResult = true;
         firstCollisionDetected = false; // Reset trước khi đánh
         hitTargetBallFirst = false;
@@ -594,17 +617,17 @@ public class CueStickController : MonoBehaviour
         //    pocketManager.HandleStrokeResult();
         //}
 
-        if (targetFinder != null)
-        {
-            targetFinder.UpdateTargetBall();
-        }
+        //if (targetFinder != null)
+        //{
+        //    targetFinder.UpdateTargetBall();
+        //}
 
-        if (targetFinder != null && targetFinder.currentTarget != null)
-        {
-            PointAtTarget(targetFinder.currentTarget);
-        }
+        //if (targetFinder != null && targetFinder.currentTarget != null)
+        //{
+        //    PointAtTarget(targetFinder.currentTarget);
+        //}
 
-       
+        StartCoroutine(UpdateTargetDelayed());
 
         // 3. RESET ÉP PHÊ (ENGLISH) VỀ TÂM BI
         if (englishController != null)
@@ -625,6 +648,8 @@ public class CueStickController : MonoBehaviour
 
         // 5. Cập nhật trạng thái để chuẩn bị cho lượt đánh tiếp theo
         hasProcessedShot = true;           // Đánh dấu đã xử lý xong shot này
+        StartCoroutine(UnlockShotProcess());
+        shotState = ShotState.Idle;
         waitingShotResult = false;
         firstCollisionDetected = false;    // Reset cảm biến va chạm cho lần sau
         //hitTargetBallFirst = false;        // Reset cờ kiểm tra mục tiêu
@@ -641,6 +666,29 @@ public class CueStickController : MonoBehaviour
         //TriggerExplodeBalls();
     }
 
+    private IEnumerator UnlockShotProcess()
+    {
+        yield return null;
+
+        hasProcessedShot = false;
+    }
+
+    private IEnumerator UpdateTargetDelayed()
+    {
+        yield return new WaitForSeconds(0.05f);
+
+        if (targetFinder != null)
+        {
+            targetFinder.UpdateTargetBall();
+        }
+
+        yield return null;
+
+        if (targetFinder != null && targetFinder.currentTarget != null)
+        {
+            PointAtTarget(targetFinder.currentTarget);
+        }
+    }
     private IEnumerator ProcessShotDelayed()
     {
         if (hasProcessedShot)

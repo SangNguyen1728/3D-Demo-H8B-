@@ -25,7 +25,9 @@ public class PocketTowPs : MonoBehaviour
     public int targetBallNumber = 1;
     public bool gameEnd = false, groupAssigned = false, correctBallPotted = false;
 
-    private bool shotAlreadyResolved = false;
+    public bool shotAlreadyResolved = false;
+
+    private bool targetBallScoredThisTurn = false;
 
     private bool ballPottedThisTurn = false;
     private bool foulCommittedThisTurn = false;
@@ -34,6 +36,10 @@ public class PocketTowPs : MonoBehaviour
     private bool hitTargetFirstFromController = false;
     private bool anyColoredBallDestroyed = false;
     private bool anyObjectBallScored = false;
+
+    private bool hitCorrectTargetThisShot = false;
+
+    private bool scoredColoredBallThisShot = false;
 
     private int pendingEvents = 0;
 
@@ -446,15 +452,19 @@ public class PocketTowPs : MonoBehaviour
     }
     public void SetHitResult(bool isCorrectHit) 
     {
+        //hitTargetFirstFromController = isCorrectHit;
         hitTargetFirstFromController = isCorrectHit;
+
+        hitCorrectTargetThisShot = isCorrectHit;
+
         Debug.Log("SET HIT RESULT = " + isCorrectHit);
     } 
 
     public void RegisterStartShot()
     {
-        shotEventVersion++;
+        //shotEventVersion++;
 
-        lastBallEventTime = Time.time;
+        //lastBallEventTime = Time.time;
 
         //ballPottedThisTurn = false;
         //foulCommittedThisTurn = false;
@@ -466,6 +476,65 @@ public class PocketTowPs : MonoBehaviour
 
         //anyColoredBallDestroyed = false;
         //hitTargetFirstFromController = false;
+        //hitTargetFirstFromController = false;
+
+        //ballPottedThisTurn = false;
+
+        //foulCommittedThisTurn = false;
+
+        //cueBallPocketedThisTurn = false;
+
+        //isNineBallPotted = false;
+
+        //anyColoredBallDestroyed = false;
+
+        //anyObjectBallScored = false;
+
+        //correctBallPotted = false;
+
+        //shotAlreadyResolved = false;
+
+        //shotReport.Clear();
+
+        //shotReport.AppendLine($"<color=white><b>--- LƯỢT PLAYER {currentPlayer} ---</b></color>");
+
+        //Debug.Log("REGISTER START SHOT");
+
+        //shotEventVersion++;
+
+        //lastBallEventTime = Time.time;
+
+        //Debug.Log("REGISTER START SHOT");
+
+        //// RESET TOÀN BỘ STATE CỦA SHOT
+
+        //hitTargetFirstFromController = false;
+
+        //ballPottedThisTurn = false;
+
+        //foulCommittedThisTurn = false;
+
+        //cueBallPocketedThisTurn = false;
+
+        //isNineBallPotted = false;
+
+        //anyColoredBallDestroyed = false;
+
+        //anyObjectBallScored = false;
+
+        //hitCorrectTargetThisShot = false;
+
+        //scoredColoredBallThisShot = false;
+
+        //correctBallPotted = false;
+
+        //shotAlreadyResolved = false;
+
+        //switchingTurn = false;
+
+        //shotReport.Clear();
+
+        //shotReport.AppendLine($"<color=white><b>--- LƯỢT PLAYER {currentPlayer} ---</b></color>");
         hitTargetFirstFromController = false;
 
         ballPottedThisTurn = false;
@@ -482,17 +551,23 @@ public class PocketTowPs : MonoBehaviour
 
         correctBallPotted = false;
 
+        targetBallScoredThisTurn = false;
+
         shotAlreadyResolved = false;
+
+        switchingTurn = false;
+
+        pendingEvents = 0;
 
         shotReport.Clear();
 
-        shotReport.AppendLine($"<color=white><b>--- LƯỢT PLAYER {currentPlayer} ---</b></color>");
-
-        Debug.Log("REGISTER START SHOT");
+        shotReport.AppendLine( $"<color=white><b>--- PLAYER {currentPlayer} TURN ---</b></color>" );
     }
 
     public void OnBallEnteredPocket(Collider ball)
     {
+        AddPendingEvent();
+
         lastBallEventTime = Time.time;
 
         if (gameEnd) return;
@@ -599,7 +674,7 @@ public class PocketTowPs : MonoBehaviour
 
             // QUAN TRỌNG:
             // KHÔNG SwitchTurn ở đây
-
+            CompletePendingEvent();
             return;
         }
 
@@ -618,6 +693,7 @@ public class PocketTowPs : MonoBehaviour
         if (nr > 0)
         {
             anyObjectBallScored = true;
+            scoredColoredBallThisShot = true;
 
             // ĐÁNH DẤU CÓ BI VÀO LỖ
             ballPottedThisTurn = true;
@@ -639,18 +715,21 @@ public class PocketTowPs : MonoBehaviour
 
                 Debug.Log("<color=green>TARGET BALL POCKETED</color>");
 
-                UpdateNextTarget();
+               // UpdateNextTarget();
             }
 
             // BI 9
             if (nr == 9)
             {
                 isNineBallPotted = true;
+
             }
 
             //Destroy(ball.gameObject);
             ball.gameObject.SetActive(false);
         }
+
+        CompletePendingEvent();
     }
 
     private IEnumerator RespawnCueBall(Collider ball)
@@ -670,6 +749,8 @@ public class PocketTowPs : MonoBehaviour
     }
     public void OnBallDestroyed(GameObject ballObj)
     {
+        AddPendingEvent();
+
         lastBallEventTime = Time.time;
 
         //if (gameEnd) return;
@@ -710,6 +791,7 @@ public class PocketTowPs : MonoBehaviour
         if (nr <= 0) return;
 
         anyObjectBallScored = true;
+        scoredColoredBallThisShot = true;
 
         Debug.Log("<color=yellow>Bi bị destroy: " + nr + "</color>");
 
@@ -718,7 +800,7 @@ public class PocketTowPs : MonoBehaviour
 
         // đánh dấu có bi vào
         ballPottedThisTurn = true;
-        if (nr == targetBallNumber)
+        if (nr == targetBallNumber || hitTargetFirstFromController)
         {
             correctBallPotted = true;
 
@@ -740,14 +822,15 @@ public class PocketTowPs : MonoBehaviour
         if (nr == 9)
         {
             isNineBallPotted = true;
-
+            CompletePendingEvent();
             StartCoroutine(HandleNineBallPottedRoutine());
 
             return;
         }
 
         // update target mới
-        UpdateNextTarget();
+        //UpdateNextTarget();
+        CompletePendingEvent();
     }
 
     public void AddPendingEvent()
@@ -1296,6 +1379,88 @@ public class PocketTowPs : MonoBehaviour
 
         //UpdateNextTarget();
 
+        //if (shotAlreadyResolved)
+        //{
+        //    Debug.Log("SHOT ALREADY RESOLVED");
+        //    return;
+        //}
+
+        //shotAlreadyResolved = true;
+
+        //if (gameEnd) return;
+
+        //Debug.Log("========== HANDLE STROKE RESULT ==========");
+
+        //Debug.Log("hitTargetFirstFromController = " + hitTargetFirstFromController);
+
+        //Debug.Log("ballPottedThisTurn = " + ballPottedThisTurn);
+
+        //Debug.Log("cueBallPocketedThisTurn = " + cueBallPocketedThisTurn);
+
+        //// =========================================
+        //// WIN
+        //// =========================================
+
+        //if (isNineBallPotted)
+        //{
+        //    gameEnd = true;
+
+        //    winPlayerText.text =
+        //        (currentPlayer == 1
+        //        ? player01Name
+        //        : player02Name)
+        //        + " YOU WIN";
+
+        //    winPlayerText.gameObject.SetActive(true);
+
+        //    Debug.Log("PLAYER WIN");
+
+        //    return;
+        //}
+
+        //// =========================================
+        //// FOUL
+        //// =========================================
+
+        //if (cueBallPocketedThisTurn)
+        //{
+        //    Debug.Log("<color=red>FOUL -> SWITCH TURN</color>");
+
+        //    SwitchTurn();
+
+        //    UpdateNextTarget();
+
+        //    return;
+        //}
+
+        //// =========================================
+        //// KEEP TURN LOGIC
+        //// =========================================
+
+        //bool keepTurn =
+        //    hitTargetFirstFromController
+        //    &&
+        //    (
+        //        ballPottedThisTurn
+        //        || anyColoredBallDestroyed
+        //        || anyObjectBallScored
+        //    );
+
+        //if (keepTurn)
+        //{
+        //    Debug.Log("<color=green>KEEP TURN</color>");
+
+        //    timeRemaining = totalTimeInput;
+        //}
+        //else
+        //{
+        //    Debug.Log("<color=red>SWITCH TURN</color>");
+
+        //    SwitchTurn();
+        //}
+
+        //UpdateNextTarget();
+
         if (shotAlreadyResolved)
         {
             Debug.Log("SHOT ALREADY RESOLVED");
@@ -1314,9 +1479,11 @@ public class PocketTowPs : MonoBehaviour
 
         Debug.Log("cueBallPocketedThisTurn = " + cueBallPocketedThisTurn);
 
-        // =========================================
-        // WIN
-        // =========================================
+        Debug.Log("anyObjectBallScored = " + anyObjectBallScored);
+
+        // =========================
+        // BI 9 WIN
+        // =========================
 
         if (isNineBallPotted)
         {
@@ -1330,16 +1497,14 @@ public class PocketTowPs : MonoBehaviour
 
             winPlayerText.gameObject.SetActive(true);
 
-            Debug.Log("PLAYER WIN");
-
             return;
         }
 
-        // =========================================
+        // =========================
         // FOUL
-        // =========================================
+        // =========================
 
-        if (cueBallPocketedThisTurn)
+        if (cueBallPocketedThisTurn || foulCommittedThisTurn)
         {
             Debug.Log("<color=red>FOUL -> SWITCH TURN</color>");
 
@@ -1350,34 +1515,32 @@ public class PocketTowPs : MonoBehaviour
             return;
         }
 
-        // =========================================
+        // =========================
         // KEEP TURN LOGIC
-        // =========================================
+        // =========================
+        bool scoredAnyObjectBall = anyObjectBallScored|| anyColoredBallDestroyed || ballPottedThisTurn;
 
-        bool keepTurn =
-            hitTargetFirstFromController
-            &&
-            (
-                ballPottedThisTurn
-                || anyColoredBallDestroyed
-                || anyObjectBallScored
-            );
+        bool keepTurn = hitTargetFirstFromController &&scoredAnyObjectBall &&!cueBallPocketedThisTurn;
+
+        //bool keepTurn = hitCorrectTargetThisShot && scoredColoredBallThisShot;
+
+        Debug.Log("KEEP TURN = " + keepTurn);
 
         if (keepTurn)
         {
-            Debug.Log("<color=green>KEEP TURN</color>");
+            Debug.Log("<color=green>PLAYER GIỮ LƯỢT</color>");
 
             timeRemaining = totalTimeInput;
         }
         else
         {
-            Debug.Log("<color=red>SWITCH TURN</color>");
+            Debug.Log("<color=orange>ĐỔI LƯỢT</color>");
 
             SwitchTurn();
         }
 
+        // UPDATE TARGET SAU KHI XỬ LÝ XONG
         UpdateNextTarget();
-
     }
 
     public IEnumerator HandleCueBallPotted()
@@ -1445,17 +1608,44 @@ public class PocketTowPs : MonoBehaviour
         //shotReport.AppendLine($"<color=orange>=> ĐỔI LƯỢT sang Player {currentPlayer}.</color>");
         //StopAllCoroutines();
 
+        //if (switchingTurn)
+        //{
+        //    Debug.Log("ALREADY SWITCHING TURN");
+        //    return;
+        //}
+
+        //switchingTurn = true;
+
+        //currentPlayer = (currentPlayer == 1) ? 2 : 1;
+
+        //Debug.Log(currentPlayer + " is Playing now");
+
+        //timeRemaining = totalTimeInput;
+
+        //highlightSlider_01.gameObject.SetActive(currentPlayer == 1);
+        //highlightSlider_02.gameObject.SetActive(currentPlayer == 2);
+
+        //shotReport.AppendLine(
+        //    $"<color=orange>=> ĐỔI LƯỢT sang Player {currentPlayer}.</color>"
+        //);
+
+        //StartCoroutine(UnlockSwitchTurn());
+
         if (switchingTurn)
         {
-            Debug.Log("ALREADY SWITCHING TURN");
+            Debug.Log("TURN SWITCH BLOCKED");
             return;
         }
 
         switchingTurn = true;
 
+        int previousPlayer = currentPlayer;
+
         currentPlayer = (currentPlayer == 1) ? 2 : 1;
 
-        Debug.Log(currentPlayer + " is Playing now");
+        Debug.Log(
+            $"<color=orange>TURN SWITCH: P{previousPlayer} -> P{currentPlayer}</color>"
+        );
 
         timeRemaining = totalTimeInput;
 
@@ -1463,7 +1653,7 @@ public class PocketTowPs : MonoBehaviour
         highlightSlider_02.gameObject.SetActive(currentPlayer == 2);
 
         shotReport.AppendLine(
-            $"<color=orange>=> ĐỔI LƯỢT sang Player {currentPlayer}.</color>"
+            $"<color=orange>=> ĐỔI LƯỢT sang Player {currentPlayer}</color>"
         );
 
         StartCoroutine(UnlockSwitchTurn());
