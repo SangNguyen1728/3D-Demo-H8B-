@@ -29,23 +29,19 @@ public class BallHealth : MonoBehaviour, IDamageable
     public bool isImmune = false;
     private int immuneTurns = 0;
 
+    private BallNo ballNo;
+
     void Start()
     {
         currentHealth = maxHealth;
         targetFill = 1f;
         currentFill = 1f;
+        ballNo = GetComponent<BallNo>();
     }
 
     void Update()
     {
-        //// Làm mượt thanh máu
-        //currentFill = Mathf.Lerp(currentFill, targetFill, Time.deltaTime * smoothSpeed);
-        //healthFill.fillAmount = currentFill;
-
-        //if (Input.GetKeyDown(KeyCode.Space))
-        //{
-        //    TakeDamage(100);
-        //}
+        
 
         // smooth fill
         currentFill = Mathf.Lerp(currentFill, targetFill, Time.deltaTime * smoothSpeed);
@@ -79,6 +75,39 @@ public class BallHealth : MonoBehaviour, IDamageable
 
     public void TakeDamage(float damage)
     {
+        //// =========================
+        //// BLOCK DAMAGE BI 8
+        //// =========================
+        //if (ballNo != null && ballNo.isEightBall)
+        //{
+        //    PocketTowPs pocket =
+        //        FindFirstObjectByType<PocketTowPs>();
+
+        //    if (pocket != null)
+        //    {
+        //        bool cleared =
+        //            pocket.HasClearedCurrentPlayerGroup();
+
+        //        // chưa clear hết bi mình
+        //        if (!cleared)
+        //        {
+        //            Debug.Log(
+        //                "<color=red>KHÔNG THỂ DAMAGE BI 8 CHƯA CLEAR GROUP</color>");
+
+        //            return;
+        //        }
+        //    }
+        //}
+
+
+        //if (isImmune)
+        //{
+        //    Debug.Log(gameObject.name + " miễn nhiễm damage!");
+        //    return;
+        //}
+
+        //if (isDead) return;
+
         //currentHealth -= damage;
         //currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
 
@@ -86,12 +115,44 @@ public class BallHealth : MonoBehaviour, IDamageable
         //targetFill = percent;
 
         //UpdateColor(percent);
-        //StartCoroutine(Flash()); // hiệu ứng hit
 
         //if (currentHealth <= 0)
         //{
+        //    //isDead = true; // ❗ KHÔNG DIE NGAY
+
+        //    if (isDead) return;
+
+        //    //isDead = true;
+
         //    Die();
         //}
+
+        if (!gameObject.activeInHierarchy)
+            return;
+
+        if (isDead)
+            return;
+
+        // BLOCK BI 8
+        if (ballNo != null && ballNo.isEightBall)
+        {
+            PocketTowPs pocket =
+                FindFirstObjectByType<PocketTowPs>();
+
+            if (pocket != null)
+            {
+                bool cleared =
+                    pocket.HasClearedCurrentPlayerGroup();
+
+                if (!cleared)
+                {
+                    Debug.Log(
+                        "<color=red>BI 8 ĐANG KHÓA DAMAGE</color>");
+
+                    return;
+                }
+            }
+        }
 
         if (isImmune)
         {
@@ -99,24 +160,20 @@ public class BallHealth : MonoBehaviour, IDamageable
             return;
         }
 
-        if (isDead) return;
-
         currentHealth -= damage;
-        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
 
-        float percent = currentHealth / maxHealth;
+        currentHealth =
+            Mathf.Clamp(currentHealth, 0, maxHealth);
+
+        float percent =
+            currentHealth / maxHealth;
+
         targetFill = percent;
 
         UpdateColor(percent);
 
         if (currentHealth <= 0)
         {
-            //isDead = true; // ❗ KHÔNG DIE NGAY
-
-            if (isDead) return;
-
-            isDead = true;
-
             Die();
         }
     }
@@ -151,67 +208,7 @@ public class BallHealth : MonoBehaviour, IDamageable
 
     void Die()
     {
-        ////Debug.Log(gameObject.name + " đã hết máu!");
-
-        ////// 1. Tắt collider (không va chạm nữa)
-        ////Collider col = GetComponent<Collider>();
-        ////if (col != null) col.enabled = false;
-
-        ////// 2. Tắt rigidbody (dừng vật lý)
-        ////Rigidbody rb = GetComponent<Rigidbody>();
-        ////if (rb != null) rb.linearVelocity = Vector3.zero;
-
-        ////// 3. Ẩn object
-        ////gameObject.SetActive(false);
-
-        //Debug.Log(gameObject.name + " chết!");
-
-        //// 🔥 CHỈ disable, KHÔNG xử lý target ở đây
-        //Collider col = GetComponent<Collider>();
-        //if (col != null) col.enabled = false;
-
-        //Rigidbody rb = GetComponent<Rigidbody>();
-        //if (rb != null)
-        //{
-        //    rb.linearVelocity = Vector3.zero;
-        //    rb.angularVelocity = Vector3.zero;
-        //}
-
-        //gameObject.SetActive(false);
-
-        //Debug.Log(gameObject.name + " chết!");
-
-        //// báo cho PocketManager
-        //PocketTowPs pocket = FindFirstObjectByType<PocketTowPs>();
-
-        //if (pocket != null)
-        //{
-        //    pocket.OnBallDestroyed(gameObject);
-        //}
-
-        //// disable collider
-        //Collider col = GetComponent<Collider>();
-
-        //if (col != null)
-        //    col.enabled = false;
-
-        //// stop rigidbody
-        //Rigidbody rb = GetComponent<Rigidbody>();
-
-        //if (rb != null)
-        //{
-        //    rb.linearVelocity = Vector3.zero;
-        //    rb.angularVelocity = Vector3.zero;
-
-        //    // 🔥 QUAN TRỌNG
-        //    rb.isKinematic = true;
-        //}
-
-        //// 🔥 KHÔNG setActive false ở đây nữa
-        //// gameObject.SetActive(false);
-
-        //// 🔥 GỌI explode luôn
-        //StartCoroutine(ExplodeRoutine());
+        
 
         if (isDead) return;
 
@@ -263,19 +260,6 @@ public class BallHealth : MonoBehaviour, IDamageable
 
     private IEnumerator ExplodeRoutine()
     {
-        //// scale nhỏ dần
-        //float t = 0;
-        //Vector3 startScale = transform.localScale;
-
-        //while (t < 1f)
-        //{
-        //    transform.localScale = Vector3.Lerp(startScale, Vector3.zero, t);
-        //    t += Time.deltaTime * 4f;
-        //    yield return null;
-        //}
-
-        //gameObject.SetActive(false);
-
         float t = 0f;
 
         Vector3 startScale = transform.localScale;
@@ -335,83 +319,5 @@ public class BallHealth : MonoBehaviour, IDamageable
         return isImmune;
     }
 
-    //[Header("Health")]
-    //public float maxHealth = 100f;
-    //private float currentHealth;
-
-    //[Header("UI")]
-    //public Image healthFill;
-
-    //[Header("Animation")]
-    //public float smoothSpeed = 8f;
-
-    //private float targetFill = 1f;
-    //private float currentFill = 1f;
-
-    //void Start()
-    //{
-    //    currentHealth = maxHealth;
-    //    currentFill = 1f;
-    //    targetFill = 1f;
-
-    //    UpdateColor(1f);
-    //}
-
-
-
-    //void Update()
-    //{
-    //    // Smooth animation
-    //    currentFill = Mathf.Lerp(currentFill, targetFill, Time.deltaTime * smoothSpeed);
-
-    //    if (healthFill != null)
-    //    {
-    //        healthFill.fillAmount = currentFill;
-    //    }
-
-    //    if (Input.GetKeyDown(KeyCode.Space))
-    //    {
-    //        TakeDamage(100);
-    //    }
-    //}
-
-    //public void TakeDamage(float damage)
-    //{
-    //    currentHealth -= damage;
-    //    currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-
-    //    float percent = currentHealth / maxHealth;
-    //    targetFill = percent;
-
-    //    UpdateColor(percent);
-
-    //    if (currentHealth <= 0)
-    //    {
-    //        Die();
-    //    }
-    //}
-
-    //void UpdateColor(float percent)
-    //{
-    //    if (healthFill == null) return;
-
-    //    Color color;
-
-    //    if (percent > 0.75f)
-    //        color = Color.green;
-    //    else if (percent > 0.5f)
-    //        color = Color.yellow;
-    //    else if (percent > 0.25f)
-    //        color = new Color(1f, 0.5f, 0f);
-    //    else
-    //        color = Color.red;
-
-    //    // t?ng sáng (gi? glow)
-    //    healthFill.color = color * 2f;
-    //}
-
-    //void Die()
-    //{
-    //    Destroy(gameObject);
-    //}
+    
 }

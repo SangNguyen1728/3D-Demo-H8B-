@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 //[CreateAssetMenu(fileName = "BaseSkills", menuName = "Scriptable Objects/BaseSkills")]
 public abstract class BaseSkills : ScriptableObject
@@ -7,6 +9,16 @@ public abstract class BaseSkills : ScriptableObject
     public int skillID;
     public Sprite icon;
     public int level = 1;
+
+    public string skill_ID;
+    public Sprite skillIcon;
+    public float cooldown;
+
+    public enum SkillType
+    {
+        Active,
+        Passive
+    }
 
     // Hàm thực thi kỹ năng (Sẽ được ghi đè ở lớp con)
     public abstract void Activate(GameObject player, GlaszekManager manager);

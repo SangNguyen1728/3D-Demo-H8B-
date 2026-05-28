@@ -8,29 +8,42 @@ public class RewardSkill : BaseSkills
 
     public override void Activate(GameObject player, GlaszekManager manager)
     {
-        //bool isEdge = false;
-
-        //currentHole = manager.ActivateHole(isEdge, skillID == 4);
-
-        //manager.StartCoroutine(WaitPlacementDone());
-
         bool isEdge = false;
 
-        // 🔵 2.0
+        // =========================
+        // 🔵 2.0 → ăn 2 bi
+        // =========================
         if (skillID == 3)
+        {
             currentHole = manager.ActivateHole(isEdge, false);
 
-        // 🟢 2.1
+            HoleLogic logic = currentHole.GetComponent<HoleLogic>();
+
+            logic.Init(false, false, 0, 2, 1);
+        }
+
+        // =========================
+        // 🟢 2.1 → tồn tại 2 lượt
+        // =========================
         else if (skillID == 4)
+        {
             currentHole = manager.ActivateHole(isEdge, true);
 
-        // 🔥 2.2 (HP)
+            HoleLogic logic = currentHole.GetComponent<HoleLogic>();
+
+            logic.Init(true, false, 0, 1, 2);
+        }
+
+        // =========================
+        // 🔥 2.2 → HP 2500
+        // =========================
         else if (skillID == 6)
         {
             currentHole = manager.ActivateHole(isEdge, false);
 
             HoleLogic logic = currentHole.GetComponent<HoleLogic>();
-            logic.Init(false, true, 2500f);
+
+            logic.Init(false, true, 2500f, 1, 1);
         }
 
         manager.StartCoroutine(WaitPlacementDone());
@@ -47,166 +60,25 @@ public class RewardSkill : BaseSkills
 
         HoleLogic logic = currentHole.GetComponent<HoleLogic>();
 
-        // 2.0
-        if (skillID == 3)
+        if (logic == null) return;
+
+        logic.ReduceTurn();
+
+        // =========================
+        // 🔥 TURN EXPIRE
+        // =========================
+        if (logic.IsExpired())
         {
             manager.DisableHoleAfterDelay(currentHole, 5f);
+            return;
         }
 
-        // 2.1
-        if (skillID == 4 && logic != null && logic.HasBallEntered())
+        // =========================
+        // 🔥 COMPLETE
+        // =========================
+        if (logic.IsCompleted())
         {
-            Debug.Log("Skill 2.1 OK");
-            manager.DisableHoleAfterDelay(currentHole, 5f);
-        }
-
-        // 🔥 2.2
-        if (skillID == 6 && logic != null && logic.HasBallEntered())
-        {
-            Debug.Log("Skill 2.2 → hết HP → 5s biến mất");
             manager.DisableHoleAfterDelay(currentHole, 5f);
         }
     }
-
-    //private GameObject currentHole; // 🔥 lưu hole
-
-    //public override void Activate(GameObject player, SkillManager manager)
-    //{
-    //    bool isEdge = false;
-
-    //    if (skillID == 3) // 🔵 2.0
-    //    {
-    //        currentHole = manager.ActivateHole(isEdge, false);
-    //    }
-    //    else if (skillID == 4) // 🟢 2.1
-    //    {
-    //        currentHole = manager.ActivateHole(isEdge, true);
-    //    }
-    //}
-
-    //public override void OnTurnEnd(SkillManager manager)
-    //{
-    //    if(currentHole == null) return;
-
-    //    HoleLogic logic = currentHole.GetComponent<HoleLogic>();
-
-    //    // 🔵 2.0
-    //    if (skillID == 3)
-    //    {
-    //        manager.DisableHoleAfterDelay(currentHole, 5f);
-    //    }
-
-    //    // 🟢 2.1
-    //    if (skillID == 4 && logic != null && logic.HasBallEntered())
-    //    {
-    //        Debug.Log("Skill 2.1 → đã ăn bi → 5s biến mất");
-    //        manager.DisableHoleAfterDelay(currentHole, 5f);
-    //    }
-
-    //    //if (skillID == 3 && currentHole != null)
-    //    //{
-    //    //    Debug.Log("Skill 2.0 → 5s biến mất");
-    //    //    manager.DisableHoleAfterDelay(currentHole, 5f);
-    //    //}
-    //}
-
-    //private bool isEdge = false;
-
-    //public override void Activate(GameObject player, SkillManager manager)
-    //{
-    //    // Skill 2.0
-    //    if (skillID == 3)
-    //    {
-    //        manager.ActivateHole(isEdge, true);
-    //    }
-    //    // Skill 2.1
-    //    else if (skillID == 4)
-    //    {
-    //        manager.ActivateHole(isEdge, false);
-    //    }
-    //}
-
-    //public override void OnTurnEnd(SkillManager manager)
-    //{
-    //    // 🔥 CẢ 2 SKILL đều delay 5s sau khi bi dừng
-    //    if (skillID == 3 || skillID == 4)
-    //    {
-    //        manager.DisableHolesAfterDelay(isEdge, 5f);
-    //    }
-    //}
-
-    //[Header("Setup Prefab")]
-    //public GameObject rewardHolePrefab; // Kéo file Prefab cái lỗ từ cửa sổ Project vào đây
-
-    //private GameObject currentInstance;
-
-    //public override void Activate(GameObject player, SkillManager manager)
-    //{
-    //    // 1. ÉP BUỘC lấy vị trí ngẫu nhiên từ danh sách GIỮA BÀN (Middle)
-    //    // Tham số 'false' truyền vào GetRandomSpawnPos để chọn list middleHolePoints
-    //    //Vector3 spawnPos = manager.GetRandomSpawnPos(false);
-    //    SkillManager.Instance.ActivateRandomHole(true);
-
-    //    // 2. Kiểm tra nếu chưa gán Prefab để tránh lỗi Null
-    //    if (rewardHolePrefab == null)
-    //    {
-    //        Debug.LogError($"<color=red>Lỗi:</color> Skill {skillName} chưa được gán Hole Prefab trong Inspector!");
-    //        return;
-    //    }
-
-    //    // 3. Khởi tạo bản sao của lỗ
-    //    //currentInstance = Instantiate(rewardHolePrefab, spawnPos, Quaternion.identity);
-
-    //    // 4. QUAN TRỌNG: Ép lỗ hiển thị (Active = true) 
-    //    // Đề phòng trường hợp file Prefab gốc đang bị ẩn
-    //    //currentInstance.SetActive(true);
-
-    //    // 5. Log ra Console để bạn kiểm tra vị trí trong lúc Test
-    //    //Debug.Log($"<color=cyan>Test Skill:</color> Đã tạo lỗ '{rewardHolePrefab.name}' tại giữa bàn: {spawnPos}");
-    //}
-
-    //public override void OnTurnEnd(SkillManager manager)
-    //{
-    //    // Xóa lỗ khi kết thúc lượt (bi dừng) để chuẩn bị cho lần bấm sau
-    //    if (currentInstance != null)
-    //    {
-    //        Destroy(currentInstance);
-    //    }
-    //}
-
-    //public int baseRewardAmount = 1; // Số bi nhận được
-    //public GameObject rewardHolePrefab;
-
-    //public override void Activate(GameObject player, SkillManager manager)
-    //{
-
-
-    //    //int totalReward = baseRewardAmount + (level - 1);
-
-    //    //// 1. Khởi tạo lỗ
-    //    //GameObject hole = Instantiate(rewardHolePrefab, manager.GetSpawnPos(skillID), Quaternion.identity);
-
-    //    //// 2. Lấy component và kiểm tra an toàn
-    //    //HoleLogic script = hole.GetComponent<HoleLogic>();
-
-    //    //if (script != null)
-    //    //{
-    //    //    script.rewardAmount = totalReward;
-    //    //    // Nếu skillID là 1.2 hoặc 2.2 (hỏa mù/telelens) thì đánh dấu là nhận máu
-    //    //    script.isHealthReward = (skillID == 1.2f || skillID == 2.2f);
-    //    //}
-    //    //else
-    //    //{
-    //    //    Debug.LogError("Lỗi: Prefab " + rewardHolePrefab.name + " chưa được gắn script HoleLogic!");
-    //    //}
-
-    //    //int totalReward = baseRewardAmount + (level - 1);
-    //    //Vector3 spawnPos = manager.GetRandomSpawnPos(true); // Luôn ở cạnh bàn chẳng hạn
-
-    //    //GameObject hole = Instantiate(rewardHolePrefab, spawnPos, Quaternion.identity);
-    //    //HoleLogic script = hole.GetComponent<HoleLogic>();
-    //    //if (script != null) script.rewardAmount = totalReward;
-    //}
-
-    //public override void OnTurnEnd(SkillManager manager) { /* Biến mất sau va chạm */ }
 }

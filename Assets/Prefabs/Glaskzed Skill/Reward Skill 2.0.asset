@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: Reward Skill 2.0
   m_EditorClassIdentifier: 
   skillName: skill2.0
-  skillID: 3
+  skillID: 4
   icon: {fileID: 0}
   level: 1
+  skill_ID: 
+  skillIcon: {fileID: 0}
+  cooldown: 0
