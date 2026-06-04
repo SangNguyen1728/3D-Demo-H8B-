@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Hole Skill 1.2
   m_EditorClassIdentifier: 
   skillName: HoleSkill
-  skillID: 3
+  skillID: 5
   icon: {fileID: 0}
   level: 1
   skill_ID: 

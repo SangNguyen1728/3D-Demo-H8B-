@@ -4,47 +4,104 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Reward Skill", menuName = "Skills/Reward")]
 public class RewardSkill : BaseSkills
 {
-    private GameObject currentHole;
+    //private GameObject currentHole;
+
+    //public override void Activate(GameObject player, GlaszekManager manager)
+    //{
+    //    bool isEdge = false;
+
+    //    // =========================
+    //    // 🔵 2.0 → ăn 2 bi
+    //    // =========================
+    //    if (skillID == 3)
+    //    {
+    //        currentHole = manager.ActivateHole(isEdge, false);
+
+    //        HoleLogic logic = currentHole.GetComponent<HoleLogic>();
+
+    //        logic.Init(false, false, 0, 2, 1);
+    //    }
+
+    //    // =========================
+    //    // 🟢 2.1 → tồn tại 2 lượt
+    //    // =========================
+    //    else if (skillID == 4)
+    //    {
+    //        currentHole = manager.ActivateHole(isEdge, true);
+
+    //        HoleLogic logic = currentHole.GetComponent<HoleLogic>();
+
+    //        logic.Init(true, false, 0, 1, 2);
+    //    }
+
+    //    // =========================
+    //    // 🔥 2.2 → HP 2500
+    //    // =========================
+    //    else if (skillID == 6)
+    //    {
+    //        currentHole = manager.ActivateHole(isEdge, false);
+
+    //        HoleLogic logic = currentHole.GetComponent<HoleLogic>();
+
+    //        logic.Init(false, true, 2500f, 1, 1);
+    //    }
+
+    //    manager.StartCoroutine(WaitPlacementDone());
+    //}
+
+    //System.Collections.IEnumerator WaitPlacementDone()
+    //{
+    //    yield return new WaitUntil(() => !HolePlacementController.Instance.IsPlacing);
+    //}
+
+    //public override void OnTurnEnd(GlaszekManager manager)
+    //{
+    //    if (currentHole == null) return;
+
+    //    HoleLogic logic = currentHole.GetComponent<HoleLogic>();
+
+    //    if (logic == null) return;
+
+    //    logic.ReduceTurn();
+
+    //    // =========================
+    //    // 🔥 TURN EXPIRE
+    //    // =========================
+    //    if (logic.IsExpired())
+    //    {
+    //        manager.DisableHoleAfterDelay(currentHole, 5f);
+    //        return;
+    //    }
+
+    //    // =========================
+    //    // 🔥 COMPLETE
+    //    // =========================
+    //    if (logic.IsCompleted())
+    //    {
+    //        manager.DisableHoleAfterDelay(currentHole, 5f);
+    //    }
+    //}
 
     public override void Activate(GameObject player, GlaszekManager manager)
     {
-        bool isEdge = false;
+        bool isEdge = false; // Reward luôn ở giữa bàn
 
-        // =========================
-        // 🔵 2.0 → ăn 2 bi
-        // =========================
+        GameObject hole = manager.ActivateHole(isEdge, false);
+        HoleLogic logic = hole.GetComponent<HoleLogic>();
+
+        // 2.0 → ăn 2 bi, 1 lượt
         if (skillID == 3)
-        {
-            currentHole = manager.ActivateHole(isEdge, false);
+            logic.Init(false, false, 0f, 2, 1);
 
-            HoleLogic logic = currentHole.GetComponent<HoleLogic>();
-
-            logic.Init(false, false, 0, 2, 1);
-        }
-
-        // =========================
-        // 🟢 2.1 → tồn tại 2 lượt
-        // =========================
+        // 2.1 → ăn 1 bi, tồn tại 2 lượt
         else if (skillID == 4)
-        {
-            currentHole = manager.ActivateHole(isEdge, true);
+            logic.Init(true, false, 0f, 1, 2);
 
-            HoleLogic logic = currentHole.GetComponent<HoleLogic>();
-
-            logic.Init(true, false, 0, 1, 2);
-        }
-
-        // =========================
-        // 🔥 2.2 → HP 2500
-        // =========================
+        // 2.2 → HP 2500
         else if (skillID == 6)
-        {
-            currentHole = manager.ActivateHole(isEdge, false);
-
-            HoleLogic logic = currentHole.GetComponent<HoleLogic>();
-
             logic.Init(false, true, 2500f, 1, 1);
-        }
+
+        logic.ownerSkillID = skillID;
 
         manager.StartCoroutine(WaitPlacementDone());
     }
@@ -56,29 +113,21 @@ public class RewardSkill : BaseSkills
 
     public override void OnTurnEnd(GlaszekManager manager)
     {
-        if (currentHole == null) return;
-
-        HoleLogic logic = currentHole.GetComponent<HoleLogic>();
-
+        HoleLogic logic = FindActiveHoleBySkillID(manager, skillID);
         if (logic == null) return;
 
         logic.ReduceTurn();
 
-        // =========================
-        // 🔥 TURN EXPIRE
-        // =========================
-        if (logic.IsExpired())
-        {
-            manager.DisableHoleAfterDelay(currentHole, 5f);
-            return;
-        }
+        if (logic.IsExpired() || logic.IsCompleted())
+            manager.DisableHoleAfterDelay(logic.gameObject, 5f);
+    }
 
-        // =========================
-        // 🔥 COMPLETE
-        // =========================
-        if (logic.IsCompleted())
-        {
-            manager.DisableHoleAfterDelay(currentHole, 5f);
-        }
+    private HoleLogic FindActiveHoleBySkillID(GlaszekManager manager, int id)
+    {
+        HoleLogic[] all = UnityEngine.Object.FindObjectsOfType<HoleLogic>();
+        foreach (var h in all)
+            if (h.gameObject.activeSelf && h.ownerSkillID == id)
+                return h;
+        return null;
     }
 }

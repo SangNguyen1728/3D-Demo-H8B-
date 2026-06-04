@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Reward Skill 2.0
   m_EditorClassIdentifier: 
   skillName: skill2.0
-  skillID: 4
+  skillID: 3
   icon: {fileID: 0}
   level: 1
   skill_ID: 

@@ -151,6 +151,8 @@ public class HoleLogic : MonoBehaviour
 
     private Renderer holeRenderer;
 
+    [HideInInspector] public int ownerSkillID = -1;
+
     void Awake()
     {
         colliders = GetComponentsInChildren<Collider>();
@@ -185,6 +187,7 @@ public class HoleLogic : MonoBehaviour
         UpdateColor();
 
         Debug.Log($"{name} INIT");
+        ownerSkillID = -1; // reset mỗi lần init
     }
 
     public void ActivateHole()
