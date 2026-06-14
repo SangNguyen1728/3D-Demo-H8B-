@@ -156,8 +156,23 @@ public class GlaszekManager : MonoBehaviour
 
     public void NotifyBallStopped()
     {
+        //Debug.Log("=== BI ĐÃ DỪNG ===");
+        //skillController.NotifyTurnEnd();
+
+        //if (BuffManager.Instance != null)
+        //    BuffManager.Instance.TickTurn();
+
         Debug.Log("=== BI ĐÃ DỪNG ===");
         skillController.NotifyTurnEnd();
+
+        if (BuffManager.Instance != null)
+            BuffManager.Instance.TickTurn();
+
+        // Tick tất cả Beelzita behaviors
+        BeelzitaBallBehavior[] behaviors =
+            FindObjectsOfType<BeelzitaBallBehavior>();
+        foreach (var b in behaviors)
+            b.OnTurnEnd();
     }
 
     public void NotifyShotStarted()

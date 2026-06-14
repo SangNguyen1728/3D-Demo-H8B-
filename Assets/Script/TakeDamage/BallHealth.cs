@@ -75,58 +75,6 @@ public class BallHealth : MonoBehaviour, IDamageable
 
     public void TakeDamage(float damage)
     {
-        //// =========================
-        //// BLOCK DAMAGE BI 8
-        //// =========================
-        //if (ballNo != null && ballNo.isEightBall)
-        //{
-        //    PocketTowPs pocket =
-        //        FindFirstObjectByType<PocketTowPs>();
-
-        //    if (pocket != null)
-        //    {
-        //        bool cleared =
-        //            pocket.HasClearedCurrentPlayerGroup();
-
-        //        // chưa clear hết bi mình
-        //        if (!cleared)
-        //        {
-        //            Debug.Log(
-        //                "<color=red>KHÔNG THỂ DAMAGE BI 8 CHƯA CLEAR GROUP</color>");
-
-        //            return;
-        //        }
-        //    }
-        //}
-
-
-        //if (isImmune)
-        //{
-        //    Debug.Log(gameObject.name + " miễn nhiễm damage!");
-        //    return;
-        //}
-
-        //if (isDead) return;
-
-        //currentHealth -= damage;
-        //currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-
-        //float percent = currentHealth / maxHealth;
-        //targetFill = percent;
-
-        //UpdateColor(percent);
-
-        //if (currentHealth <= 0)
-        //{
-        //    //isDead = true; // ❗ KHÔNG DIE NGAY
-
-        //    if (isDead) return;
-
-        //    //isDead = true;
-
-        //    Die();
-        //}
-
         if (!gameObject.activeInHierarchy)
             return;
 
@@ -319,5 +267,50 @@ public class BallHealth : MonoBehaviour, IDamageable
         return isImmune;
     }
 
-    
+    public void SetHealthDirect(float value)
+    {
+        currentHealth = Mathf.Clamp(value, 0, maxHealth);
+        targetFill = currentHealth / maxHealth;
+        UpdateColor(targetFill);
+    }
+
+    // Expose currentHealth để HoleLogic đọc
+    public float GetCurrentHealth() => currentHealth;
+
+    private Coroutine blinkRoutine;
+
+    // Thêm method public
+    public void BlinkOnRespawn(float duration = 3f)
+    {
+        if (blinkRoutine != null)
+            StopCoroutine(blinkRoutine);
+        blinkRoutine = StartCoroutine(BlinkRoutine(duration));
+    }
+
+    private IEnumerator BlinkRoutine(float duration)
+    {
+        float elapsed = 0f;
+        float blinkInterval = 0.15f;
+        bool visible = true;
+
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+
+        while (elapsed < duration)
+        {
+            visible = !visible;
+
+            foreach (var r in renderers)
+                r.enabled = visible;
+
+            yield return new WaitForSeconds(blinkInterval);
+            elapsed += blinkInterval;
+        }
+
+        // Đảm bảo hiện lại sau khi hết nhấp nháy
+        foreach (var r in renderers)
+            r.enabled = true;
+
+        blinkRoutine = null;
+    }
+
 }

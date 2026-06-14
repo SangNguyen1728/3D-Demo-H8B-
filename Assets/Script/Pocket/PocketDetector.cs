@@ -6,16 +6,27 @@ public class PocketDetector : MonoBehaviour
 
     void Start()
     {
-        // Tự động tìm script quản lý chính trong Scene
         masterLogic = FindObjectOfType<PocketTowPs>();
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        // Logic gốc
         if (masterLogic != null)
-        {
-            // Báo cho script chính biết có bi vừa chui vào lỗ này
             masterLogic.OnBallEnteredPocket(other);
-        }
+
+        GameObject ball = other.gameObject;
+
+        // Track cho BeelzitaManager
+        if (BeelzitaManager.Instance != null)
+            BeelzitaManager.Instance.RegisterPocketedBall(ball);
+
+        // Notify behavior nếu có
+        BeelzitaBallBehavior behavior =
+            ball.GetComponent<BeelzitaBallBehavior>() ??
+            ball.GetComponentInParent<BeelzitaBallBehavior>();
+
+        if (behavior != null)
+            behavior.OnEnteredPocket();
     }
 }

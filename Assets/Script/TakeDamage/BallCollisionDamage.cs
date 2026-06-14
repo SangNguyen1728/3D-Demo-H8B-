@@ -18,14 +18,27 @@ public class BallCollisionDamage : MonoBehaviour
 
     void Start()
     {
+        //health = GetComponent<BallHealth>();
+        //ballNo = GetComponent<BallNo>();
+
+        //pocketManager = FindFirstObjectByType<PocketTowPs>();
         health = GetComponent<BallHealth>();
         ballNo = GetComponent<BallNo>();
-
         pocketManager = FindFirstObjectByType<PocketTowPs>();
+
+        // 🔥 Cảnh báo nếu thiếu component
+        if (ballNo == null)
+            Debug.LogWarning($"[BallCollisionDamage] {gameObject.name} thiếu BallNo!");
+        if (health == null)
+            Debug.LogWarning($"[BallCollisionDamage] {gameObject.name} thiếu BallHealth!");
     }
 
     void OnCollisionEnter(Collision collision)
     {
+        // 🔥 NULL CHECK — bi spawn có thể thiếu component
+        if (ballNo == null) return;
+        if (health == null) return;
+
         if (ballNo.ballNumber == 9 && !IsAllOtherBallsCleared())
         {
             return;
@@ -119,60 +132,5 @@ public class BallCollisionDamage : MonoBehaviour
             float damage = Random.Range(wrongBallRange.x, wrongBallRange.y);
             health.TakeDamage(damage);
         }
-
-        //if (pocketManager == null) return;
-
-        //int target = pocketManager.targetBallNumber;
-
-        //// 🎯 đúng bi mục tiêu
-        //if (ballNo.ballNumber == target)
-        //{
-        //    Debug.Log("Hit đúng bi mục tiêu: -" + correctHitDamage);
-        //    health.TakeDamage(correctHitDamage);
-        //}
-        //else
-        //{
-        //    float damage = Random.Range(wrongBallRange.x, wrongBallRange.y);
-        //    Debug.Log("Hit sai bi: -" + damage);
-        //    health.TakeDamage(damage);
-        //}
     }
-
-    //public float damageMultiplier = 0.05f;
-
-    //private IDamageable damageable;
-
-    //void Start()
-    //{
-    //    damageable = GetComponent<IDamageable>();
-    //}
-
-    //void OnCollisionEnter(Collision collision)
-    //{
-    //    float impulse = collision.impulse.magnitude;
-
-    //    float damage = impulse * damageMultiplier;
-
-    //    // giảm damage khi va vào tường
-    //    if (collision.gameObject.CompareTag("Wall"))
-    //    {
-    //        damage *= 0.5f;
-    //    }
-
-    //    // tính góc va chạm (realistic hơn)
-    //    if (collision.contactCount > 0)
-    //    {
-    //        ContactPoint contact = collision.contacts[0];
-    //        Vector3 normal = contact.normal;
-
-    //        float angle = Vector3.Dot(
-    //            -collision.relativeVelocity.normalized,
-    //            normal
-    //        );
-
-    //        damage *= Mathf.Clamp01(angle);
-    //    }
-
-    //    damageable?.TakeDamage(damage);
-    //}
 }
