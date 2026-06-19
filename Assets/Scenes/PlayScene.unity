@@ -551,7 +551,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultRespawnPoint: {fileID: 0}
   useFixedPosition: 1
-  fixedSpawnPosition: {x: 0, y: 0.85, z: 0.3}
+  fixedSpawnPosition: {x: 1.5, y: 1.185, z: -0.08389727}
+  spawnOffsetRange: 0.15
 --- !u!1 &40637928
 GameObject:
   m_ObjectHideFlags: 0

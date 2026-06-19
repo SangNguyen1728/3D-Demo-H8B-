@@ -1,25 +1,54 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class CueBallController : MonoBehaviour
 {
+    [Header("English (Spin) Settings")]
     public float ballRadius = 0.0285f;
     public float sensitivity = 0.5f;
     public Vector2 spinValues = Vector2.zero;
-    private Rigidbody rb;
 
+    [Header("Spin Physics — Tinh chỉnh độ chân thực")]
+    [Tooltip("Lực ma sát chuyển spin thành chuyển động sau khi bi chạm bi khác")]
+    public float spinToVelocityFactor = 2.5f;
+
+    [Tooltip("Tốc độ giảm spin theo thời gian (giả lập ma sát bi-bàn)")]
+    public float spinDecayRate = 0.8f;
+
+    [Tooltip("Ngưỡng tốc độ để coi bi đã dừng — dưới ngưỡng này spin ngừng tác động")]
+    public float minSpeedForSpinEffect = 0.05f;
+
+    [Tooltip("Độ mạnh bẻ cong đường đi do side-spin")]
+    public float curveStrength = 0.3f;
+
+    private Rigidbody rb;
     private PocketTowPs pocketManager;
     private CueStickController stick;
 
+    // Lưu lại spin lúc đánh để áp dụng sau va chạm
+    private Vector2 storedSpinAtHit = Vector2.zero;
+    private bool hasStoredSpin = false;
+
     void Start()
     {
+        rb = GetComponent<Rigidbody>();
+
         pocketManager = Object.FindFirstObjectByType<PocketTowPs>();
         stick = Object.FindFirstObjectByType<CueStickController>();
     }
 
+    void FixedUpdate()
+    {
+        ApplySpinPhysics();
+    }
+
+    // ================================
+    // 🎯 ENGLISH INPUT
+    // ================================
     public void UpdateEnglish(float x, float y)
     {
         spinValues += new Vector2(x, y) * sensitivity;
-        if (spinValues.magnitude > 1f) spinValues = spinValues.normalized;
+        LimitSpin();
     }
 
     public void SetEnglishExplicit(Vector2 input)
@@ -37,18 +66,106 @@ public class CueBallController : MonoBehaviour
     {
         return (pivot.right * spinValues.x * ballRadius) + (pivot.up * spinValues.y * ballRadius);
     }
-    //public Vector3 GetHitOffset(Transform pivot) => (pivot.right * spinValues.x * ballRadius) + (pivot.up * spinValues.y * ballRadius);
 
     public void ResetEnglish() => spinValues = Vector2.zero;
 
+    // ================================
+    // 🔥 LƯU SPIN TRƯỚC CÚ ĐÁNH
+    // ================================
+    // Gọi từ CueStickController.HitCueBall() trước khi AddForceAtPosition
+    public void StoreSpinForShot()
+    {
+        storedSpinAtHit = spinValues;
+        hasStoredSpin = storedSpinAtHit.magnitude > 0.01f;
+
+        if (hasStoredSpin)
+            Debug.Log($"[CueBallController] Lưu spin cho cú đánh này: {storedSpinAtHit}");
+    }
+
     public void StopBall()
     {
-        if (rb != null) { rb.linearVelocity = Vector3.zero; rb.angularVelocity = Vector3.zero; }
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+        hasStoredSpin = false;
+        storedSpinAtHit = Vector2.zero;
     }
+
+    // ================================
+    // 💥 VA CHẠM
+    // ================================
     private void OnCollisionEnter(Collision collision)
     {
-        // Gửi thông tin va chạm về cho CueStickController xử lý
+        // Logic gốc — gửi thông tin va chạm cho CueStickController
         if (stick != null) stick.NotifyFirstCollision(collision.gameObject);
+
+        // 🔥 Khi bi trắng chạm bi khác → áp dụng hiệu ứng spin (follow/draw)
+        BallNo otherBall = collision.gameObject.GetComponent<BallNo>();
+        if (otherBall != null && !otherBall.isCueBall && hasStoredSpin)
+        {
+            ApplySpinEffectOnCollision(collision);
+        }
+    }
+
+    // ================================
+    // 🌀 SPIN PHYSICS — TẠO HIỆU ỨNG CONG ĐƯỜNG ĐI
+    // ================================
+    private void ApplySpinPhysics()
+    {
+        if (rb == null || !hasStoredSpin) return;
+
+        float speed = rb.linearVelocity.magnitude;
+
+        // Bi đã dừng hoặc quá chậm → ngừng áp dụng spin
+        if (speed < minSpeedForSpinEffect)
+        {
+            hasStoredSpin = false;
+            return;
+        }
+
+        // Side spin (x) → tạo lực bẻ cong đường đi (giống Magnus effect đơn giản hóa)
+        if (Mathf.Abs(storedSpinAtHit.x) > 0.05f)
+        {
+            Vector3 moveDir = rb.linearVelocity.normalized;
+            Vector3 curveDir = Vector3.Cross(Vector3.up, moveDir);
+            rb.AddForce(curveDir * storedSpinAtHit.x * curveStrength, ForceMode.Acceleration);
+        }
+
+        // Giảm dần spin theo thời gian (ma sát bi-bàn làm mất spin)
+        storedSpinAtHit *= (1f - spinDecayRate * Time.fixedDeltaTime);
+    }
+
+    // ================================
+    // 🎱 FOLLOW / DRAW SAU VA CHẠM
+    // ================================
+    private void ApplySpinEffectOnCollision(Collision collision)
+    {
+        if (rb == null) return;
+
+        float topSpin = storedSpinAtHit.y; // y > 0 = top spin (follow), y < 0 = back spin (draw)
+
+        if (Mathf.Abs(topSpin) < 0.05f) return;
+
+        Vector3 contactNormal = collision.GetContact(0).normal;
+        Vector3 forwardDir = -contactNormal; // hướng bi đang di chuyển tới khi chạm
+
+        // Top spin: đẩy bi tiếp tục theo hướng cũ sau va chạm (follow)
+        // Back spin: đẩy bi theo hướng ngược lại (draw)
+        Vector3 spinForce = forwardDir * topSpin * spinToVelocityFactor;
+
+        StartCoroutine(ApplyDelayedSpinForce(spinForce));
+
+        Debug.Log($"[CueBallController] Áp dụng spin effect: topSpin={topSpin}, force={spinForce}");
+    }
+
+    private IEnumerator ApplyDelayedSpinForce(Vector3 force)
+    {
+        yield return new WaitForFixedUpdate();
+
+        if (rb != null)
+            rb.AddForce(force, ForceMode.Impulse);
     }
 
     //[Header("English (Spin) Settings")]

@@ -29,6 +29,9 @@ public class BallHealth : MonoBehaviour, IDamageable
     public bool isImmune = false;
     private int immuneTurns = 0;
 
+    private Coroutine blinkRoutine;
+    private bool isEnemyBlinkActive = false;
+
     private BallNo ballNo;
 
     void Start()
@@ -277,40 +280,132 @@ public class BallHealth : MonoBehaviour, IDamageable
     // Expose currentHealth để HoleLogic đọc
     public float GetCurrentHealth() => currentHealth;
 
-    private Coroutine blinkRoutine;
+   
 
     // Thêm method public
     public void BlinkOnRespawn(float duration = 3f)
     {
+        //if (blinkRoutine != null)
+        //    StopCoroutine(blinkRoutine);
+        //blinkRoutine = StartCoroutine(BlinkRoutine(duration));
+
+        if (isEnemyBlinkActive) return; // Không chồng nếu đang blink theo lượt
+
         if (blinkRoutine != null)
             StopCoroutine(blinkRoutine);
+
         blinkRoutine = StartCoroutine(BlinkRoutine(duration));
     }
 
     private IEnumerator BlinkRoutine(float duration)
     {
+        //float elapsed = 0f;
+        //float blinkInterval = 0.15f;
+        //bool visible = true;
+
+        //Renderer[] renderers = GetComponentsInChildren<Renderer>();
+
+        //while (elapsed < duration)
+        //{
+        //    visible = !visible;
+
+        //    foreach (var r in renderers)
+        //        r.enabled = visible;
+
+        //    yield return new WaitForSeconds(blinkInterval);
+        //    elapsed += blinkInterval;
+        //}
+
+        //// Đảm bảo hiện lại sau khi hết nhấp nháy
+        //foreach (var r in renderers)
+        //    r.enabled = true;
+
+        //blinkRoutine = null;
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
         float elapsed = 0f;
         float blinkInterval = 0.15f;
         bool visible = true;
 
-        Renderer[] renderers = GetComponentsInChildren<Renderer>();
-
         while (elapsed < duration)
         {
             visible = !visible;
-
-            foreach (var r in renderers)
-                r.enabled = visible;
+            foreach (var r in renderers) r.enabled = visible;
 
             yield return new WaitForSeconds(blinkInterval);
             elapsed += blinkInterval;
         }
 
-        // Đảm bảo hiện lại sau khi hết nhấp nháy
-        foreach (var r in renderers)
-            r.enabled = true;
-
+        foreach (var r in renderers) r.enabled = true;
         blinkRoutine = null;
+    }
+
+    private Coroutine enemyBlinkRoutine;
+
+    // Blink liên tục khi là lượt địch, tắt khi không phải
+    public void BlinkEnemyBall(bool enable)
+    {
+        //if (enemyBlinkRoutine != null)
+        //{
+        //    StopCoroutine(enemyBlinkRoutine);
+        //    enemyBlinkRoutine = null;
+        //}
+
+        //// Đảm bảo renderer hiện lại khi tắt
+        //if (!enable)
+        //{
+        //    Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        //    foreach (var r in renderers) r.enabled = true;
+        //    return;
+        //}
+
+        //enemyBlinkRoutine = StartCoroutine(EnemyBlinkRoutine());
+
+        isEnemyBlinkActive = enable;
+
+        if (blinkRoutine != null)
+        {
+            StopCoroutine(blinkRoutine);
+            blinkRoutine = null;
+        }
+
+        if (!enable)
+        {
+            Renderer[] renderers = GetComponentsInChildren<Renderer>();
+            foreach (var r in renderers) r.enabled = true;
+            return;
+        }
+
+        blinkRoutine = StartCoroutine(EnemyBlinkLoop());
+    }
+
+    private IEnumerator EnemyBlinkLoop()
+    {
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        float blinkInterval = 0.4f;
+        bool visible = true;
+
+        while (isEnemyBlinkActive)
+        {
+            visible = !visible;
+            foreach (var r in renderers) r.enabled = visible;
+            yield return new WaitForSeconds(blinkInterval);
+        }
+
+        foreach (var r in renderers) r.enabled = true;
+    }
+
+    private IEnumerator EnemyBlinkRoutine()
+    {
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        float blinkInterval = 0.5f; // Chậm hơn BlinkOnRespawn để dễ phân biệt
+        bool visible = true;
+
+        while (true)
+        {
+            visible = !visible;
+            foreach (var r in renderers) r.enabled = visible;
+            yield return new WaitForSeconds(blinkInterval);
+        }
     }
 
 }

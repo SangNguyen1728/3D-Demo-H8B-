@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7708b17d079c14f468df133e7bd38562, type: 3}
   m_Name: BeelzitaLoadout
   m_EditorClassIdentifier: 
-  slot1: {fileID: 11400000, guid: d1cbbdd5a7d08d9419d3df78af75d1fd, type: 2}
-  slot2: {fileID: 11400000, guid: e861267ed2a0c8a408cbe030654aa7dc, type: 2}
+  slot1: {fileID: 11400000, guid: eb7bad4cfe7790842b0152b3b485ca61, type: 2}
+  slot2: {fileID: 11400000, guid: 8fe5b209a7f8d7d4697737f4bf7dcb5f, type: 2}
   slot3: {fileID: 11400000, guid: fa920f05ea8b2fb4aba3ee944cee08f4, type: 2}

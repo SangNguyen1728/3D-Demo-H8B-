@@ -436,6 +436,50 @@ public class CueStickController : MonoBehaviour
     // --- LOGIC ĐÁNH BÓNG ---
     public IEnumerator HitCueBall()
     {
+        //hitPeriod = true;
+        //hasProcessedShot = false;
+        //if (pocketManager != null)
+        //{
+        //    pocketManager.shotAlreadyResolved = false;
+        //}
+        //waitingShotResult = true;
+        //firstCollisionDetected = false; // Reset trước khi đánh
+        //hitTargetBallFirst = false;
+        //moveCueBallAllow = false;
+        //initialMoveCueBall = false;
+
+        //if (pocketManager != null)
+        //    pocketManager.RegisterStartShot();
+
+        //shotState = ShotState.Shooting;
+
+        //// 1. Hiệu ứng gậy đâm vào
+        //Vector3 englishOffset = (englishController != null) ? englishController.GetHitOffset(transform) : Vector3.zero;
+        //Vector3 hitPositionInLocal = stickLocalOrigin + transform.InverseTransformDirection(englishOffset);
+
+        //float t = 0;
+        //Vector3 startPos = stickVisual.localPosition;
+        //while (t < 1f)
+        //{
+        //    stickVisual.localPosition = Vector3.Lerp(startPos, hitPositionInLocal, t);
+        //    t += Time.deltaTime * stickHitSpeed;
+        //    yield return null;
+        //}
+
+        //// 2. Tác động lực vật lý
+        //Vector3 worldHitPoint = cueBall.position + englishOffset;
+        //worldHitPoint -= transform.forward * (englishController != null ? englishController.ballRadius : 0.0285f);
+        //cueBall.AddForceAtPosition(transform.forward * sliderHitForce, worldHitPoint, ForceMode.Impulse);
+
+        //if (GlaszekManager.Instance != null)
+        //{
+        //    GlaszekManager.Instance.NotifyShotStarted();
+        //}
+
+        //// Chờ một chút để bi cái rời gậy trước khi kết thúc "hitPeriod" visual
+        //yield return new WaitForSeconds(0.1f);
+        //hitPeriod = false;
+
         hitPeriod = true;
         hasProcessedShot = false;
         if (pocketManager != null)
@@ -464,6 +508,12 @@ public class CueStickController : MonoBehaviour
             stickVisual.localPosition = Vector3.Lerp(startPos, hitPositionInLocal, t);
             t += Time.deltaTime * stickHitSpeed;
             yield return null;
+        }
+
+        // 🔥 Lưu spin trước khi đánh, để áp dụng hiệu ứng follow/draw/curve sau va chạm
+        if (englishController != null)
+        {
+            englishController.StoreSpinForShot();
         }
 
         // 2. Tác động lực vật lý

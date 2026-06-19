@@ -168,11 +168,16 @@ public class GlaszekManager : MonoBehaviour
         if (BuffManager.Instance != null)
             BuffManager.Instance.TickTurn();
 
-        // Tick tất cả Beelzita behaviors
+        // Tick Beelzita behaviors
         BeelzitaBallBehavior[] behaviors =
             FindObjectsOfType<BeelzitaBallBehavior>();
         foreach (var b in behaviors)
             b.OnTurnEnd();
+
+        // 🔥 Notify blink theo lượt mới
+        //PocketTowPs pocket = FindFirstObjectByType<PocketTowPs>();
+        //if (pocket != null && BeelzitaManager.Instance != null)
+        //    BeelzitaManager.Instance.OnTurnChanged(pocket.currentPlayer);
     }
 
     public void NotifyShotStarted()
