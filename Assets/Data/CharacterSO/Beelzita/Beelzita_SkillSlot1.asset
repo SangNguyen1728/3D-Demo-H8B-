@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44d784047585f384781a508ca6818d81, type: 3}
+  m_Name: Beelzita_SkillSlot1
+  m_EditorClassIdentifier: 
+  slotId: 1
+  slotDisplayName: 1.0
+  variants:
+  - {fileID: 11400000, guid: d1cbbdd5a7d08d9419d3df78af75d1fd, type: 2}
+  - {fileID: 11400000, guid: eb7bad4cfe7790842b0152b3b485ca61, type: 2}
+  - {fileID: 11400000, guid: 576299ab166651d448671e82f53f9e4e, type: 2}

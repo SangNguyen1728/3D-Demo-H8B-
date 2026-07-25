@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 178c30353f91a96458052e2db2958484, type: 3}
+  m_Name: Glaszek
+  m_EditorClassIdentifier: 
+  characterId: 1
+  displayName: Glaszek
+  description: 
+  portrait: {fileID: 0}
+  characterPrefab: {fileID: 101369258247100953, guid: 86ef61b2cbe9b9e42800207a15927bda, type: 3}
+  skillSlots:
+  - {fileID: 11400000, guid: af7cfa19bdc84944099416e84eb18043, type: 2}
+  - {fileID: 11400000, guid: a360266003b207841add1c17a449b8fa, type: 2}
+  - {fileID: 11400000, guid: 8c13a0cc22d3aa849abc10d3d52c073a, type: 2}

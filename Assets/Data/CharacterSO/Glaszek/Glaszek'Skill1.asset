@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44d784047585f384781a508ca6818d81, type: 3}
+  m_Name: Glaszek'Skill1
+  m_EditorClassIdentifier: 
+  slotId: 1
+  slotDisplayName: 1.0
+  variants:
+  - {fileID: 11400000, guid: 5cc8420fc3df9be469e0a72006a1ab10, type: 2}
+  - {fileID: 11400000, guid: 1f3468c47ea2b6246b7d2758066bf9f3, type: 2}
+  - {fileID: 11400000, guid: cf62b41008571da44bd2ea81879d84af, type: 2}
