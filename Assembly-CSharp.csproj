@@ -69,6 +69,7 @@
     <Compile Include="Assets\Data\CharacterHolder\CharacterSkillDisplay.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\Pocket\PocketTrigger.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\Beelzita\PlacementZone.cs" />
+    <Compile Include="Assets\Script\Saving\SaveManager.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\Pocket\PocketDetector.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\TakeDamage\IDamageable.cs" />
     <Compile Include="Assets\Script\HomeScript\HomeScreen\UI Layer\SkillSlotRowUI.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="Assets\Script\PlayscenePVP1D\SkillController.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\Cue\CueBallEnglish.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\GameManager.cs" />
+    <Compile Include="Assets\Script\Saving\CharacterRegistrySO.cs" />
     <Compile Include="Assets\Script\HomeScript\HomeScreen\UI Layer\SkillVariantButtonUI.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\Beelzita\SkillBallMarker.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\TakeDamage\BallHealth.cs" />
@@ -97,6 +99,7 @@
     <Compile Include="Assets\Script\PlayscenePVP1D\Glaszek\BaseSkills.cs" />
     <Compile Include="Assets\PinePie\Simple Joystick\Core\Base\JoystickController.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\Glaszek\BallOwnership.cs" />
+    <Compile Include="Assets\Script\Saving\SaveData.cs" />
     <Compile Include="Assets\Script\HomeScript\Character\SkillVariantSO.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\Script\HomeScript\LoadingScreen\LoadingScreenController.cs" />

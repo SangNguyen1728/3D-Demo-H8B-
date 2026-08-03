@@ -70,6 +70,7 @@ public class SkillSelectUI : MonoBehaviour
     private void OnConfirmClicked()
     {
         Debug.Log("[SkillSelectUI] Loadout hoàn tất, về Home");
+        SaveManager.Instance.SaveCurrentSelection();
         UIFlowManager.Instance.ShowHomeOnly();
     }
 }

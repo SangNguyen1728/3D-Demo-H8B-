@@ -2,7 +2,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "CharacterRegistry", menuName = "Billiards/Character Registry")]
-public class CharacterRegistrySO : ScriptableObject
+public class CharacterRegistry : ScriptableObject
 {
     public List<CharacterSO> allCharacters;
 

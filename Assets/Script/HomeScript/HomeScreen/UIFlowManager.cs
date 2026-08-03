@@ -17,6 +17,7 @@ public class UIFlowManager : MonoBehaviour
 
     private void Start()
     {
+        SaveManager.Instance.LoadSavedSelection();
         ShowHomeOnly();
     }
 
