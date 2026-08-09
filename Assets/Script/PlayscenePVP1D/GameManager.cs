@@ -4,18 +4,19 @@ using UnityEngine;
 using System;
 using Unity.VisualScripting;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public Animator UpperUIAnimator, cameraButtonAnim,buttonPauseAnim;
-    private Animator pausePanelAnim, backButtonAnim, settingPanelAnim,audioPanelAnim,infoPanelAnim,
+    public Animator UpperUIAnimator, cameraButtonAnim, buttonPauseAnim;
+    private Animator pausePanelAnim, backButtonAnim, settingPanelAnim, audioPanelAnim, infoPanelAnim,
         displayPanelAnim;
 
     public Animator[] selectShapeAnimator;
 
     [NonSerialized] public GameObject previousPanel, previousOptionPanel;
 
-    public GameObject backButton, pausePanel, backGround, settingPanel, audioPanel, infoPanel,displayPanel;
+    public GameObject backButton, pausePanel, backGround, settingPanel, audioPanel, infoPanel, displayPanel;
 
     public bool UpperUIShift = true;
 
@@ -24,6 +25,15 @@ public class GameManager : MonoBehaviour
     public TargetBallFinder targetFinder;
 
     public GameObject winPanel;
+
+    [Header("Confirm Panels")]
+    public GameObject restartConfirmPanel;
+    public GameObject homeConfirmPanel;
+    private Animator restartConfirmPanelAnim;
+    private Animator homeConfirmPanelAnim;
+
+    [Header("Win / GameOver")]
+    public GameObject gameOverPanel;
 
 
     private void Start()
@@ -81,6 +91,15 @@ public class GameManager : MonoBehaviour
         UpperUIAnimator.SetBool("IsIldePlace", true);
         UpperUIAnimator.SetBool("IsGoBack", false);
 
+        //if (restartConfirmPanel != null)
+        //    restartConfirmPanelAnim = restartConfirmPanel.GetComponent<Animator>();
+        //if (homeConfirmPanel != null)
+        //    homeConfirmPanelAnim = homeConfirmPanel.GetComponent<Animator>();
+        if (restartConfirmPanel != null)
+            restartConfirmPanelAnim = restartConfirmPanel.GetComponentInChildren<Animator>();
+        if (homeConfirmPanel != null)
+            homeConfirmPanelAnim = homeConfirmPanel.GetComponentInChildren<Animator>();
+
         // 🔥🔥🔥 FIX: đảm bảo UI chính HIỆN
         ForceShowMainUI();
     }
@@ -124,13 +143,13 @@ public class GameManager : MonoBehaviour
             yield return new WaitForSecondsRealtime(0.3f);
 
             settingPanel.SetActive(true);
-            foreach(Animator selected in selectShapeAnimator)
+            foreach (Animator selected in selectShapeAnimator)
             {
                 selected.gameObject.SetActive(true);
                 selected.SetBool("IsSelectOut", true);
             }
 
-            if(!backButton.activeSelf)
+            if (!backButton.activeSelf)
             {
                 backButton.SetActive(true);
             }
@@ -143,12 +162,12 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator InforPanelSetActive()
     {
-        if(previousOptionPanel == audioPanel)
+        if (previousOptionPanel == audioPanel)
         {
             audioPanelAnim.SetBool("IsGoBack", true);
             selectShapeAnimator[0].SetBool("IsSelectOut", true);
         }
-        if(previousOptionPanel == displayPanel)
+        if (previousOptionPanel == displayPanel)
         {
             displayPanelAnim.SetBool("IsGoBack", true);
             selectShapeAnimator[2].SetBool("IsSelectOut", true);
@@ -164,12 +183,12 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator AudioPanelSetActive()
     {
-        if(previousOptionPanel == infoPanel)
+        if (previousOptionPanel == infoPanel)
         {
             infoPanelAnim.SetBool("IsGoBack", true);
             selectShapeAnimator[1].SetBool("IsSelectOut", true);
         }
-        if(previousOptionPanel == displayPanel)
+        if (previousOptionPanel == displayPanel)
         {
             displayPanelAnim.SetBool("IsGoBack", true);
             selectShapeAnimator[2].SetBool("IsSelectOut", true);
@@ -185,12 +204,12 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator DisplayPanelSetActive()
     {
-        if(previousOptionPanel == infoPanel)
+        if (previousOptionPanel == infoPanel)
         {
             infoPanelAnim.SetBool("IsGoBack", true);
             selectShapeAnimator[1].SetBool("IsSelectOut", true);
         }
-        if(previousOptionPanel == audioPanel)
+        if (previousOptionPanel == audioPanel)
         {
             audioPanelAnim.SetBool("isGoBack", true);
             selectShapeAnimator[0].SetBool("IsSelectOut", true);
@@ -206,22 +225,22 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator BackPanelActive()
     {
-        if(settingPanel.activeSelf)
+        if (settingPanel.activeSelf)
         {
             settingPanelAnim.SetBool("IsGoBack", true);
             StartCoroutine(DeactivateSettingPanel(0.35f));
 
-            if(previousOptionPanel == audioPanel)
+            if (previousOptionPanel == audioPanel)
             {
                 audioPanelAnim.SetBool("IsGoBack", true);
                 selectShapeAnimator[0].SetBool("IsSelectOut", true);
             }
-            if( previousOptionPanel == infoPanel)
+            if (previousOptionPanel == infoPanel)
             {
                 infoPanelAnim.SetBool("IsGoBack", true);
                 selectShapeAnimator[1].SetBool("IsSelectOut", true);
             }
-            if(previousOptionPanel == displayPanel)
+            if (previousOptionPanel == displayPanel)
             {
                 displayPanelAnim.SetBool("IsGoBack", true);
                 selectShapeAnimator[2].SetBool("IsSelectOut", true);
@@ -231,18 +250,18 @@ public class GameManager : MonoBehaviour
         StartCoroutine(DeactivateOptionPanel(0.35f));
 
         // Back from pause panel
-        if(pausePanel && pausePanel.activeSelf)
+        if (pausePanel && pausePanel.activeSelf)
         {
             ResumeGame();
         }
 
         yield return new WaitForSecondsRealtime(0.3f);
 
-        if(pausePanel && previousPanel == pausePanel)
+        if (pausePanel && previousPanel == pausePanel)
         {
             pausePanel.SetActive(true);
 
-            if(!backButton.activeSelf)
+            if (!backButton.activeSelf)
             {
                 backButton.SetActive(true);
             }
@@ -270,7 +289,7 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(delay);
         pausePanel.SetActive(false);
-        if(!settingPanel.activeSelf)
+        if (!settingPanel.activeSelf)
         {
             backButton.SetActive(false);
         }
@@ -285,11 +304,11 @@ public class GameManager : MonoBehaviour
     private IEnumerator DeactivateOptionPanel(float delay)
     {
         yield return new WaitForSecondsRealtime(delay);
-        if(previousOptionPanel == audioPanel)
+        if (previousOptionPanel == audioPanel)
             audioPanel.SetActive(false);
-        if(previousOptionPanel == infoPanel)
+        if (previousOptionPanel == infoPanel)
             infoPanel.SetActive(false);
-        if(previousOptionPanel == displayPanel)
+        if (previousOptionPanel == displayPanel)
             displayPanel.SetActive(false);
     }
 
@@ -365,4 +384,109 @@ public class GameManager : MonoBehaviour
     {
         StartCoroutine(WinPanel());
     }
+
+    public void ShowGameOverPanel()
+    {
+        StartCoroutine(GameOverPanelRoutine());
+    }
+
+    private IEnumerator GameOverPanelRoutine()
+    {
+        Time.timeScale = 0f;
+        gameOverPanel.SetActive(true);
+        backGround.SetActive(true);
+        yield return null;
+    }
+
+    public void OnRestartButtonClicked()
+    {
+        //Debug.Log("[GameManager] Restart trận đấu");
+        //Time.timeScale = 1f; // đảm bảo không bị kẹt pause khi load lại
+
+        //string currentScene = SceneManager.GetActiveScene().name;
+        //SceneLoader.Instance.LoadScene(currentScene);
+
+
+        //Debug.Log("[GameManager] Yêu cầu xác nhận Restart");
+        //if (restartConfirmPanel != null)
+        //{
+        //    restartConfirmPanel.SetActive(true);
+        //    if (restartConfirmPanelAnim != null)
+        //        restartConfirmPanelAnim.SetBool("IsGoBack", false); // hiện ra
+        //}
+
+        Debug.Log("[GameManager] Yêu cầu xác nhận Restart");
+        if (restartConfirmPanel != null)
+            restartConfirmPanel.SetActive(true);
+    }
+
+    public void OnMainHomeButtonClicked()
+    {
+        //Debug.Log("[GameManager] Quay về Home");
+        //Time.timeScale = 1f;
+
+        //SceneLoader.Instance.LoadScene("HomeScene");
+
+
+        //Debug.Log("[GameManager] Yêu cầu xác nhận về Home");
+        //if (homeConfirmPanel != null)
+        //{
+        //    homeConfirmPanel.SetActive(true);
+        //    if (homeConfirmPanelAnim != null)
+        //        homeConfirmPanelAnim.SetBool("IsGoBack", false); // hiện ra
+        //}
+
+        Debug.Log("[GameManager] Yêu cầu xác nhận về Home");
+        if (homeConfirmPanel != null)
+            homeConfirmPanel.SetActive(true);
+    }
+
+    public void OnConfirmRestart()
+    {
+        Debug.Log("[GameManager] Xác nhận Restart trận đấu");
+        Time.timeScale = 1f;
+
+        string currentScene = SceneManager.GetActiveScene().name;
+        SceneLoader.Instance.LoadScene(currentScene);
+    }
+
+    public void OnCancelRestart()
+    {
+        //Debug.Log("[GameManager] Hủy Restart");
+        //if (restartConfirmPanelAnim != null)
+        //    restartConfirmPanelAnim.SetBool("IsGoBack", true); // chạy animation ẩn đi
+        //StartCoroutine(DeactivateAfterDelay(restartConfirmPanel, 0.35f));
+
+        Debug.Log("[GameManager] Hủy Restart");
+        if (restartConfirmPanel != null)
+            restartConfirmPanel.SetActive(false);
+    }
+
+    public void OnConfirmMainHome()
+    {
+        Debug.Log("[GameManager] Xác nhận về Home");
+        Time.timeScale = 1f;
+
+        SceneLoader.Instance.LoadScene("HomeScene");
+    }
+
+    public void OnCancelMainHome()
+    {
+        //Debug.Log("[GameManager] Hủy về Home");
+        //if (homeConfirmPanelAnim != null)
+        //    homeConfirmPanelAnim.SetBool("IsGoBack", true); // chạy animation ẩn đi
+        //StartCoroutine(DeactivateAfterDelay(homeConfirmPanel, 0.35f));
+
+        Debug.Log("[GameManager] Hủy về Home");
+        if (homeConfirmPanel != null)
+            homeConfirmPanel.SetActive(false);
+    }
+
+    private IEnumerator DeactivateAfterDelay(GameObject panel, float delay)
+    {
+        yield return new WaitForSecondsRealtime(delay);
+        if (panel != null)
+            panel.SetActive(false);
+    }
 }
+

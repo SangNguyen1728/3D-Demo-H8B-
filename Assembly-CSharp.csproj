@@ -67,6 +67,7 @@
     <Compile Include="Assets\Script\PlayscenePVP1D\TableHoleManager.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\Glaszek\HoleLogic.cs" />
     <Compile Include="Assets\Data\CharacterHolder\CharacterSkillDisplay.cs" />
+    <Compile Include="Assets\Script\HomeScript\SelectionSummaryUI.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\Pocket\PocketTrigger.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\Beelzita\PlacementZone.cs" />
     <Compile Include="Assets\Script\Saving\SaveManager.cs" />

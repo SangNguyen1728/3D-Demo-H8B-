@@ -388,6 +388,38 @@ public class PocketTowPs : MonoBehaviour
         PlayerPrefs.SetInt("PocketdBallsSaved", totalPottedBallsCount);
         PlayerPrefs.SetInt("RacksCountSaved", totalRacksCount);
     }
+
+    private IEnumerator EndMatchRoutine(int winner)
+    {
+        gameEnd = true;
+        cueStickController.stopTimer = true;
+
+        string winnerName = winner == 1 ? player01Name : player02Name;
+        winPlayerText.text = winnerName + " WIN";
+        winPlayerText.gameObject.SetActive(true);
+
+        gameManager.cameraButtonAnim.SetBool("IsGoBack", true);
+        gameManager.buttonPauseAnim.SetBool("IsGoBack", true);
+        cueStickController.powerSliderAnim.SetBool("IsGoBack", true);
+
+        currentPottedText01.text = player01PottedBalls.Count.ToString();
+        currentPottedText02.text = player02PottedBalls.Count.ToString();
+
+        SavePocketedBalls();
+        totalRacksCount++;
+        PlayerPrefs.SetInt("RacksCountSaved", totalRacksCount);
+
+        yield return new WaitForSecondsRealtime(3.3f);
+
+        if (winner == 1)
+        {
+            gameManager.ShowWinPanel();
+        }
+        else
+        {
+            gameManager.ShowGameOverPanel();
+        }
+    }
     public void SetHitResult(bool isCorrectHit) 
     {
         //hitTargetFirstFromController = isCorrectHit;
@@ -875,8 +907,59 @@ public class PocketTowPs : MonoBehaviour
             // =========================
             if (gameMode == PoolGameMode.EightBall)
             {
+                //bool cleared =
+                //    HasClearedGroup(currentPlayer);
+
+                //// =========================
+                //// THẮNG HỢP LỆ
+                //// =========================
+                //if (cleared &&
+                //    hitTargetFirstFromController &&
+                //    !cueBallPocketedThisTurn)
+                //{
+                //    gameEnd = true;
+
+                //    winPlayerText.text =
+                //        (currentPlayer == 1
+                //        ? player01Name
+                //        : player02Name)
+                //        + " WIN";
+
+                //    winPlayerText.gameObject.SetActive(true);
+
+                //    Debug.Log("<color=green>LEGAL 8 BALL WIN</color>");
+                //}
+                //else
+                //{
+                //    // =========================
+                //    // THUA DO ĐÁNH 8 SỚM
+                //    // =========================
+                //    gameEnd = true;
+
+                //    int loser = currentPlayer;
+
+                //    int winner =
+                //        loser == 1 ? 2 : 1;
+
+                //    string winnerName =
+                //        winner == 1
+                //        ? player01Name
+                //        : player02Name;
+
+                //    winPlayerText.text =
+                //        winnerName + " WIN";
+
+                //    winPlayerText.gameObject.SetActive(true);
+
+                //    Debug.Log("<color=red>ILLEGAL 8 BALL -> LOSE MATCH</color>");
+                //}
+
+                //return;
+
                 bool cleared =
-                    HasClearedGroup(currentPlayer);
+                   HasClearedGroup(currentPlayer);
+
+                int winner;
 
                 // =========================
                 // THẮNG HỢP LỆ
@@ -885,15 +968,7 @@ public class PocketTowPs : MonoBehaviour
                     hitTargetFirstFromController &&
                     !cueBallPocketedThisTurn)
                 {
-                    gameEnd = true;
-
-                    winPlayerText.text =
-                        (currentPlayer == 1
-                        ? player01Name
-                        : player02Name)
-                        + " WIN";
-
-                    winPlayerText.gameObject.SetActive(true);
+                    winner = currentPlayer;
 
                     Debug.Log("<color=green>LEGAL 8 BALL WIN</color>");
                 }
@@ -902,25 +977,12 @@ public class PocketTowPs : MonoBehaviour
                     // =========================
                     // THUA DO ĐÁNH 8 SỚM
                     // =========================
-                    gameEnd = true;
-
-                    int loser = currentPlayer;
-
-                    int winner =
-                        loser == 1 ? 2 : 1;
-
-                    string winnerName =
-                        winner == 1
-                        ? player01Name
-                        : player02Name;
-
-                    winPlayerText.text =
-                        winnerName + " WIN";
-
-                    winPlayerText.gameObject.SetActive(true);
+                    winner = currentPlayer == 1 ? 2 : 1;
 
                     Debug.Log("<color=red>ILLEGAL 8 BALL -> LOSE MATCH</color>");
                 }
+
+                StartCoroutine(EndMatchRoutine(winner));
 
                 return;
             }

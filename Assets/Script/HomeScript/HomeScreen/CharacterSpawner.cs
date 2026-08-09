@@ -38,7 +38,7 @@ public class CharacterSpawner : MonoBehaviour
     //        display.ApplyLoadout(loadout);
     //}
 
-    private void Start()
+    private void Awake()
     {
         SkillLoadout loadout = (SceneLoader.Instance != null)
             ? SceneLoader.Instance.SelectedSkillLoadout
@@ -52,6 +52,10 @@ public class CharacterSpawner : MonoBehaviour
         }
 
         ApplySkillLoadout(controller, loadout);
+
+        CharacterSkillDisplay display = controller.GetComponent<CharacterSkillDisplay>();
+        if (display != null)
+            display.ApplyLoadout(loadout);
     }
 
     private void ApplySkillLoadout(PlayerSkillController controller, SkillLoadout loadout)
