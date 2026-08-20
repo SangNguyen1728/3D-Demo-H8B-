@@ -19,3 +19,8 @@ MonoBehaviour:
   skill_ID: 
   skillIcon: {fileID: 0}
   cooldown: 0
+  description: 
+  requiredLevel: 1
+  staminaCost: 90
+  flashCount: 5
+  flashInterval: 0.12

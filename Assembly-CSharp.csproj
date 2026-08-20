@@ -74,11 +74,13 @@
     <Compile Include="Assets\Script\PlayscenePVP1D\Pocket\PocketDetector.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\TakeDamage\IDamageable.cs" />
     <Compile Include="Assets\Script\HomeScript\HomeScreen\UI Layer\SkillSlotRowUI.cs" />
+    <Compile Include="Assets\Script\BuffManagerRegistry.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\Pocket\PocketTowPs.cs" />
     <Compile Include="Assets\Script\HomeScript\HomeScreen\UI Layer\CharacterButtonUI.cs" />
     <Compile Include="Assets\Script\HomeScript\HomeScreen\ModeButtonUI.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\Glaszek\HolePlacementController.cs" />
     <Compile Include="Assets\Script\HomeScript\HomeScreen\GameModeSO.cs" />
+    <Compile Include="Assets\Script\StaminaManager.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\Glaszek\HoleSpawnSkill.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\Cue\CueStickController.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\BallCollisionNotifier.cs" />
@@ -109,9 +111,11 @@
     <Compile Include="Assets\Script\PlayscenePVP1D\Beelzita\SnakeSkill.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\HPBarCamera.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\PlayerSkillLoadout.cs" />
+    <Compile Include="Assets\Script\PlayerManagerRegistry.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\Beelzita\RabbitSkill.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\Beelzita\MouseSkill.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\Beelzita\BeelzitaManager.cs" />
+    <Compile Include="Assets\Script\StaminaManagerRegistry.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\Cue\CueBallSensor.cs" />
     <Compile Include="Assets\Script\HomeScript\Character\Character Registry.cs" />
     <Compile Include="Assets\Script\HomeScript\HomeScreen\UI Layer\CharacterSelectUI.cs" />

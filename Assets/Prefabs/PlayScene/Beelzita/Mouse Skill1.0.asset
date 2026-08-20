@@ -21,3 +21,4 @@ MonoBehaviour:
   cooldown: 0
   description: 
   requiredLevel: 1
+  staminaCost: 30

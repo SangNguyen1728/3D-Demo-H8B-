@@ -80,6 +80,12 @@ public class PocketTowPs : MonoBehaviour
 
     private string player1Group = "";
     private string player2Group = "";
+
+    private int shotCount = 0; // đếm số cú đánh đã bắt đầu
+    public bool isFirstShot => shotCount <= 1; // true khi đang ở cú đánh đầu tiên
+
+    private List<float> ownBallsPottedThisShot = new List<float>();
+    private List<float> opponentBallsPottedThisShot = new List<float>();
     void Start()
     {
         
@@ -190,6 +196,7 @@ public class PocketTowPs : MonoBehaviour
 
         highlightSlider_01.gameObject.SetActive(true);
         highlightSlider_02.gameObject.SetActive(false);
+        shotCount = 0;
 
         targetBallID_1.text = "Target Balls";
         targetBallID_2.text = "Target Balls";
@@ -432,7 +439,18 @@ public class PocketTowPs : MonoBehaviour
 
     public void RegisterStartShot()
     {
-        
+        shotCount++;
+
+        ownBallsPottedThisShot.Clear();       // MỚI
+        opponentBallsPottedThisShot.Clear();  // MỚI
+
+        for (int p = 1; p <= 2; p++)
+        {
+            GlaszekManager m = PlayerManagerRegistry.Get(p);
+            if (m != null)
+                m.ResetSkillUsage();
+        }
+
         hitTargetFirstFromController = false;
 
         ballPottedThisTurn = false;
@@ -602,6 +620,57 @@ public class PocketTowPs : MonoBehaviour
                 }
             }
 
+            //BallHealth bh = ball.GetComponent<BallHealth>();
+            //if (bh != null)
+            //{
+            //    StaminaManager stamina = StaminaManagerRegistry.Get(currentPlayer);
+            //    if (stamina != null)
+            //    {
+            //        SkillBallMarker marker = ball.GetComponent<SkillBallMarker>();
+            //        bool alwaysOpponent = marker != null && marker.isEnemyBall;
+
+            //        bool isOwnBall = !alwaysOpponent && IsPlayersBall(ball.GetComponent<BallNo>());
+            //        float value = isOwnBall ? bh.maxHealth : bh.GetCurrentHealth();
+
+            //        stamina.AddStamina(value / 5f);
+            //    }
+            //}
+
+            //if (!isFirstShot)
+            //{
+            //    BallHealth bh = ball.GetComponent<BallHealth>();
+            //    if (bh != null)
+            //    {
+            //        StaminaManager stamina = StaminaManagerRegistry.Get(currentPlayer);
+            //        if (stamina != null)
+            //        {
+            //            SkillBallMarker marker = ball.GetComponent<SkillBallMarker>();
+            //            bool alwaysOpponent = marker != null && marker.isEnemyBall;
+
+            //            bool isOwnBall = !alwaysOpponent && IsPlayersBall(ball.GetComponent<BallNo>());
+            //            float value = isOwnBall ? bh.maxHealth : bh.GetCurrentHealth();
+
+            //            stamina.AddStamina(value / 5f);
+            //        }
+            //    }
+            //}
+
+            if (!isFirstShot)
+            {
+                BallHealth bh = ball.GetComponent<BallHealth>();
+                if (bh != null)
+                {
+                    SkillBallMarker marker = ball.GetComponent<SkillBallMarker>();
+                    bool alwaysOpponent = marker != null && marker.isEnemyBall;
+                    bool isOwnBall = !alwaysOpponent && IsPlayersBall(ball.GetComponent<BallNo>());
+
+                    if (isOwnBall)
+                        ownBallsPottedThisShot.Add(bh.maxHealth);
+                    else
+                        opponentBallsPottedThisShot.Add(bh.GetCurrentHealth());
+                }
+            }
+
             // BI 9
             if ((gameMode == PoolGameMode.NineBall && nr == 9)||(gameMode == PoolGameMode.EightBall && nr == 8))
             {
@@ -616,6 +685,16 @@ public class PocketTowPs : MonoBehaviour
         }
 
         CompletePendingEvent();
+    }
+
+    public void RegisterPottedBallForStamina(bool isOwnBall, float maxHP, float currentHP)
+    {
+        if (isFirstShot) return;
+
+        if (isOwnBall)
+            ownBallsPottedThisShot.Add(maxHP);
+        else
+            opponentBallsPottedThisShot.Add(currentHP);
     }
 
     private IEnumerator RespawnCueBall(Collider ball)
@@ -873,6 +952,22 @@ public class PocketTowPs : MonoBehaviour
         shotAlreadyResolved = true;
 
         if (gameEnd) return;
+
+        if (!isFirstShot && ownBallsPottedThisShot.Count > 0)
+        {
+            float totalOwn = 0f;
+            foreach (var v in ownBallsPottedThisShot) totalOwn += v;
+
+            float totalOpp = 0f;
+            foreach (var v in opponentBallsPottedThisShot) totalOpp += v;
+
+            StaminaManager stamina = StaminaManagerRegistry.Get(currentPlayer);
+            if (stamina != null)
+            {
+                float reward = (totalOwn + totalOpp) / 5f / stamina.rewardDivisor; // MỚI — quy đổi thang
+                stamina.AddStamina(reward);
+            }
+        }
 
         Debug.Log("========== HANDLE STROKE RESULT ==========");
 

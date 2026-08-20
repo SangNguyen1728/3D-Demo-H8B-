@@ -32,6 +32,7 @@ public class HoleLogic : MonoBehaviour
     private Renderer holeRenderer;
 
     [HideInInspector] public int ownerSkillID = -1;
+    [HideInInspector] public int ownerPlayer = -1; // MỚI
     [HideInInspector] public System.Action onBallEntered;
 
     private bool respawnOnce = false;
@@ -40,6 +41,8 @@ public class HoleLogic : MonoBehaviour
     private float respawnHPCost = 0f;
     private bool immuneToEnemy = false;
     private PlacementZone placementZone = PlacementZone.Free;
+
+
 
     void Awake()
     {
@@ -76,6 +79,7 @@ public class HoleLogic : MonoBehaviour
 
         Debug.Log($"{name} INIT");
         ownerSkillID = -1; // reset mỗi lần init
+        ownerPlayer = -1; // MỚI — reset mỗi lần init
         onBallEntered = null;
         respawnOnce = false;
         hasRespawned = false;

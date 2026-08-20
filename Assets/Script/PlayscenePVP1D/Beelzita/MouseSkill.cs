@@ -87,12 +87,45 @@ public class MouseSkill : BaseSkills
         int currentPlayer = pocket != null ? pocket.currentPlayer : 1;
 
         // 1.0 — Chuột: móc bi địch từ lỗ lên, HP=300
+        //if (skillID == 11)
+        //{
+        //    GameObject ball = bm.GetLastEnemyPocketedBall(currentPlayer);
+        //    if (ball == null) { Debug.LogWarning("[Chuột 1.0] Không có bi địch trong lỗ!"); return; }
+
+        //    bm.RespawnBall(ball, 300f, bm.GetRespawnPosition());
+        //    Debug.Log("[Chuột 1.0] Móc bi địch lên HP=300");
+        //}
+        //// 1.1 — Chuột Tơ: móc bi địch từ lỗ lên, HP=300 + 700DEF/3 lượt
+        //else if (skillID == 12)
+        //{
+        //    GameObject ball = bm.GetLastEnemyPocketedBall(currentPlayer);
+        //    if (ball == null) { Debug.LogWarning("[Chuột Tơ 1.1] Không có bi địch trong lỗ!"); return; }
+
+        //    //bm.RespawnBall(ball, 300f, bm.GetRespawnPosition(), (b) =>
+        //    //{
+        //    //    if (BuffManager.Instance != null)
+        //    //        BuffManager.Instance.AddDefBuff(700f, 3);
+        //    //    Debug.Log("[Chuột Tơ 1.1] +700DEF/3 lượt");
+        //    //});
+        //    bm.RespawnBall(ball, 300f, bm.GetRespawnPosition(), (b) =>
+        //    {
+        //        BuffManager buff = BuffManagerRegistry.Get(currentPlayer); // ĐỔI
+        //        if (buff != null)
+        //            buff.AddDefBuff(700f, 3);
+        //        Debug.Log("[Chuột Tơ 1.1] +700DEF/3 lượt");
+        //    });
+        //}
         if (skillID == 11)
         {
             GameObject ball = bm.GetLastEnemyPocketedBall(currentPlayer);
             if (ball == null) { Debug.LogWarning("[Chuột 1.0] Không có bi địch trong lỗ!"); return; }
 
-            bm.RespawnBall(ball, 300f, bm.GetRespawnPosition());
+            bm.RespawnBall(ball, 300f, bm.GetRespawnPosition(), (b) =>
+            {
+                // MỚI — đánh dấu luôn tính là bi đối thủ khi ăn về sau
+                SkillBallMarker marker = b.GetComponent<SkillBallMarker>() ?? b.AddComponent<SkillBallMarker>();
+                marker.isEnemyBall = true;
+            });
             Debug.Log("[Chuột 1.0] Móc bi địch lên HP=300");
         }
         // 1.1 — Chuột Tơ: móc bi địch từ lỗ lên, HP=300 + 700DEF/3 lượt
@@ -103,8 +136,13 @@ public class MouseSkill : BaseSkills
 
             bm.RespawnBall(ball, 300f, bm.GetRespawnPosition(), (b) =>
             {
-                if (BuffManager.Instance != null)
-                    BuffManager.Instance.AddDefBuff(700f, 3);
+                // MỚI
+                SkillBallMarker marker = b.GetComponent<SkillBallMarker>() ?? b.AddComponent<SkillBallMarker>();
+                marker.isEnemyBall = true;
+
+                BuffManager buff = BuffManagerRegistry.Get(currentPlayer);
+                if (buff != null)
+                    buff.AddDefBuff(700f, 3);
                 Debug.Log("[Chuột Tơ 1.1] +700DEF/3 lượt");
             });
         }
@@ -133,7 +171,8 @@ public class MouseSkill : BaseSkills
 
     public override void OnTurnEnd(GlaszekManager manager)
     {
-        if (BuffManager.Instance != null)
-            BuffManager.Instance.TickTurn();
+        BuffManager buff = BuffManagerRegistry.Get(manager.playerNumber); // ĐỔI
+        if (buff != null)
+            buff.TickTurn();
     }
 }

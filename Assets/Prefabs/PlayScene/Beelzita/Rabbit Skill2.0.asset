@@ -21,4 +21,5 @@ MonoBehaviour:
   cooldown: 0
   description: 
   requiredLevel: 1
+  staminaCost: 30
   ballPrefab: {fileID: 1955376204062152440, guid: d8aee96eb1ecd1e41baa85e284572a79, type: 3}

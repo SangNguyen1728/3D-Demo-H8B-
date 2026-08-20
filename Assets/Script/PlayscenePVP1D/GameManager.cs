@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using Unity.VisualScripting;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
+
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour

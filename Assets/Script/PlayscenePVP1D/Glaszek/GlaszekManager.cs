@@ -6,141 +6,31 @@ public class GlaszekManager : MonoBehaviour
 {
     //public static GlaszekManager Instance;
 
-    ////[Header("Skills")]
-    ////public BaseSkills slot1;
-    ////public BaseSkills slot2;
-
-    ////[Header("Hole Groups")]
-    ////public List<GameObject> edgeHoles;
-    ////public List<GameObject> middleHoles;
-
     //private PlayerSkillController skillController;
-
-
 
     //void Awake()
     //{
     //    Instance = this;
-
     //    skillController = GetComponent<PlayerSkillController>();
     //}
 
     //// =========================
-    //// 🎯 SPAWN HOLE
+    //// 🎯 SPAWN HOLE — giờ gọi qua TableHoleManager
     //// =========================
     //public GameObject ActivateHole(bool isEdge, bool destroyOnBallEnter)
     //{
-    //    //TurnOffAllHoles();
-
-    //    List<GameObject> targetList = isEdge ? edgeHoles : middleHoles;
-
-    //    int index = Random.Range(0, targetList.Count);
-    //    GameObject hole = targetList[index];
-
-    //    hole.SetActive(true);
-
-    //    HoleLogic logic = hole.GetComponent<HoleLogic>();
-
-    //    if (logic != null)
-    //    {
-    //        // 🔥 luôn reset về default
-    //        //logic.Init(destroyOnBallEnter, false, 0);
-    //        logic.Init(destroyOnBallEnter, false, 0, 1,1);
-    //    }
-
-    //    HolePlacementController.Instance.StartPlacing(hole, isEdge);
-
-    //    return hole;
     //    return TableHoleManager.Instance.ActivateHole(isEdge, destroyOnBallEnter);
-
-
-    //}
-
-    //private IEnumerator StartPlacingDelay(GameObject hole, bool isEdge)
-    //{
-    //    yield return new WaitForSeconds(1f);
-
-    //    if (HolePlacementController.Instance != null)
-    //    {
-    //        Debug.Log("Bắt đầu cho phép kéo lỗ");
-
-    //        HolePlacementController.Instance.StartPlacing(hole, isEdge);
-    //    }
-    //    else
-    //    {
-    //        Debug.LogError("Thiếu HolePlacementController!");
-    //    }
-    //}
-
-    //private Vector3 GetDefaultSpawnPosition(bool isEdge)
-    //{
-    //    float tableY = 0.75f; // 🔥 chỉnh theo bàn bạn
-
-    //    if (isEdge)
-    //    {
-    //        return new Vector3(0f, tableY, 1.2f); // gần băng
-    //    }
-    //    else
-    //    {
-    //        return new Vector3(0f, tableY, 0f); // giữa bàn
-    //    }
     //}
 
     //// =========================
-    //// 🎯 DELAY DISABLE (FIX CHUẨN)
+    //// 🎯 DELAY DISABLE — giờ gọi qua TableHoleManager
     //// =========================
     //public void DisableHoleAfterDelay(GameObject hole, float delay)
     //{
-    //    //StartCoroutine(DisableCoroutine(hole, delay));
     //    TableHoleManager.Instance.DisableHoleAfterDelay(hole, delay);
     //}
 
-    ////IEnumerator DisableCoroutine(GameObject hole, float delay)
-    ////{
-    ////    yield return new WaitForSeconds(delay);
-
-    ////    if (hole != null && hole.activeSelf)
-    ////    {
-    ////        Debug.Log("Disable hole: " + hole.name);
-    ////        hole.SetActive(false);
-    ////    }
-    ////}
-
     //// =========================
-    ////void TurnOffAllHoles()
-    ////{
-    ////    foreach (var h in edgeHoles)
-    ////        if (h != null) h.SetActive(false);
-
-    ////    foreach (var h in middleHoles)
-    ////        if (h != null) h.SetActive(false);
-    ////}
-
-    //// =========================
-    ////public void UseSkillSlot1()
-    ////{
-    ////    Debug.Log("Use Skill 1");
-
-    ////    if (slot1 != null)
-    ////        slot1.Activate(gameObject, this);
-    ////}
-
-    ////public void UseSkillSlot2()
-    ////{
-    ////    Debug.Log("Use Skill 2");
-
-    ////    if (slot2 != null)
-    ////        slot2.Activate(gameObject, this);
-    ////}
-
-    ////// =========================
-    ////public void NotifyBallStopped()
-    ////{
-    ////    Debug.Log("=== BI ĐÃ DỪNG ===");
-
-    ////    if (slot1 != null) slot1.OnTurnEnd(this);
-    ////    if (slot2 != null) slot2.OnTurnEnd(this);
-    ////}
     //public void UseSkill1()
     //{
     //    skillController.UseSkill1();
@@ -158,12 +48,6 @@ public class GlaszekManager : MonoBehaviour
 
     //public void NotifyBallStopped()
     //{
-    //    //Debug.Log("=== BI ĐÃ DỪNG ===");
-    //    //skillController.NotifyTurnEnd();
-
-    //    //if (BuffManager.Instance != null)
-    //    //    BuffManager.Instance.TickTurn();
-
     //    Debug.Log("=== BI ĐÃ DỪNG ===");
     //    skillController.NotifyTurnEnd();
 
@@ -172,58 +56,52 @@ public class GlaszekManager : MonoBehaviour
 
     //    // Tick Beelzita behaviors
     //    BeelzitaBallBehavior[] behaviors =
-    //        FindObjectsOfType<BeelzitaBallBehavior>();
+    //        FindObjectsByType<BeelzitaBallBehavior>(FindObjectsSortMode.None);
     //    foreach (var b in behaviors)
     //        b.OnTurnEnd();
-
-    //    // 🔥 Notify blink theo lượt mới
-    //    //PocketTowPs pocket = FindFirstObjectByType<PocketTowPs>();
-    //    //if (pocket != null && BeelzitaManager.Instance != null)
-    //    //    BeelzitaManager.Instance.OnTurnChanged(pocket.currentPlayer);
     //}
 
     //public void NotifyShotStarted()
     //{
     //    Debug.Log("=== SHOT START ===");
 
-    //    HoleLogic[] holes = FindObjectsOfType<HoleLogic>();
+    //    HoleLogic[] holes = FindObjectsByType<HoleLogic>(FindObjectsSortMode.None);
 
     //    foreach (var h in holes)
     //    {
     //        if (h.gameObject.activeSelf)
     //        {
-    //            h.ActivateHole(); // 🔥 CHỈ Ở ĐÂY
+    //            h.ActivateHole();
     //        }
     //    }
     //}
 
-    public static GlaszekManager Instance;
+    [Header("Player Identity")]
+    [Tooltip("1 hoặc 2 — xác định đây là manager của Player nào")]
+    public int playerNumber = 1;
 
     private PlayerSkillController skillController;
 
     void Awake()
     {
-        Instance = this;
+        PlayerManagerRegistry.Register(playerNumber, this);
         skillController = GetComponent<PlayerSkillController>();
     }
 
-    // =========================
-    // 🎯 SPAWN HOLE — giờ gọi qua TableHoleManager
-    // =========================
     public GameObject ActivateHole(bool isEdge, bool destroyOnBallEnter)
     {
         return TableHoleManager.Instance.ActivateHole(isEdge, destroyOnBallEnter);
     }
 
-    // =========================
-    // 🎯 DELAY DISABLE — giờ gọi qua TableHoleManager
-    // =========================
     public void DisableHoleAfterDelay(GameObject hole, float delay)
     {
         TableHoleManager.Instance.DisableHoleAfterDelay(hole, delay);
     }
 
-    // =========================
+    public void ResetSkillUsage()
+    {
+        skillController?.ResetShotSkillUsage();
+    }
     public void UseSkill1()
     {
         skillController.UseSkill1();
@@ -241,13 +119,15 @@ public class GlaszekManager : MonoBehaviour
 
     public void NotifyBallStopped()
     {
-        Debug.Log("=== BI ĐÃ DỪNG ===");
+        Debug.Log($"=== BI ĐÃ DỪNG (Player {playerNumber}) ===");
         skillController.NotifyTurnEnd();
 
-        if (BuffManager.Instance != null)
-            BuffManager.Instance.TickTurn();
+        //if (BuffManager.Instance != null)
+        //    BuffManager.Instance.TickTurn();
+        BuffManager buff = BuffManagerRegistry.Get(playerNumber);
+        if (buff != null)
+            buff.TickTurn();
 
-        // Tick Beelzita behaviors
         BeelzitaBallBehavior[] behaviors =
             FindObjectsByType<BeelzitaBallBehavior>(FindObjectsSortMode.None);
         foreach (var b in behaviors)
@@ -256,17 +136,16 @@ public class GlaszekManager : MonoBehaviour
 
     public void NotifyShotStarted()
     {
-        Debug.Log("=== SHOT START ===");
+        Debug.Log($"=== SHOT START (Player {playerNumber}) ===");
 
         HoleLogic[] holes = FindObjectsByType<HoleLogic>(FindObjectsSortMode.None);
-
         foreach (var h in holes)
         {
             if (h.gameObject.activeSelf)
-            {
                 h.ActivateHole();
-            }
         }
     }
+
+
 
 }
