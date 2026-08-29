@@ -22,4 +22,8 @@ MonoBehaviour:
   description: 
   requiredLevel: 1
   staminaCost: 35
+  skillDescription: "T\u1EA1o 1 vi\xEAn bi c\u1EE7a c\u1EA3 2, 1000HP, ch\u1EC9 c\xF3
+    th\u1EC3 \u0111\u1EB7t trong v\xF9ng tam gi\xE1c \u0111\u1EB7t bi s\u1ED1(sau
+    khi r\u1EDBt l\u1ED7 v\xE0 \u0111\u1ED1i ph\u01B0\u01A1ng \u0111\u1EB7t l\u1EA1i
+    t\u1EF1 do trong tam gi\xE1c v\xE0 tr\u1EEB 300HP )"
   ballPrefab: {fileID: 1955376204062152440, guid: d8aee96eb1ecd1e41baa85e284572a79, type: 3}

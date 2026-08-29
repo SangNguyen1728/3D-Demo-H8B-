@@ -22,3 +22,6 @@ MonoBehaviour:
   description: 
   requiredLevel: 1
   staminaCost: 35
+  skillDescription: "T\u1EA1o th\xEAm 1 vi\xEAn bi  c\u1EE7a \u0111\u1ED1i th\u1EE7,
+    h\u1ED3i 300HP, 700DEF h\u1EBFt trong 3 g\u1EADy(t\u1ED3n t\u1EA1i trong 3 turn
+    v\xE0 ch\u1ECBu s\xE1t th\u01B0\u01A1ng c\u1EE7a \u0111\u1ED1i th\u1EE7)"

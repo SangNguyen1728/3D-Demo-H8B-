@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Beelzita_SkillSlot1
   m_EditorClassIdentifier: 
   slotId: 1
-  slotDisplayName: 1.0
+  slotDisplayName: Skill 1.0
   variants:
   - {fileID: 11400000, guid: d1cbbdd5a7d08d9419d3df78af75d1fd, type: 2}
   - {fileID: 11400000, guid: eb7bad4cfe7790842b0152b3b485ca61, type: 2}

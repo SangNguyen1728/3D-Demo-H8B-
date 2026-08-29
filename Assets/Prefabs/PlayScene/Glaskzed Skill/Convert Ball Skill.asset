@@ -22,5 +22,7 @@ MonoBehaviour:
   description: 
   requiredLevel: 1
   staminaCost: 90
+  skillDescription: "Khi\u1EBFn cho 1 vi\xEAn bi c\u1EE7a b\u1EA3n th\xE2n th\xE0nh
+    vi\xEAn bi c\u1EE7a \u0111\u1ED1i ph\u01B0\u01A1ng"
   flashCount: 5
   flashInterval: 0.12

@@ -41,6 +41,9 @@ public abstract class BaseSkills : ScriptableObject
     [Header("Stamina")]
     public int staminaCost = 0;
 
+    [TextArea(2, 4)]
+    public string skillDescription;
+
     public enum SkillType
     {
         Active,

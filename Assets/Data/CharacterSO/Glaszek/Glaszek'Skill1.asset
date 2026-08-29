@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Glaszek'Skill1
   m_EditorClassIdentifier: 
   slotId: 1
-  slotDisplayName: 1.0
+  slotDisplayName: Skill 1
   variants:
   - {fileID: 11400000, guid: 5cc8420fc3df9be469e0a72006a1ab10, type: 2}
   - {fileID: 11400000, guid: 1f3468c47ea2b6246b7d2758066bf9f3, type: 2}

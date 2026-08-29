@@ -22,4 +22,7 @@ MonoBehaviour:
   description: 
   requiredLevel: 1
   staminaCost: 30
+  skillDescription: "T\u1EA1o 1 vi\xEAn bi c\u1EE7a c\u1EA3 2 \u0111\u1EB7t t\u1EF1
+    do, t\u1ED3n t\u1EA1i trong 3 l\u01B0\u1EE3t, ch\u1EC9 c\xF3 th\u1EC3 \u0111\u1EB7t
+    trong v\xF9ng tam gi\xE1c \u0111\u1EB7t bi s\u1ED1"
   ballPrefab: {fileID: 1955376204062152440, guid: d8aee96eb1ecd1e41baa85e284572a79, type: 3}

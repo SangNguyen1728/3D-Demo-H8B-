@@ -37,6 +37,12 @@ public class SkillSlotRowUI : MonoBehaviour
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(variantButtonContainer.GetComponent<RectTransform>());
 
+        //if (slotData.variants.Count == 1)
+        //{
+        //    Debug.Log($"[SkillSlotRowUI] Slot {slotIndex} chỉ có 1 skill -> tự động chọn: {slotData.variants[0].skillName}");
+        //    onVariantSelected?.Invoke(slotIndex, slotData.variants[0]);
+        //}
+
         RefreshSelectionVisual();
     }
 

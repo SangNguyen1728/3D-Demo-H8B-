@@ -31,6 +31,7 @@ public class CharacterButtonUI : MonoBehaviour
 
     public void SetSelected(bool isSelected)
     {
+        Debug.Log($"[CharacterButtonUI] SetSelected({isSelected}) cho {CharacterData?.displayName}, selectedHighlight null? {selectedHighlight == null}");
         if (selectedHighlight != null)
             selectedHighlight.SetActive(isSelected);
     }

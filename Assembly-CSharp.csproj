@@ -81,6 +81,7 @@
     <Compile Include="Assets\Script\PlayscenePVP1D\Glaszek\HolePlacementController.cs" />
     <Compile Include="Assets\Script\HomeScript\HomeScreen\GameModeSO.cs" />
     <Compile Include="Assets\Script\StaminaManager.cs" />
+    <Compile Include="Assets\Script\SkillTooltipUI.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\Glaszek\HoleSpawnSkill.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\Cue\CueStickController.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\BallCollisionNotifier.cs" />

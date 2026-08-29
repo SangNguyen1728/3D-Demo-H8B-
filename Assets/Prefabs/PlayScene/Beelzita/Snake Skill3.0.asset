@@ -22,3 +22,6 @@ MonoBehaviour:
   description: 
   requiredLevel: 1
   staminaCost: 90
+  skillDescription: "Khi\u1EBFn vi\xEAn bi c\xE1i \u0111\u01B0a m\xE1u c\u1EE7a 3
+    vi\xEAn bi s\u1ED1 \u0111\u1EA7u (kh\xF4ng ph\u1EA3i s\u1ED1 8) v\u1EC1 kh\xF4ng
+    n\u1EBFu m\xE1u ch\xFAng th\u1EA5p h\u01A1n l\u1EA7n l\u01B0\u1EE3t l\xE0 30%-20%-10%"
