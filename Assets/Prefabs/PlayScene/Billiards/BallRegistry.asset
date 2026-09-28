@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48cdf8b1aa5447f4a84aae919fbe220c, type: 3}
+  m_Name: BallRegistry
+  m_EditorClassIdentifier: 
+  allBalls:
+  - {fileID: 11400000, guid: d3e8a41d22f533448b67bbe688be0ecb, type: 2}
+  - {fileID: 11400000, guid: d20981f3df464704d9c4b54bcd89c774, type: 2}
+  - {fileID: 11400000, guid: 3d7dc82d001038c44be45d85e9709325, type: 2}
+  - {fileID: 11400000, guid: 9b7372585f29ae14187b8d9f15c5f116, type: 2}
+  - {fileID: 11400000, guid: c92c7a1e6626df743ba75314ae624ced, type: 2}

@@ -7,4 +7,6 @@ public class SaveData
     public int selectedSkill1Id = -1;
     public int selectedSkill2Id = -1;
     public int selectedSkill3Id = -1;
+
+    public int[] selectedBallIds = new int[3] { -1, -1, -1 };
 }

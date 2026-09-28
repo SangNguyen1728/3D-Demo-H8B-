@@ -37,33 +37,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        //cueStickController = GetComponent<CueStickController>();
-
-        //pausePanelAnim = pausePanel.GetComponent<Animator>();
-        //backButtonAnim = backButton.GetComponent<Animator>();
-        //settingPanelAnim = settingPanel.GetComponent<Animator>();
-        //audioPanelAnim = audioPanel.GetComponent<Animator>();
-        //infoPanelAnim = infoPanel.GetComponent<Animator>();
-        //displayPanelAnim = displayPanel.GetComponent<Animator>();
-        //targetFinder = targetFinder.GetComponent<TargetBallFinder>();
-
-        //if (cueStickController == null)
-        //{
-        //    //cueStickController = FindObjectOfType<CueStickController>();
-        //    cueStickController = GetComponent<CueStickController>();
-        //}
-
-        //pausePanel.SetActive(false);
-        //backGround.SetActive(false);
-        //backButton.SetActive(false);
-
-        //settingPanel.SetActive(false);
-        //audioPanel.SetActive(false);
-        //displayPanel.SetActive(false);
-        //infoPanel.SetActive(false);
-
-        //UpperUIAnimator.SetBool("IsIldePlace", true);
-        //UpperUIAnimator.SetBool("IsGoBack", false);
+        
 
         pausePanelAnim = pausePanel.GetComponent<Animator>();
         backButtonAnim = backButton.GetComponent<Animator>();
@@ -90,10 +64,7 @@ public class GameManager : MonoBehaviour
         UpperUIAnimator.SetBool("IsIldePlace", true);
         UpperUIAnimator.SetBool("IsGoBack", false);
 
-        //if (restartConfirmPanel != null)
-        //    restartConfirmPanelAnim = restartConfirmPanel.GetComponent<Animator>();
-        //if (homeConfirmPanel != null)
-        //    homeConfirmPanelAnim = homeConfirmPanel.GetComponent<Animator>();
+       
         if (restartConfirmPanel != null)
             restartConfirmPanelAnim = restartConfirmPanel.GetComponentInChildren<Animator>();
         if (homeConfirmPanel != null)

@@ -61,8 +61,10 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.0.47f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Script\CueBall\Inventory\EquipmentConfig.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\Beelzita\BuffManager.cs" />
     <Compile Include="Assets\Script\HomeScript\Character\SkillSlotSO.cs" />
+    <Compile Include="Assets\Script\CueBall\PanelToggleUI.cs" />
     <Compile Include="Assets\Script\HomeScript\Character\CharacterSO.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\TableHoleManager.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\Glaszek\HoleLogic.cs" />
@@ -74,6 +76,7 @@
     <Compile Include="Assets\Script\PlayscenePVP1D\Pocket\PocketDetector.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\TakeDamage\IDamageable.cs" />
     <Compile Include="Assets\Script\HomeScript\HomeScreen\UI Layer\SkillSlotRowUI.cs" />
+    <Compile Include="Assets\Script\CueBall\BallScaleConfig.cs" />
     <Compile Include="Assets\Script\BuffManagerRegistry.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\Pocket\PocketTowPs.cs" />
     <Compile Include="Assets\Script\HomeScript\HomeScreen\UI Layer\CharacterButtonUI.cs" />
@@ -82,10 +85,12 @@
     <Compile Include="Assets\Script\HomeScript\HomeScreen\GameModeSO.cs" />
     <Compile Include="Assets\Script\StaminaManager.cs" />
     <Compile Include="Assets\Script\SkillTooltipUI.cs" />
+    <Compile Include="Assets\Script\CueBall\BallInventoryManager.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\Glaszek\HoleSpawnSkill.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\Cue\CueStickController.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\BallCollisionNotifier.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\Cue\CueBallController.cs" />
+    <Compile Include="Assets\Script\CueBall\Inventory\BallRegistrySO.cs" />
     <Compile Include="Assets\Script\HomeScript\HomeScreen\SceneLoader.cs" />
     <Compile Include="Assets\Script\HomeScript\HomeScreen\CharacterSpawner.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\Glaszek\FixedShieldSkill.cs" />
@@ -122,17 +127,21 @@
     <Compile Include="Assets\Script\HomeScript\HomeScreen\UI Layer\CharacterSelectUI.cs" />
     <Compile Include="Assets\Script\HomeScript\HomeScreen\UIHomeScreen.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\TakeDamage\BallCollisionDamage.cs" />
+    <Compile Include="Assets\Script\CueBall\Inventory\InventorySelectionPanelUI.cs" />
     <Compile Include="Assets\Script\HomeScript\Character\SkillLoadout.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\NineBallRules.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\Glaszek\RewardSkill.cs" />
+    <Compile Include="Assets\Script\CueBall\BallSelectionButtonUI.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\TargetBallFinder.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\BallNo.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\SkillSlowMotion.cs" />
     <Compile Include="Assets\Script\HomeScript\HomeScreen\UIFlowManager.cs" />
+    <Compile Include="Assets\Script\CueBall\Inventory\InventorySlotUI.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\Ball.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\SkillButtonController.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\Beelzita\BeelzitaBallBehavior.cs" />
     <Compile Include="Assets\PinePie\Simple Joystick\Examples\demo script\MovementScript.cs" />
+    <Compile Include="Assets\Script\RaycastDebugger.cs" />
     <Compile Include="Assets\Script\HomeScript\HomeScreen\ModeSelectUI.cs" />
   </ItemGroup>
   <ItemGroup>

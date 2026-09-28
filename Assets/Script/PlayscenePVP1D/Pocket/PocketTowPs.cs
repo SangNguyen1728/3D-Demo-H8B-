@@ -699,18 +699,28 @@ public class PocketTowPs : MonoBehaviour
 
     private IEnumerator RespawnCueBall(Collider ball)
     {
+        //yield return new WaitForSeconds(0.2f);
+
+        //ball.transform.position =
+        //    new Vector3(-0.9f, 1.18f, -0.17f);
+
+        //Rigidbody rb = ball.attachedRigidbody;
+
+        //if (rb != null)
+        //{
+        //    rb.linearVelocity = Vector3.zero;
+        //    rb.angularVelocity = Vector3.zero;
+        //}
         yield return new WaitForSeconds(0.2f);
 
-        ball.transform.position =
-            new Vector3(-0.9f, 1.18f, -0.17f);
+        ball.transform.position = new Vector3(-0.9f, 1.18f, -0.17f);
 
-        Rigidbody rb = ball.attachedRigidbody;
+        CueBallController cueCtrl = ball.GetComponent<CueBallController>();
+        if (cueCtrl != null)
+            cueCtrl.StopBall(); // reset velocity + spin gọn hơn set tay
 
-        if (rb != null)
-        {
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-        }
+        // 🆕 Kích hoạt Ball-in-Hand: cho phép kéo thả tự do + hiện message hướng dẫn
+        StartCoroutine(HandleCueBallPotted());
     }
 
     public bool IsValidFirstHit8Ball(int nr)

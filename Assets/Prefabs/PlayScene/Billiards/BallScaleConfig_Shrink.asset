@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16fbe1e4fe470944d91eae6450910d25, type: 3}
+  m_Name: BallScaleConfig_Shrink
+  m_EditorClassIdentifier: 
+  equipmentId: 2
+  displayName: "Thu Nh\u1ECF"
+  mode: 2
+  scaleChangeAmount: 0.5
+  scaleLerpSpeed: 6
+  rollingSpeedThreshold: 0.05
+  enablePhaseThrough: 0
+  phaseThroughDuration: 3
+  enableReturnToShotPosition: 0
+  minSafeDistanceFromOtherBalls: 0.15

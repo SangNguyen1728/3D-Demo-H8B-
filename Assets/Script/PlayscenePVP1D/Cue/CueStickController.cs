@@ -123,6 +123,7 @@ public class CueStickController : MonoBehaviour
 
         //isMoving = movingNow;
 
+
         bool movingNow = !AreAllBallsStopped();
 
         switch (shotState)
@@ -158,6 +159,8 @@ public class CueStickController : MonoBehaviour
         }
 
         isMoving = movingNow;
+
+        HandleMouseInput(); // 🆕 kích hoạt xử lý kéo thả bi cái / gậy
 
         if (!isMoving && !hitPeriod)
         {
@@ -276,28 +279,51 @@ public class CueStickController : MonoBehaviour
 
         Plane plane = new Plane(Vector3.up, cueStickPivot.position);
 
-        if(Input.GetMouseButtonDown(0) && allowRotateStickWhileSlider)
+        //if(Input.GetMouseButtonDown(0) && allowRotateStickWhileSlider)
+        //{
+        //    Ray ray = activeCamera.ScreenPointToRay(Input.mousePosition);
+
+        //    if(plane.Raycast(ray, out float distance))
+        //    {
+        //        Vector3 hitPoint = ray.GetPoint(distance);
+
+        //        if(Physics.Raycast(ray, out RaycastHit hit) && hit.collider.CompareTag("CueBall"))
+        //        {
+        //            lastMousePosition = hitPoint;
+        //            isDraggingCueBall = true;
+        //        }
+        //        else
+        //        {
+        //            lastMousePosition = isOnTopCameraActive ? GetMouseWorldPosition() : Input.mousePosition;
+        //            isDraggingStick = true;
+        //        }
+        //    }
+        //}
+        if (Input.GetMouseButtonDown(0))
         {
             Ray ray = activeCamera.ScreenPointToRay(Input.mousePosition);
 
-            if(plane.Raycast(ray, out float distance))
+            if (plane.Raycast(ray, out float distance))
             {
                 Vector3 hitPoint = ray.GetPoint(distance);
+                bool clickedCueBall = Physics.Raycast(ray, out RaycastHit hit) && hit.collider.CompareTag("CueBall");
 
-                if(Physics.Raycast(ray, out RaycastHit hit) && hit.collider.CompareTag("CueBall"))
+                if (moveCueBallAllow && clickedCueBall)
                 {
+                    // 🆕 Ball-in-Hand: kéo bi cái, độc lập với việc xoay gậy
                     lastMousePosition = hitPoint;
                     isDraggingCueBall = true;
+                    Debug.Log("[CueStickController] Bắt đầu kéo bi cái (Ball-in-Hand)");
                 }
-                else
+                else if (allowRotateStickWhileSlider)
                 {
                     lastMousePosition = isOnTopCameraActive ? GetMouseWorldPosition() : Input.mousePosition;
                     isDraggingStick = true;
                 }
             }
         }
-        
-        if(Input.GetMouseButton(0))
+
+        if (Input.GetMouseButton(0))
         {
             if(isDraggingCueBall)
             {
@@ -670,7 +696,23 @@ public class CueStickController : MonoBehaviour
         GameManager gm = GameObject.FindFirstObjectByType<GameManager>();
         if (gm != null) gm.PrepareNextTurn();
 
+        if (englishController != null)
+        {
+            englishController.TryReturnToShotPosition();
+        }
+
+        // 🆕 Reset bi về bình thường cho lượt đánh kế tiếp
+        if (BallInventoryManager.Instance != null)
+        {
+            BallInventoryManager.Instance.ResetToNormalForNextShot();
+        }
+
         Debug.Log("<color=green>Sẵn sàng cho lượt đánh tiếp theo!</color>");
+
+        if (BallInventoryManager.Instance != null)
+        {
+            BallInventoryManager.Instance.ResetToNormalForNextShot();
+        }
 
         //TriggerExplodeBalls();
     }

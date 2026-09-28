@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class SceneLoader : MonoBehaviour
@@ -123,6 +124,9 @@ public class SceneLoader : MonoBehaviour
     public CharacterSO SelectedCharacter { get; private set; }
     public SkillLoadout SelectedSkillLoadout { get; private set; } = new SkillLoadout();
 
+    //public BallScaleConfig SelectedBallConfig { get; private set; }
+    public List<BallScaleConfig> SelectedBallLoadout { get; private set; } = new List<BallScaleConfig>();
+
     private void Awake()
     {
         if (Instance == null)
@@ -161,6 +165,17 @@ public class SceneLoader : MonoBehaviour
                 return;
         }
         Debug.Log($"[SceneLoader] Slot {slotIndex} -> {variant.skillName}");
+    }
+
+    //public void SetSelectedBall(BallScaleConfig ballConfig)
+    //{
+    //    SelectedBallConfig = ballConfig;
+    //    Debug.Log($"[SceneLoader] Đã chọn bi: {(ballConfig != null ? ballConfig.mode.ToString() : "null")}");
+    //}
+    public void SetSelectedBallLoadout(List<BallScaleConfig> balls)
+    {
+        SelectedBallLoadout = new List<BallScaleConfig>(balls);
+        Debug.Log($"[SceneLoader] Đã lưu loadout {SelectedBallLoadout.Count} bi");
     }
 
     public void LoadScene(string sceneName)
