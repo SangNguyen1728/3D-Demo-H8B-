@@ -66,6 +66,7 @@
     <Compile Include="Assets\Script\HomeScript\Character\SkillSlotSO.cs" />
     <Compile Include="Assets\Script\CueBall\PanelToggleUI.cs" />
     <Compile Include="Assets\Script\HomeScript\Character\CharacterSO.cs" />
+    <Compile Include="Assets\Script\SkillsChoosed\SkillSelectionUI.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\TableHoleManager.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\Glaszek\HoleLogic.cs" />
     <Compile Include="Assets\Data\CharacterHolder\CharacterSkillDisplay.cs" />
@@ -130,6 +131,7 @@
     <Compile Include="Assets\Script\CueBall\Inventory\InventorySelectionPanelUI.cs" />
     <Compile Include="Assets\Script\HomeScript\Character\SkillLoadout.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\NineBallRules.cs" />
+    <Compile Include="Assets\Script\SkillsChoosed\SkillSelectionManager.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\Glaszek\RewardSkill.cs" />
     <Compile Include="Assets\Script\CueBall\BallSelectionButtonUI.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\TargetBallFinder.cs" />

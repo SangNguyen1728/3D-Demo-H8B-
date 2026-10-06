@@ -73,6 +73,14 @@ public class CueStickController : MonoBehaviour
     public bool initialMoveCueBall = false, moveCueBallAllow = true;
 
     public bool isDraggingStick = false, isDraggingCueBall = false;
+    //public bool IsInputLocked =>
+    //    SkillSelectionManager.Instance != null &&
+    //    SkillSelectionManager.Instance.WindowEnabledForNextShot &&
+    //    (shotState == ShotState.WaitingEvents ||
+    //     shotState == ShotState.Resolving ||
+    //     SkillSelectionManager.Instance.IsInDelay);
+
+    private bool lastInputLocked = false;
     private bool allowRotateStickWhileSlider;
     void Start()
     {
@@ -123,6 +131,13 @@ public class CueStickController : MonoBehaviour
 
         //isMoving = movingNow;
 
+        bool lockedNow = IsInputLocked;
+        if (lockedNow != lastInputLocked)
+        {
+            lastInputLocked = lockedNow;
+            if (powerSlider != null) powerSlider.interactable = !lockedNow;
+            Debug.Log($"[CueStickController] Input {(lockedNow ? "KHÓA" : "MỞ")} | state={shotState}");
+        }
 
         bool movingNow = !AreAllBallsStopped();
 
@@ -168,7 +183,8 @@ public class CueStickController : MonoBehaviour
             transform.position = cueBall.position;
 
             // Xoay gậy trong chế độ FPS (lấy delta từ Input System)
-            if (!isOnTopCameraActive && inputSystem.IsDragging && !inputSystem.IsEnglishMode)
+            //if (!isOnTopCameraActive && inputSystem.IsDragging && !inputSystem.IsEnglishMode)
+            if (!isOnTopCameraActive && inputSystem.IsDragging && !inputSystem.IsEnglishMode && !IsInputLocked)
             {
                 transform.Rotate(Vector3.up, inputSystem.RotationDelta, Space.World);
             }
@@ -178,6 +194,20 @@ public class CueStickController : MonoBehaviour
         else if (!hitPeriod) // Nếu bóng đang lăn và không trong lúc đâm cơ thì ẩn gậy
         {
             SetStickVisibility(false);
+        }
+    }
+
+    public bool IsInputLocked
+    {
+        get
+        {
+            SkillSelectionManager ssm = SkillSelectionManager.Instance;
+            if (ssm == null) return false;
+
+            if (ssm.IsSelecting || ssm.IsInDelay) return true;
+
+            return ssm.WindowEnabledForNextShot &&
+                   (shotState == ShotState.WaitingEvents || shotState == ShotState.Resolving);
         }
     }
 
@@ -276,6 +306,13 @@ public class CueStickController : MonoBehaviour
     private void HandleMouseInput()
     {
         Camera activeCamera = mainCamera;
+
+        if (IsInputLocked)
+        {
+            isDraggingCueBall = false;
+            isDraggingStick = false;
+            return;
+        }
 
         Plane plane = new Plane(Vector3.up, cueStickPivot.position);
 
@@ -506,12 +543,20 @@ public class CueStickController : MonoBehaviour
         //yield return new WaitForSeconds(0.1f);
         //hitPeriod = false;
 
+        if (IsInputLocked)
+        {
+            Debug.LogWarning("[CueStickController] HitCueBall bị CHẶN: đang khóa input (cửa sổ chọn skill)");
+            yield break;
+        }
+
         hitPeriod = true;
         hasProcessedShot = false;
         if (pocketManager != null)
         {
             pocketManager.shotAlreadyResolved = false;
         }
+        if (SkillSelectionManager.Instance != null)
+            SkillSelectionManager.Instance.OnShotStarted();
         waitingShotResult = true;
         firstCollisionDetected = false; // Reset trước khi đánh
         hitTargetBallFirst = false;
@@ -566,13 +611,23 @@ public class CueStickController : MonoBehaviour
     // --- CÁC HÀM UI & LOGIC DỪNG BÓNG ---
     public void OnSliderValueChange()
     {
-        if (isMoving || hitPeriod) return;
+        //if (isMoving || hitPeriod) return;
+        if (isMoving || hitPeriod || IsInputLocked) return;
         sliderHitForce = hitForceAmount * powerSlider.value;
     }
 
     public void OnSliderReleased()
     {
+        // if (isMoving || hitPeriod) return;
+
+        if (IsInputLocked)
+        {
+            sliderHitForce = 0f;
+            if (powerSlider != null) powerSlider.value = 0f;
+            return;
+        }
         if (isMoving || hitPeriod) return;
+
         if (sliderHitForce > 0.5f)
         { StartCoroutine(HitCueBall());
           StartCoroutine(ResetSlider());
@@ -708,6 +763,9 @@ public class CueStickController : MonoBehaviour
         }
 
         Debug.Log("<color=green>Sẵn sàng cho lượt đánh tiếp theo!</color>");
+
+        if (SkillSelectionManager.Instance != null && pocketManager != null)
+            SkillSelectionManager.Instance.BeginSelection(pocketManager.currentPlayer);
 
         if (BallInventoryManager.Instance != null)
         {
