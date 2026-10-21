@@ -460,6 +460,15 @@ public class SkillSelectionManager : MonoBehaviour
     [Tooltip("true = đóng băng đồng hồ lượt trong lúc khóa input (Delay/Selecting), để người chơi không mất thời gian suy nghĩ.")]
     public bool freezeTurnTimerWhileLocked = true;
 
+    [Header("Phạt khi giành skill mà không dùng")]
+    [Header("Phạt khi giành skill mà không dùng")]
+    [Tooltip("Số stamina bị trừ cố định nếu giành skill nhưng không dùng. 0 = tắt phạt.")]
+    public float unusedGrabPenaltyFlat = 20f;
+
+    [Header("Thời hạn dùng skill đã giành")]
+    [Tooltip("Số giây được dùng skill sau khi giành. Hết giờ chưa dùng -> bị phạt ngay và khóa skill. 0 = không giới hạn (chỉ phạt khi đánh bi hoặc hết lượt).")]
+    public float readyDuration = 10f;
+
     [Header("Debug")]
     public bool verboseLog = true;
 
@@ -469,6 +478,15 @@ public class SkillSelectionManager : MonoBehaviour
     public float TimeLeft { get; private set; }
     public int ReadyPlayer { get; private set; }
     public int ReadySlot { get; private set; }
+
+    public float ReadyTimeLeft { get; private set; }
+
+    // ===== Phản hồi "skill đã khóa" cho UI =====
+    public bool LockFeedbackActive { get; private set; }
+    public int LockedPlayer { get; private set; }   // skill được tô đỏ (hết hạn / bị bấm sai lượt)
+    public int LockedSlot { get; private set; }
+    public float LockedPenalty { get; private set; }
+    public float LockFeedbackTime { get; private set; } = -999f; // unscaled time
     public string LastMessage { get; private set; } = "";
     public float LastMessageTime { get; private set; } = -999f;
     public bool IsInDelay => CurrentState == State.Delay;
@@ -485,6 +503,8 @@ public class SkillSelectionManager : MonoBehaviour
     private readonly List<Request> workList = new List<Request>();
     private int readyFrame = -1;
     private bool timerFrozenByUs = false; // [NEW]
+
+    private float lastPenaltyTaken = 0f;
 
     // ================================================================
     private void Awake()
@@ -509,6 +529,8 @@ public class SkillSelectionManager : MonoBehaviour
     /// <summary>Gọi cuối CueStickController.OnAllBallsStoppedAction (sau khi đã xử lý đổi lượt).</summary>
     public void BeginSelection(int turnPlayerNumber)
     {
+        ClearLockFeedback();
+
         if (pocket != null && pocket.gameEnd)
         {
             Log("BeginSelection bị bỏ qua: game đã kết thúc");
@@ -544,6 +566,8 @@ public class SkillSelectionManager : MonoBehaviour
     /// <summary>Gọi trong CueStickController.HitCueBall khi cú đánh bắt đầu.</summary>
     public void OnShotStarted()
     {
+        ClearLockFeedback();
+
         shotsStarted++;
         Log($"SHOT STARTED | cú đánh thứ {shotsStarted}");
 
@@ -554,9 +578,14 @@ public class SkillSelectionManager : MonoBehaviour
 
         if (CurrentState == State.Delay || CurrentState == State.Selecting || CurrentState == State.Ready)
         {
+            //CloseWindow(hadReady
+            //    ? $"cú đánh đã thực hiện, P{readyP} không dùng skill (không trừ stamina)"
+            //    : "cú đánh đã được thực hiện");
+
             CloseWindow(hadReady
-                ? $"cú đánh đã thực hiện, P{readyP} không dùng skill (không trừ stamina)"
-                : "cú đánh đã được thực hiện");
+                ? $"cú đánh đã thực hiện, P{readyP} không dùng skill"
+                : "cú đánh đã được thực hiện",
+                penalizeUnused: hadReady);
         }
     }
 
@@ -685,8 +714,12 @@ public class SkillSelectionManager : MonoBehaviour
 
             if (r.player != TurnPlayer)
             {
+                //Post($"P{r.player} grabbed out of turn - nobody can use skills");
+                //CloseWindow($"P{r.player} giành ngoài lượt -> không ai được dùng skill");
+                //return;
                 Post($"P{r.player} grabbed out of turn - nobody can use skills");
                 CloseWindow($"P{r.player} giành ngoài lượt -> không ai được dùng skill");
+                RaiseLockFeedback(r.player, r.slot, 0f);
                 return;
             }
 
@@ -738,8 +771,40 @@ public class SkillSelectionManager : MonoBehaviour
                 break;
 
             case State.Ready:
-                ShouldAbort();
+                //ShouldAbort();
+                //break;
+                //if (ShouldAbort()) return;
+
+                //if (readyDuration > 0f)
+                //{
+                //    ReadyTimeLeft -= Time.deltaTime;
+                //    if (ReadyTimeLeft <= 0f)
+                //    {
+                //        ReadyTimeLeft = 0f;
+                //        CloseWindow($"P{ReadyPlayer} giữ skill quá {readyDuration:0.#}s mà không dùng -> phạt và khóa skill",
+                //                    penalizeUnused: true);
+                //    }
+                //}
+                //break;
+
+                if (ShouldAbort()) return;
+
+                if (readyDuration > 0f)
+                {
+                    ReadyTimeLeft -= Time.deltaTime;
+                    if (ReadyTimeLeft <= 0f)
+                    {
+                        ReadyTimeLeft = 0f;
+                        int expiredPlayer = ReadyPlayer;
+                        int expiredSlot = ReadySlot;
+
+                        CloseWindow($"P{expiredPlayer} giữ skill quá {readyDuration:0.#}s mà không dùng -> phạt và khóa skill",
+                                    penalizeUnused: true);
+                        RaiseLockFeedback(expiredPlayer, expiredSlot, lastPenaltyTaken);
+                    }
+                }
                 break;
+
         }
     }
 
@@ -755,7 +820,8 @@ public class SkillSelectionManager : MonoBehaviour
 
         if (pocket.currentPlayer != TurnPlayer)
         {
-            CloseWindow($"đổi lượt (P{TurnPlayer} -> P{pocket.currentPlayer})");
+            //CloseWindow($"đổi lượt (P{TurnPlayer} -> P{pocket.currentPlayer})");
+            CloseWindow($"đổi lượt (P{TurnPlayer} -> P{pocket.currentPlayer})", penalizeUnused: true);
             return true;
         }
 
@@ -798,6 +864,7 @@ public class SkillSelectionManager : MonoBehaviour
         ReadySlot = slot;
         CurrentState = State.Ready;
         readyFrame = Time.frameCount;
+        ReadyTimeLeft = readyDuration;
         FreezeTurnTimer(false); // [NEW] panel đóng -> mở khóa, đồng hồ chạy lại
 
         PlayerSkillController psc = GetPSC(player);
@@ -831,13 +898,53 @@ public class SkillSelectionManager : MonoBehaviour
         }
     }
 
-    private void CloseWindow(string reason)
+    private void CloseWindow(string reason, bool penalizeUnused = false)
     {
+        lastPenaltyTaken = 0f;
+        // Giành skill nhưng không dùng -> phạt (phải xét TRƯỚC khi đổi state)
+        if (penalizeUnused && CurrentState == State.Ready)
+            ApplyUnusedPenalty();
+
         RevokeAllGrants();
         queue.Clear();
         CurrentState = State.Closed;
         FreezeTurnTimer(false); // [NEW]
         Log($"=== ĐÓNG CỬA SỔ: {reason} ===");
+    }
+
+    private void ApplyUnusedPenalty()
+    {
+        if (unusedGrabPenaltyFlat <= 0f) return;
+
+        StaminaManager st = StaminaManagerRegistry.Get(ReadyPlayer);
+        if (st == null) return;
+
+        BaseSkills sk = GetSkill(ReadyPlayer, ReadySlot);
+        string skillName = sk != null ? sk.skillName : "skill";
+
+        float taken = st.ConsumeUpTo(unusedGrabPenaltyFlat);
+
+        lastPenaltyTaken = taken;
+
+        Post($"P{ReadyPlayer} lost {taken:0.#} stamina (skill not used)");
+        Log($"PHẠT: P{ReadyPlayer} giành {skillName} nhưng không dùng -> trừ {taken:0.##}/{unusedGrabPenaltyFlat:0.##} stamina");
+    }
+
+    private void RaiseLockFeedback(int player, int slot, float penalty)
+    {
+        LockFeedbackActive = true;
+        LockedPlayer = player;
+        LockedSlot = slot;
+        LockedPenalty = penalty;
+        LockFeedbackTime = Time.unscaledTime;
+        Log($"LOCK FEEDBACK: skill P{player} slot{slot} bị khóa (phạt {penalty:0.##}) -> UI hiện trạng thái cooldown");
+    }
+
+    private void ClearLockFeedback()
+    {
+        if (!LockFeedbackActive) return;
+        LockFeedbackActive = false;
+        Log("Tắt phản hồi khóa skill");
     }
 
     private void RevokeAllGrants()
@@ -913,5 +1020,24 @@ public class SkillSelectionManager : MonoBehaviour
     private void DebugOpenWindow()
     {
         if (pocket != null) BeginSelection(pocket.currentPlayer);
+    }
+
+    [ContextMenu("DEBUG: In trạng thái hiện tại")]
+    private void DebugDumpState()
+    {
+        Debug.Log($"[SkillSelect] STATE={CurrentState} | TurnPlayer=P{TurnPlayer} | pocket.currentPlayer=P{(pocket != null ? pocket.currentPlayer : -1)} | shotsStarted={shotsStarted} | Ready=P{ReadyPlayer}/slot{ReadySlot} | LockFeedback={LockFeedbackActive} (P{LockedPlayer}/slot{LockedSlot})");
+
+        for (int p = 1; p <= 2; p++)
+        {
+            PlayerSkillController psc = GetPSC(p);
+            StaminaManager st = StaminaManagerRegistry.Get(p);
+            Debug.Log($"[SkillSelect]   P{p}: stamina={(st != null ? st.GetCurrentStamina().ToString("F1") : "NULL")} | {(psc != null ? psc.DebugState() : "PSC NULL")}");
+
+            for (int s = 1; s <= 3; s++)
+            {
+                BaseSkills sk = GetSkill(p, s);
+                Debug.Log($"[SkillSelect]      slot{s}: {(sk != null ? sk.skillName : "NULL")} | cost={(sk != null ? sk.staminaCost : 0)} | đủ stamina={CanAfford(p, s)}");
+            }
+        }
     }
 }

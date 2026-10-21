@@ -169,6 +169,8 @@ public class PlayerSkillController : MonoBehaviour
         grantedSlot = 0;
     }
 
+    public string DebugState() => $"grantedSlot={grantedSlot} | hasUsedSkillThisShot={hasUsedSkillThisShot}";
+
     public void ResetShotSkillUsage()
     {
         hasUsedSkillThisShot = false;

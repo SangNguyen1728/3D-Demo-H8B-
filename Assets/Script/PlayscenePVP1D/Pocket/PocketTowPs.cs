@@ -699,28 +699,27 @@ public class PocketTowPs : MonoBehaviour
 
     private IEnumerator RespawnCueBall(Collider ball)
     {
+
         //yield return new WaitForSeconds(0.2f);
 
-        //ball.transform.position =
-        //    new Vector3(-0.9f, 1.18f, -0.17f);
+        //ball.transform.position = new Vector3(-0.9f, 1.18f, -0.17f);
 
-        //Rigidbody rb = ball.attachedRigidbody;
+        //CueBallController cueCtrl = ball.GetComponent<CueBallController>();
+        //if (cueCtrl != null)
+        //    cueCtrl.StopBall(); // reset velocity + spin gọn hơn set tay
 
-        //if (rb != null)
-        //{
-        //    rb.linearVelocity = Vector3.zero;
-        //    rb.angularVelocity = Vector3.zero;
-        //}
+        //// 🆕 Kích hoạt Ball-in-Hand: cho phép kéo thả tự do + hiện message hướng dẫn
+        //StartCoroutine(HandleCueBallPotted());
+
         yield return new WaitForSeconds(0.2f);
 
-        ball.transform.position = new Vector3(-0.9f, 1.18f, -0.17f);
+        ball.transform.position = new Vector3(-0.9f, 1.18f, -0.17f); // vị trí tạm, người chơi sẽ kéo đi chỗ khác
 
         CueBallController cueCtrl = ball.GetComponent<CueBallController>();
         if (cueCtrl != null)
-            cueCtrl.StopBall(); // reset velocity + spin gọn hơn set tay
+            cueCtrl.StopBall(); // reset velocity + spin
 
-        // 🆕 Kích hoạt Ball-in-Hand: cho phép kéo thả tự do + hiện message hướng dẫn
-        StartCoroutine(HandleCueBallPotted());
+        Debug.Log("[PocketTowPs] Bi cái đã về vị trí tạm, chờ hết cú đánh rồi cho đặt lại");
     }
 
     public bool IsValidFirstHit8Ball(int nr)
@@ -1115,6 +1114,9 @@ public class PocketTowPs : MonoBehaviour
         if (cueBallPocketedThisTurn || foulCommittedThisTurn)
         {
             Debug.Log("<color=red>FOUL -> SWITCH TURN</color>");
+
+            if (cueBallPocketedThisTurn)
+                StartCoroutine(HandleCueBallPotted());
 
             SwitchTurn();
 

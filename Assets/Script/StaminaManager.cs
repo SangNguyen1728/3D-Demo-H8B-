@@ -43,6 +43,17 @@ public class StaminaManager : MonoBehaviour
         return true;
     }
 
+    public float ConsumeUpTo(float amount)
+    {
+        if (amount <= 0f) return 0f;
+
+        float taken = Mathf.Min(amount, currentStamina);
+        currentStamina = Mathf.Clamp(currentStamina - taken, 0, maxStamina);
+        Debug.Log($"[Stamina P{playerNumber}] PHẠT -{taken:F1} -> còn {currentStamina:F1}");
+        UpdateUI();
+        return taken;
+    }
+
     public void AddStamina(float amount)
     {
         if (amount <= 0) return;

@@ -37,8 +37,20 @@ public class CueStickController : MonoBehaviour
     public float stickHitSpeed = 15f;
     public float stopThreshold = 0.08f;
 
-    private Vector3 tableMinBounds = new Vector3 (-3.5f, 0f, -1.7f),
-        tableMaxBounds = new Vector3(3.5f, 0f, 1.7f);
+    [Header("Ball-in-Hand")]
+    public Vector3 tableMinBounds = new Vector3(-3.5f, 0f, -1.7f);
+    public Vector3 tableMaxBounds = new Vector3(3.5f, 0f, 1.7f);
+    [Tooltip("Vùng chạm quanh bi (pixel) để bắt đầu kéo bi, dùng cho camera sau cơ")]
+    public float minBallTouchRadiusPx = 60f;
+    [Tooltip("Camera sau cơ: kéo hết chiều cao màn hình thì bi đi bao nhiêu đơn vị thế giới")]
+    public float stickCamDragWorldPerScreenHeight = 4f;
+
+    private Collider cueBallCol;
+    private Vector3 lastDragMousePos;
+    private readonly Collider[] overlapBuffer = new Collider[8];
+
+    //private Vector3 tableMinBounds = new Vector3 (-3.5f, 0f, -1.7f),
+    //tableMaxBounds = new Vector3(3.5f, 0f, 1.7f);
 
     private float topRotationSensitivity = 0.8f, camStickRotationSensitivity = 5f;
 
@@ -79,6 +91,9 @@ public class CueStickController : MonoBehaviour
     //    (shotState == ShotState.WaitingEvents ||
     //     shotState == ShotState.Resolving ||
     //     SkillSelectionManager.Instance.IsInDelay);
+
+    public bool ShotControlsVisible =>
+       shotState == ShotState.Idle && !hitPeriod && !IsInputLocked;
 
     private bool lastInputLocked = false;
     private bool allowRotateStickWhileSlider;
@@ -305,111 +320,225 @@ public class CueStickController : MonoBehaviour
 
     private void HandleMouseInput()
     {
-        Camera activeCamera = mainCamera;
+        //Camera activeCamera = mainCamera;
 
-        if (IsInputLocked)
-        {
-            isDraggingCueBall = false;
-            isDraggingStick = false;
-            return;
-        }
+        //if (IsInputLocked)
+        //{
+        //    isDraggingCueBall = false;
+        //    isDraggingStick = false;
+        //    return;
+        //}
 
-        Plane plane = new Plane(Vector3.up, cueStickPivot.position);
+        //Plane plane = new Plane(Vector3.up, cueStickPivot.position);
 
-        //if(Input.GetMouseButtonDown(0) && allowRotateStickWhileSlider)
+        //if (Input.GetMouseButtonDown(0))
         //{
         //    Ray ray = activeCamera.ScreenPointToRay(Input.mousePosition);
 
-        //    if(plane.Raycast(ray, out float distance))
+        //    if (plane.Raycast(ray, out float distance))
         //    {
         //        Vector3 hitPoint = ray.GetPoint(distance);
+        //        bool clickedCueBall = Physics.Raycast(ray, out RaycastHit hit) && hit.collider.CompareTag("CueBall");
 
-        //        if(Physics.Raycast(ray, out RaycastHit hit) && hit.collider.CompareTag("CueBall"))
+        //        if (moveCueBallAllow && clickedCueBall)
         //        {
+        //            // 🆕 Ball-in-Hand: kéo bi cái, độc lập với việc xoay gậy
         //            lastMousePosition = hitPoint;
         //            isDraggingCueBall = true;
+        //            Debug.Log("[CueStickController] Bắt đầu kéo bi cái (Ball-in-Hand)");
         //        }
-        //        else
+        //        else if (allowRotateStickWhileSlider)
         //        {
         //            lastMousePosition = isOnTopCameraActive ? GetMouseWorldPosition() : Input.mousePosition;
         //            isDraggingStick = true;
         //        }
         //    }
         //}
+
+        //if (Input.GetMouseButton(0))
+        //{
+        //    if(isDraggingCueBall)
+        //    {
+        //        Ray ray = activeCamera.ScreenPointToRay(Input.mousePosition);
+        //        if(plane.Raycast(ray, out float distance))
+        //        {
+        //            if(moveCueBallAllow)
+        //            {
+        //                Vector3 hitPoint = ray.GetPoint(distance);
+
+        //                float tableMinBound = initialMoveCueBall ? 2f : tableMinBounds.x;
+
+        //                float clampedX = Mathf.Clamp(hitPoint.x, tableMinBound, tableMaxBounds.x);
+        //                float clampedZ = Mathf.Clamp(hitPoint.z, tableMinBounds.z, tableMaxBounds.z);
+
+        //                cueBall.position = new Vector3(clampedX, cueBall.position.y, clampedZ);
+        //            }
+        //        }
+        //        else
+        //        {
+        //            Debug.Log("CueBall is not ready to move");
+        //        }
+        //    }
+        //}
+        //else if (isDraggingStick && allowRotateStickWhileSlider)
+        //{
+        //    Vector3 currentMousePosition = isOnTopCameraActive ? GetMouseWorldPosition() : Input.mousePosition;
+        //   if(isOnTopCameraActive)
+        //    {
+        //        Vector3 lastDirection = lastMousePosition - cueStickPivot.position;
+        //        Vector3 currentDirection =  currentMousePosition - cueStickPivot.position;
+
+        //        float angle = Vector3.SignedAngle(lastDirection, currentDirection, Vector3.up);
+        //        cueStickPivot.Rotate(Vector3.up, angle * topRotationSensitivity, Space.World);
+        //    }
+        //   else
+        //    {
+        //        Vector3 mouseDelta = currentMousePosition - lastMousePosition;
+        //        cueStickPivot.Rotate(Vector3.up, mouseDelta.x * camStickRotationSensitivity * Time.deltaTime, Space.World);
+        //    }
+
+        //    lastMousePosition = currentMousePosition;
+        //}
+
+        //if(Input.GetMouseButtonUp(0))
+        //{
+        //    isDraggingStick = false;
+        //    isDraggingCueBall = false;
+        //}
+
+        if (!moveCueBallAllow || hitPeriod || isMoving)
+        {
+            isDraggingCueBall = false;
+            return;
+        }
+
+        // Bắt đầu kéo
         if (Input.GetMouseButtonDown(0))
         {
-            Ray ray = activeCamera.ScreenPointToRay(Input.mousePosition);
-
-            if (plane.Raycast(ray, out float distance))
+            bool overUI = EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
+            if (!overUI && IsPointerOnCueBall(Input.mousePosition))
             {
-                Vector3 hitPoint = ray.GetPoint(distance);
-                bool clickedCueBall = Physics.Raycast(ray, out RaycastHit hit) && hit.collider.CompareTag("CueBall");
-
-                if (moveCueBallAllow && clickedCueBall)
-                {
-                    // 🆕 Ball-in-Hand: kéo bi cái, độc lập với việc xoay gậy
-                    lastMousePosition = hitPoint;
-                    isDraggingCueBall = true;
-                    Debug.Log("[CueStickController] Bắt đầu kéo bi cái (Ball-in-Hand)");
-                }
-                else if (allowRotateStickWhileSlider)
-                {
-                    lastMousePosition = isOnTopCameraActive ? GetMouseWorldPosition() : Input.mousePosition;
-                    isDraggingStick = true;
-                }
+                isDraggingCueBall = true;
+                lastDragMousePos = Input.mousePosition;
+                Debug.Log("[CueStickController] Bắt đầu kéo bi cái | camera trên cao = " + isOnTopCameraActive);
             }
         }
 
-        if (Input.GetMouseButton(0))
+        // Đang kéo
+        if (isDraggingCueBall && Input.GetMouseButton(0))
         {
-            if(isDraggingCueBall)
+            Vector3 target = isOnTopCameraActive ? GetDragPosTopCamera() : GetDragPosStickCamera();
+            target = ClampToTable(target);
+
+            if (!IsBlockedByOtherBall(target))
             {
-                Ray ray = activeCamera.ScreenPointToRay(Input.mousePosition);
-                if(plane.Raycast(ray, out float distance))
-                {
-                    if(moveCueBallAllow)
-                    {
-                        Vector3 hitPoint = ray.GetPoint(distance);
-
-                        float tableMinBound = initialMoveCueBall ? 2f : tableMinBounds.x;
-
-                        float clampedX = Mathf.Clamp(hitPoint.x, tableMinBound, tableMaxBounds.x);
-                        float clampedZ = Mathf.Clamp(hitPoint.z, tableMinBounds.z, tableMaxBounds.z);
-
-                        cueBall.position = new Vector3(clampedX, cueBall.position.y, clampedZ);
-                    }
-                }
-                else
-                {
-                    Debug.Log("CueBall is not ready to move");
-                }
-            }
-        }
-        else if (isDraggingStick && allowRotateStickWhileSlider)
-        {
-            Vector3 currentMousePosition = isOnTopCameraActive ? GetMouseWorldPosition() : Input.mousePosition;
-           if(isOnTopCameraActive)
-            {
-                Vector3 lastDirection = lastMousePosition - cueStickPivot.position;
-                Vector3 currentDirection =  currentMousePosition - cueStickPivot.position;
-
-                float angle = Vector3.SignedAngle(lastDirection, currentDirection, Vector3.up);
-                cueStickPivot.Rotate(Vector3.up, angle * topRotationSensitivity, Space.World);
-            }
-           else
-            {
-                Vector3 mouseDelta = currentMousePosition - lastMousePosition;
-                cueStickPivot.Rotate(Vector3.up, mouseDelta.x * camStickRotationSensitivity * Time.deltaTime, Space.World);
+                cueBall.position = target;
+                cueBall.linearVelocity = Vector3.zero;
+                cueBall.angularVelocity = Vector3.zero;
             }
 
-            lastMousePosition = currentMousePosition;
+            lastDragMousePos = Input.mousePosition;
         }
 
-        if(Input.GetMouseButtonUp(0))
+        // Thả tay -> tự chỉnh cơ về bi mục tiêu
+        if (Input.GetMouseButtonUp(0) && isDraggingCueBall)
         {
-            isDraggingStick = false;
             isDraggingCueBall = false;
+            Debug.Log("[CueStickController] Thả bi cái tại " + cueBall.position);
+            StartCoroutine(AutoAimAfterPlacement());
         }
+    }
+
+    private Vector3 GetDragPosTopCamera()
+    {
+        Plane plane = new Plane(Vector3.up, new Vector3(0f, cueBall.position.y, 0f));
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        return plane.Raycast(ray, out float d) ? ray.GetPoint(d) : cueBall.position;
+    }
+
+    // Camera sau cơ: kéo TƯƠNG ĐỐI theo hướng camera (tránh vòng lặp camera bám theo bi)
+    private Vector3 GetDragPosStickCamera()
+    {
+        Vector2 delta = (Vector2)Input.mousePosition - (Vector2)lastDragMousePos;
+
+        Vector3 camRight = mainCamera.transform.right; camRight.y = 0f; camRight.Normalize();
+        Vector3 camFwd = mainCamera.transform.forward; camFwd.y = 0f; camFwd.Normalize();
+
+        float k = stickCamDragWorldPerScreenHeight / Screen.height;
+        return cueBall.position + (camRight * delta.x + camFwd * delta.y) * k;
+    }
+
+    // Chạm vào bi tính theo khoảng cách trên màn hình (không dùng raycast nên không bị cơ che)
+    public bool IsPointerOnCueBall(Vector3 screenPos)
+    {
+        if (mainCamera == null || cueBall == null) return false;
+
+        Vector3 sp = mainCamera.WorldToScreenPoint(cueBall.position);
+        if (sp.z <= 0f) return false;
+
+        Vector3 edge = mainCamera.WorldToScreenPoint(cueBall.position + mainCamera.transform.right * GetCueBallWorldRadius());
+        float pxRadius = Mathf.Max(Mathf.Abs(edge.x - sp.x) * 2.5f, minBallTouchRadiusPx);
+
+        return ((Vector2)screenPos - (Vector2)sp).sqrMagnitude <= pxRadius * pxRadius;
+    }
+
+    private float GetCueBallWorldRadius()
+    {
+        if (cueBallCol == null) cueBallCol = cueBall.GetComponent<Collider>();
+        if (cueBallCol != null) return cueBallCol.bounds.extents.x;
+        return englishController != null ? englishController.ballRadius : 0.0285f;
+    }
+
+    // Giữ bi trong mặt bàn (trừ bán kính để bi không lòi ra mép)
+    private Vector3 ClampToTable(Vector3 p)
+    {
+        float r = GetCueBallWorldRadius();
+        float minX = initialMoveCueBall ? 2f : tableMinBounds.x + r;
+
+        float x = Mathf.Clamp(p.x, minX, tableMaxBounds.x - r);
+        float z = Mathf.Clamp(p.z, tableMinBounds.z + r, tableMaxBounds.z - r);
+        return new Vector3(x, cueBall.position.y, z);
+    }
+
+    // Không cho đặt chồng lên bi khác (tránh physics đẩy bi văng)
+    private bool IsBlockedByOtherBall(Vector3 pos)
+    {
+        int count = Physics.OverlapSphereNonAlloc(pos, GetCueBallWorldRadius() * 0.98f, overlapBuffer);
+        for (int i = 0; i < count; i++)
+        {
+            BallNo b = overlapBuffer[i].GetComponent<BallNo>();
+            if (b != null && !b.isCueBall) return true;
+        }
+        return false;
+    }
+
+    // Sau khi đặt bi, tự xoay cơ về bi mục tiêu
+    private IEnumerator AutoAimAfterPlacement()
+    {
+        yield return null; // đợi 1 frame cho vị trí bi ổn định
+
+        if (targetFinder != null)
+        {
+            targetFinder.UpdateTargetBall();
+
+            if (targetFinder.currentTarget != null)
+            {
+                transform.position = cueBall.position;
+                PointAtTarget(targetFinder.currentTarget);
+                Debug.Log("[CueStickController] Đã tự chỉnh cơ vào bi mục tiêu sau khi đặt bi cái");
+            }
+        }
+    }
+
+    // Vẽ khung giới hạn bàn khi chọn object trong Scene view để chỉnh cho khớp mặt bàn
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.green;
+        Vector3 c = (tableMinBounds + tableMaxBounds) * 0.5f;
+        c.y = cueBall != null ? cueBall.position.y : 1.18f;
+        Vector3 s = tableMaxBounds - tableMinBounds;
+        s.y = 0.01f;
+        Gizmos.DrawWireCube(c, s);
     }
 
     private void AdjustStickPivotToCueBall()

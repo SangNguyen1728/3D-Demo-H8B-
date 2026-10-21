@@ -48,6 +48,10 @@ public class CueBallController : MonoBehaviour
     // 🆕 Danh sách Collider đang bị tắt va chạm tạm thời — dùng cho tính năng Xuyên Bi
     private List<Collider> ignoredCollidersThisShot = new List<Collider>();
 
+    private bool abilityFiredThisShot = false;   // cú đánh này đã kích hoạt kỹ năng chưa (tối đa 1 lần / cú đánh)
+    private bool returnArmed = false;            // Hồi Vị đã được kích hoạt chưa (cuối cú đánh mới dịch chuyển)
+    private Coroutine phaseRoutine;              // coroutine Xuyên Bi đang chạy (để dọn đúng cách)
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -68,6 +72,40 @@ public class CueBallController : MonoBehaviour
     // ================================
     private void HandleBallScaleEffect()
     {
+        //if (rb == null || visualTransform == null || scaleConfig == null) return;
+
+        //if (scaleConfig.mode == BallScaleMode.None) return;
+
+        //float speed = rb.linearVelocity.magnitude;
+        //bool isRolling = speed > scaleConfig.rollingSpeedThreshold;
+
+        //if (isRolling && !wasRolling)
+        //{
+        //    targetScaleMultiplier = scaleConfig.mode == BallScaleMode.AlwaysGrow
+        //        ? (1f + scaleConfig.scaleChangeAmount)
+        //        : (1f - scaleConfig.scaleChangeAmount);
+
+        //    Debug.Log($"[CueBallController] Bắt đầu lăn -> Mode: {scaleConfig.mode} x{targetScaleMultiplier}");
+        //}
+        //else if (!isRolling && wasRolling)
+        //{
+        //    targetScaleMultiplier = 1f;
+
+        //    Debug.Log("[CueBallController] Bi dừng -> Trả về scale gốc");
+        //}
+
+        //wasRolling = isRolling;
+
+        //currentScaleMultiplier = Mathf.Lerp(
+        //    currentScaleMultiplier,
+        //    targetScaleMultiplier,
+        //    Time.fixedDeltaTime * scaleConfig.scaleLerpSpeed
+        //);
+
+        //visualTransform.localScale = Vector3.one * currentScaleMultiplier;
+        //visualTransform.rotation = Quaternion.identity;
+        //visualTransform.position = transform.position + Vector3.up * (ballRadius * (currentScaleMultiplier - 1f));
+
         if (rb == null || visualTransform == null || scaleConfig == null) return;
 
         if (scaleConfig.mode == BallScaleMode.None) return;
@@ -75,15 +113,9 @@ public class CueBallController : MonoBehaviour
         float speed = rb.linearVelocity.magnitude;
         bool isRolling = speed > scaleConfig.rollingSpeedThreshold;
 
-        if (isRolling && !wasRolling)
-        {
-            targetScaleMultiplier = scaleConfig.mode == BallScaleMode.AlwaysGrow
-                ? (1f + scaleConfig.scaleChangeAmount)
-                : (1f - scaleConfig.scaleChangeAmount);
-
-            Debug.Log($"[CueBallController] Bắt đầu lăn -> Mode: {scaleConfig.mode} x{targetScaleMultiplier}");
-        }
-        else if (!isRolling && wasRolling)
+        // 🆕 Không còn tự phóng/thu khi bắt đầu lăn — chỉ đổi target khi ActivateAbility() chạy (chạm màn hình)
+        // Vừa dừng lại -> trả về scale gốc
+        if (!isRolling && wasRolling)
         {
             targetScaleMultiplier = 1f;
 
@@ -106,11 +138,32 @@ public class CueBallController : MonoBehaviour
     // Gọi hàm này để đổi loại bi đang dùng (từ BallInventoryManager)
     public void ApplyScaleConfig(BallScaleConfig newConfig)
     {
+        //scaleConfig = newConfig;
+
+        //currentScaleMultiplier = 1f;
+        //targetScaleMultiplier = 1f;
+        //wasRolling = false;
+
+        //if (visualTransform != null)
+        //{
+        //    visualTransform.localScale = Vector3.one;
+        //    visualTransform.position = transform.position;
+        //    visualTransform.rotation = Quaternion.identity;
+        //}
+
+        //Debug.Log($"[CueBallController] Áp dụng config mới: {(newConfig != null ? newConfig.mode.ToString() : "null")}");
+
+        EndPhaseThrough();   // 🆕 dọn hiệu ứng Xuyên Bi còn sót (nếu có) trước khi đổi bi
+
         scaleConfig = newConfig;
 
         currentScaleMultiplier = 1f;
         targetScaleMultiplier = 1f;
         wasRolling = false;
+
+        // 🆕 Đổi bi -> xoá trạng thái kích hoạt cũ
+        abilityFiredThisShot = false;
+        returnArmed = false;
 
         if (visualTransform != null)
         {
@@ -119,19 +172,82 @@ public class CueBallController : MonoBehaviour
             visualTransform.rotation = Quaternion.identity;
         }
 
-        Debug.Log($"[CueBallController] Áp dụng config mới: {(newConfig != null ? newConfig.mode.ToString() : "null")}");
+        Debug.Log($"[CueBallController] Áp dụng config mới: {(newConfig != null ? newConfig.displayName : "null")}");
     }
 
     // ================================
     // 👻 XUYÊN BI
     // ================================
-    private void TryStartPhaseThrough()
+    //private void TryStartPhaseThrough()
+    //{
+    //    if (scaleConfig == null || !scaleConfig.enablePhaseThrough) return;
+    //    if (myCollider == null || stick == null) return;
+
+    //    StopAllCoroutines(); // tránh chồng 2 coroutine xuyên bi nếu lỡ đánh liên tiếp quá nhanh
+    //    StartCoroutine(PhaseThroughRoutine(scaleConfig.phaseThroughDuration));
+    //}
+
+    //private IEnumerator PhaseThroughRoutine(float duration)
+    //{
+    //    ignoredCollidersThisShot.Clear();
+
+    //    foreach (Rigidbody ballRb in stick.balls)
+    //    {
+    //        if (ballRb == null) continue;
+
+    //        Collider col = ballRb.GetComponent<Collider>();
+    //        if (col == null) continue;
+
+    //        Physics.IgnoreCollision(myCollider, col, true);
+    //        ignoredCollidersThisShot.Add(col);
+    //    }
+
+    //    Debug.Log($"[CueBallController] Bắt đầu XUYÊN BI trong {duration}s");
+
+    //    yield return new WaitForSeconds(duration);
+
+    //    foreach (Collider col in ignoredCollidersThisShot)
+    //    {
+    //        if (col != null)
+    //            Physics.IgnoreCollision(myCollider, col, false);
+    //    }
+
+    //    ignoredCollidersThisShot.Clear();
+
+    //    Debug.Log("[CueBallController] Hết XUYÊN BI -> va chạm bình thường trở lại");
+    //}
+
+    // 👻 XUYÊN BI (bắt đầu khi người chơi chạm màn hình)
+    // ================================
+    private void StartPhaseThrough()
     {
-        if (scaleConfig == null || !scaleConfig.enablePhaseThrough) return;
         if (myCollider == null || stick == null) return;
 
-        StopAllCoroutines(); // tránh chồng 2 coroutine xuyên bi nếu lỡ đánh liên tiếp quá nhanh
-        StartCoroutine(PhaseThroughRoutine(scaleConfig.phaseThroughDuration));
+        EndPhaseThrough();   // dọn hiệu ứng cũ (nếu còn) trước khi bắt đầu cái mới
+
+        phaseRoutine = StartCoroutine(PhaseThroughRoutine(scaleConfig.phaseThroughDuration));
+    }
+
+    private void EndPhaseThrough()
+    {
+        if (phaseRoutine != null)
+        {
+            StopCoroutine(phaseRoutine);
+            phaseRoutine = null;
+        }
+
+        RestoreIgnoredCollisions();
+    }
+
+    private void RestoreIgnoredCollisions()
+    {
+        foreach (Collider col in ignoredCollidersThisShot)
+        {
+            if (col != null && myCollider != null)
+                Physics.IgnoreCollision(myCollider, col, false);
+        }
+
+        ignoredCollidersThisShot.Clear();
     }
 
     private IEnumerator PhaseThroughRoutine(float duration)
@@ -149,17 +265,12 @@ public class CueBallController : MonoBehaviour
             ignoredCollidersThisShot.Add(col);
         }
 
-        Debug.Log($"[CueBallController] Bắt đầu XUYÊN BI trong {duration}s");
+        Debug.Log($"[CueBallController] Bắt đầu XUYÊN BI trong {duration}s ({ignoredCollidersThisShot.Count} bi)");
 
         yield return new WaitForSeconds(duration);
 
-        foreach (Collider col in ignoredCollidersThisShot)
-        {
-            if (col != null)
-                Physics.IgnoreCollision(myCollider, col, false);
-        }
-
-        ignoredCollidersThisShot.Clear();
+        phaseRoutine = null;
+        RestoreIgnoredCollisions();
 
         Debug.Log("[CueBallController] Hết XUYÊN BI -> va chạm bình thường trở lại");
     }
@@ -170,7 +281,41 @@ public class CueBallController : MonoBehaviour
     // Gọi từ CueStickController ngay sau khi 1 cú đánh xử lý xong hoàn toàn
     public void TryReturnToShotPosition()
     {
+        //if (scaleConfig == null || !scaleConfig.enableReturnToShotPosition) return;
+
+        //Collider[] nearbyColliders = Physics.OverlapSphere(shotStartPosition, scaleConfig.minSafeDistanceFromOtherBalls);
+
+        //foreach (Collider col in nearbyColliders)
+        //{
+        //    BallNo ball = col.GetComponent<BallNo>();
+
+        //    if (ball != null && !ball.isCueBall)
+        //    {
+        //        Debug.Log("[CueBallController] Có bi mục tiêu quá gần vị trí cũ -> HỦY hồi vị");
+        //        return;
+        //    }
+        //}
+
+        //if (rb != null)
+        //{
+        //    rb.linearVelocity = Vector3.zero;
+        //    rb.angularVelocity = Vector3.zero;
+        //}
+
+        //transform.position = shotStartPosition;
+
+        //Debug.Log("[CueBallController] Đã HỒI VỊ bi trắng về vị trí đánh trước đó");
+
         if (scaleConfig == null || !scaleConfig.enableReturnToShotPosition) return;
+
+        // 🆕 Chỉ hồi vị nếu người chơi đã chạm màn hình kích hoạt trong cú đánh này
+        if (!returnArmed)
+        {
+            Debug.Log("[CueBallController] Hồi Vị chưa được kích hoạt (không chạm màn hình) -> bỏ qua");
+            return;
+        }
+
+        returnArmed = false;
 
         Collider[] nearbyColliders = Physics.OverlapSphere(shotStartPosition, scaleConfig.minSafeDistanceFromOtherBalls);
 
@@ -194,6 +339,58 @@ public class CueBallController : MonoBehaviour
         transform.position = shotStartPosition;
 
         Debug.Log("[CueBallController] Đã HỒI VỊ bi trắng về vị trí đánh trước đó");
+    }
+
+    // ✋ KÍCH HOẠT KỸ NĂNG (gọi khi người chơi chạm màn hình lúc bi đang lăn)
+    // ================================
+    public bool HasActivatableAbility =>
+        scaleConfig != null &&
+        (scaleConfig.mode != BallScaleMode.None ||
+         scaleConfig.enablePhaseThrough ||
+         scaleConfig.enableReturnToShotPosition);
+
+    public bool ActivateAbility(out string reason)
+    {
+        reason = "";
+
+        if (!HasActivatableAbility)
+        {
+            reason = "bi đang chọn không có kỹ năng";
+            return false;
+        }
+
+        if (abilityFiredThisShot)
+        {
+            reason = "đã kích hoạt trong cú đánh này rồi";
+            return false;
+        }
+
+        if (rb == null || rb.linearVelocity.magnitude <= scaleConfig.rollingSpeedThreshold)
+        {
+            reason = "bi trắng đang không lăn";
+            return false;
+        }
+
+        abilityFiredThisShot = true;
+
+        // Phóng To / Thu Nhỏ: bắt đầu đổi scale từ thời điểm chạm
+        if (scaleConfig.mode != BallScaleMode.None)
+        {
+            targetScaleMultiplier = scaleConfig.mode == BallScaleMode.AlwaysGrow
+                ? (1f + scaleConfig.scaleChangeAmount)
+                : (1f - scaleConfig.scaleChangeAmount);
+        }
+
+        // Xuyên Bi: bắt đầu đếm 3s từ thời điểm chạm
+        if (scaleConfig.enablePhaseThrough)
+            StartPhaseThrough();
+
+        // Hồi Vị: đánh dấu, cuối cú đánh mới dịch chuyển
+        if (scaleConfig.enableReturnToShotPosition)
+            returnArmed = true;
+
+        Debug.Log($"[CueBallController] KÍCH HOẠT kỹ năng: {scaleConfig.displayName}");
+        return true;
     }
 
     // ================================
@@ -238,7 +435,10 @@ public class CueBallController : MonoBehaviour
         shotStartPosition = transform.position;
 
         // 🆕 Kích hoạt Xuyên Bi nếu config đang bật
-        TryStartPhaseThrough();
+        //TryStartPhaseThrough();
+
+        abilityFiredThisShot = false;
+        returnArmed = false;
     }
 
     public void StopBall()
@@ -307,18 +507,18 @@ public class CueBallController : MonoBehaviour
 
         Vector3 spinForce = forwardDir * topSpin * spinToVelocityFactor;
 
-        StartCoroutine(ApplyDelayedSpinForce(spinForce));
+        //StartCoroutine(ApplyDelayedSpinForce(spinForce));
 
         Debug.Log($"[CueBallController] Áp dụng spin effect: topSpin={topSpin}, force={spinForce}");
     }
 
-    private IEnumerator ApplyDelayedSpinForce(Vector3 force)
-    {
-        yield return new WaitForFixedUpdate();
+    //private IEnumerator ApplyDelayedSpinForce(Vector3 force)
+    //{
+    //    yield return new WaitForFixedUpdate();
 
-        if (rb != null)
-            rb.AddForce(force, ForceMode.Impulse);
-    }
+    //    if (rb != null)
+    //        rb.AddForce(force, ForceMode.Impulse);
+    //}
 
     //[Header("English (Spin) Settings")]
     //public float ballRadius = 0.0285f;

@@ -3434,7 +3434,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6792227008128828349, guid: 41fc2224df5c7f643b3b6849b10ca38d, type: 3}
   m_PrefabInstance: {fileID: 1435084739}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1435084740}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2d1b42538a8b04c4cb2196c1fc64c567, type: 3}
@@ -4261,35 +4261,74 @@ MonoBehaviour:
     icon: {fileID: 159875769}
     nameText: {fileID: 384131054}
     costText: {fileID: 681213650}
+    lockOverlay: {fileID: 0}
+    expiredHighlight: {fileID: 0}
   - button: {fileID: 540660138}
     icon: {fileID: 265669939}
     nameText: {fileID: 1332279425}
     costText: {fileID: 74670556}
+    lockOverlay: {fileID: 0}
+    expiredHighlight: {fileID: 0}
   - button: {fileID: 2048646836}
     icon: {fileID: 1987498340}
     nameText: {fileID: 1130956947}
     costText: {fileID: 2121885667}
+    lockOverlay: {fileID: 0}
+    expiredHighlight: {fileID: 0}
   player2Slots:
   - button: {fileID: 373583314}
     icon: {fileID: 421167609}
     nameText: {fileID: 233881316}
     costText: {fileID: 169212579}
+    lockOverlay: {fileID: 0}
+    expiredHighlight: {fileID: 0}
   - button: {fileID: 1006953827}
     icon: {fileID: 1210808052}
     nameText: {fileID: 1533670118}
     costText: {fileID: 1880676337}
+    lockOverlay: {fileID: 0}
+    expiredHighlight: {fileID: 0}
   - button: {fileID: 750347904}
     icon: {fileID: 1865086012}
     nameText: {fileID: 242463841}
     costText: {fileID: 1702310225}
-  readyChip: {fileID: 431022265}
-  readyButton: {fileID: 431022267}
-  readyLabel: {fileID: 688225135}
-  readyIcon: {fileID: 0}
-  messageText: {fileID: 0}
+    lockOverlay: {fileID: 0}
+    expiredHighlight: {fileID: 0}
+  player1UseButtons:
+  - button: {fileID: 1209954847}
+    label: {fileID: 1720805461}
+    icon: {fileID: 0}
+    cooldownFill: {fileID: 0}
+  - button: {fileID: 116668845}
+    label: {fileID: 1910509331}
+    icon: {fileID: 0}
+    cooldownFill: {fileID: 0}
+  - button: {fileID: 477530572}
+    label: {fileID: 2117502861}
+    icon: {fileID: 0}
+    cooldownFill: {fileID: 0}
+  player2UseButtons: []
+  messageText: {fileID: 2144587111}
   messageDuration: 1.5
   litAlpha: 1
   dimAlpha: 0.3
+  lockedDisplay: 0
+  lockedFlashSeconds: 2.5
+  lockedAlpha: 0.45
+  lockedTint: {r: 0.45, g: 0.45, b: 0.45, a: 1}
+  expiredTint: {r: 0.9, g: 0.25, b: 0.25, a: 1}
+  pulseSpeed: 6
+  shotControls:
+  - {fileID: 1487662656}
+  - {fileID: 1435084740}
+  - {fileID: 25278717}
+  - {fileID: 2081520462}
+  controlsFadeSpeed: 10
+  cueStick: {fileID: 0}
+  hideWhileSkillReady:
+  - {fileID: 1435084740}
+  joystickAnchor: {fileID: 1435084741}
+  matchJoystickSize: 0
 --- !u!1 &182226734
 GameObject:
   m_ObjectHideFlags: 0
@@ -11442,10 +11481,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pocket: {fileID: 0}
+  cueStick: {fileID: 0}
   delayBeforeWindow: 0
   selectionDuration: 3
   firstShotWithWindow: 3
   hideIfNobodyCanAfford: 0
+  freezeTurnTimerWhileLocked: 1
+  unusedGrabPenaltyFlat: 20
+  readyDuration: 5
   verboseLog: 1
 --- !u!4 &593831511
 Transform:
@@ -18616,14 +18659,14 @@ RectTransform:
   - {fileID: 1229941296}
   - {fileID: 1573398347}
   - {fileID: 178876107}
+  - {fileID: 1209954846}
+  - {fileID: 116668844}
+  - {fileID: 477530571}
   - {fileID: 2028622364}
   - {fileID: 1983396196}
   - {fileID: 1644727067}
   - {fileID: 1729684011}
   - {fileID: 538831057}
-  - {fileID: 1209954846}
-  - {fileID: 116668844}
-  - {fileID: 477530571}
   - {fileID: 25278718}
   - {fileID: 2081520463}
   m_Father: {fileID: 0}
@@ -24675,6 +24718,16 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 41fc2224df5c7f643b3b6849b10ca38d, type: 3}
+--- !u!1 &1435084740 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1107898977752410966, guid: 41fc2224df5c7f643b3b6849b10ca38d, type: 3}
+  m_PrefabInstance: {fileID: 1435084739}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &1435084741 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7483677236648522534, guid: 41fc2224df5c7f643b3b6849b10ca38d, type: 3}
+  m_PrefabInstance: {fileID: 1435084739}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1437778479
 GameObject:
   m_ObjectHideFlags: 0
@@ -32252,6 +32305,8 @@ MonoBehaviour:
   cooldownTurns: 2
   buttonsContainer: {fileID: 25278718}
   ballButtonPrefab: {fileID: 4136774709242064134, guid: 9e85ddfde2b403448b6b072bdf2c29ee, type: 3}
+  tapToActivate: 1
+  ignoreTapOverInteractiveUI: 1
 --- !u!4 &1820324531
 Transform:
   m_ObjectHideFlags: 0
@@ -37623,6 +37678,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetPanel: {fileID: 25278717}
   startVisible: 0
+  closeAfterSelect: 1
+  currentBallLabel: {fileID: 0}
 --- !u!114 &2081520465
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -40965,6 +41022,10 @@ MonoBehaviour:
   hitForceAmount: 20
   stickHitSpeed: 5
   stopThreshold: 0.15
+  tableMinBounds: {x: -3.5, y: 0, z: -1.7}
+  tableMaxBounds: {x: 3.5, y: 0, z: 1.7}
+  minBallTouchRadiusPx: 60
+  stickCamDragWorldPerScreenHeight: 4
   isMoving: 0
   hitPeriod: 0
   shotState: 0

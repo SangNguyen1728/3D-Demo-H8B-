@@ -11,6 +11,8 @@ public class CueStickInput : MonoBehaviour
     public JoystickController englishJoystick; // Kéo Joystick UI vào đây
     private CueStickController controller;
 
+    private bool draggingBall = false;
+
     public float RotationDelta { get; private set; }
     public bool IsDragging { get; private set; }
 
@@ -63,8 +65,26 @@ public class CueStickInput : MonoBehaviour
 
     private void HandleRotationLogic()
     {
-        if (Input.GetMouseButtonDown(0)) IsDragging = true;
-        if (Input.GetMouseButtonUp(0)) IsDragging = false;
+        //if (Input.GetMouseButtonDown(0)) IsDragging = true;
+        //if (Input.GetMouseButtonUp(0)) IsDragging = false;
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            // 🆕 Nếu đang được phép đặt bi và chạm vào bi -> nhường cho CueStickController kéo bi
+            draggingBall = controller.moveCueBallAllow && controller.IsPointerOnCueBall(Input.mousePosition);
+            IsDragging = !draggingBall;
+        }
+        if (Input.GetMouseButtonUp(0))
+        {
+            IsDragging = false;
+            draggingBall = false;
+        }
+
+        if (draggingBall)
+        {
+            RotationDelta = 0;
+            return;
+        }
 
         if (IsDragging)
         {
