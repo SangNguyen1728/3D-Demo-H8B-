@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95c8567e711af124b89b4699e49fdc79, type: 3}
+  m_Name: Snake Skill3.0 Test
+  m_EditorClassIdentifier: 
+  skillName: Snake 3.0
+  skillID: 17
+  icon: {fileID: 0}
+  level: 1
+  skill_ID: 17
+  skillIcon: {fileID: 0}
+  cooldown: 0
+  description: 
+  requiredLevel: 1
+  staminaCost: 90
+  skillDescription: "Khi\u1EBFn vi\xEAn bi c\xE1i \u0111\u01B0a m\xE1u c\u1EE7a 3
+    vi\xEAn bi s\u1ED1 \u0111\u1EA7u (kh\xF4ng ph\u1EA3i s\u1ED1 8) v\u1EC1 kh\xF4ng
+    n\u1EBFu m\xE1u ch\xFAng th\u1EA5p h\u01A1n l\u1EA7n l\u01B0\u1EE3t l\xE0 30%-20%-10%"
+  targetingType: 0
+  showLogoUntilNextShot: 1
+  areaRadius: 0.4
+  targetingHint: 

@@ -47,6 +47,37 @@ public class ConvertBallSkill : BaseSkills
         manager.StartCoroutine(FlashAndConvert(targetBall, pocket));
     }
 
+    public override bool IsValidTarget(BallNo ball, GlaszekManager manager)
+    {
+        if (ball == null || ball.isCueBall || !ball.gameObject.activeInHierarchy) return false;
+
+        PocketTowPs pocket = Object.FindFirstObjectByType<PocketTowPs>();
+        if (pocket == null) return false;
+
+        // IsPlayersBall tính theo pocket.currentPlayer -> tạm đặt thành người dùng skill để xét đúng góc nhìn
+        int saved = pocket.currentPlayer;
+        pocket.currentPlayer = manager != null ? manager.playerNumber : saved;
+        bool isOwn = pocket.IsPlayersBall(ball);
+        pocket.currentPlayer = saved;
+
+        return !isOwn; // chỉ chọn bi của đối thủ
+    }
+
+    public override void ActivateWithTarget(GameObject player, GlaszekManager manager, SkillTargetData data)
+    {
+        if (data.ball == null)
+        {
+            Debug.LogWarning("CONVERT SKILL: không có bi được chọn");
+            return;
+        }
+
+        PocketTowPs pocket = Object.FindFirstObjectByType<PocketTowPs>();
+        if (pocket == null) return;
+
+        Debug.Log($"CONVERT SKILL (chọn tay): sẽ convert bi số {data.ball.ballNumber}");
+        manager.StartCoroutine(FlashAndConvert(data.ball, pocket));
+    }
+
     private IEnumerator FlashAndConvert(BallNo ball, PocketTowPs pocket)
     {
         BallOwnership ownership = ball.GetComponent<BallOwnership>();

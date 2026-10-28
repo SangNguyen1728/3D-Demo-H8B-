@@ -494,6 +494,12 @@ public class SkillSelectionUI : MonoBehaviour
     public TMP_Text messageText;
     public float messageDuration = 1.5f;
 
+    [Header("Logo phép Toggle (dưới joystick, tới khi bắt đầu cú đánh kế tiếp)")]
+    [Tooltip("Object chứa logo (ẩn mặc định). Đặt nó DƯỚI joystick trong Editor.")]
+    public GameObject toggleBadge;
+    public Image toggleBadgeIcon;
+    public TMP_Text toggleBadgeLabel;
+
     [Header("Look: bình thường")]
     public float litAlpha = 1f;
     public float dimAlpha = 0.3f;
@@ -531,6 +537,8 @@ public class SkillSelectionUI : MonoBehaviour
     private bool[] hideInReady = new bool[0];
     private bool lastSkillReady = false;
 
+    private bool badgeShownLast = false;
+
     // ================================================================
     private void Awake()
     {
@@ -541,6 +549,8 @@ public class SkillSelectionUI : MonoBehaviour
         InitSlots(player2Slots, 2);
         InitUseButtons(player1UseButtons);
         InitUseButtons(player2UseButtons);
+
+        if (toggleBadge != null) toggleBadge.SetActive(false);
 
         if (cueStick == null) cueStick = FindFirstObjectByType<CueStickController>();
         if (cueStick == null) Debug.LogWarning("[SkillUI] Không tìm thấy CueStickController: không ẩn/hiện được điều khiển cú đánh");
@@ -616,7 +626,8 @@ public class SkillSelectionUI : MonoBehaviour
 
         SkillSelectionManager.State st = manager.CurrentState;
         bool selecting = st == SkillSelectionManager.State.Selecting;
-        bool showLocked = !selecting && st != SkillSelectionManager.State.Ready && ShouldShowLocked();
+        //bool showLocked = !selecting && st != SkillSelectionManager.State.Ready && ShouldShowLocked();
+        bool showLocked = !selecting && st != SkillSelectionManager.State.Ready && st != SkillSelectionManager.State.Targeting && ShouldShowLocked();
 
         // Thanh chỉ nhận chạm khi đang Selecting. Ở trạng thái khóa thì chỉ để xem (không chặn input)
         SetPanelVisible(selecting || showLocked, selecting);
@@ -624,6 +635,8 @@ public class SkillSelectionUI : MonoBehaviour
         UpdateUseButtons(st);
 
         UpdateShotControls();
+
+        UpdateToggleBadge();
 
         if (st != lastState)
         {
@@ -986,5 +999,32 @@ public class SkillSelectionUI : MonoBehaviour
             cg.blocksRaycasts = visible;
             cg.interactable = visible;
         }
+    }
+
+    private void UpdateToggleBadge()
+    {
+        if (toggleBadge == null || manager == null) return;
+
+        BaseSkills skill = manager.BadgeSkill;
+        bool show = skill != null;
+
+        if (show != badgeShownLast)
+        {
+            badgeShownLast = show;
+            toggleBadge.SetActive(show);
+            Debug.Log($"[SkillUI] Logo bật tắt {(show ? "HIỆN: " + skill.skillName : "ẨN")}");
+        }
+
+        if (!show) return;
+
+        if (toggleBadgeIcon != null)
+        {
+            Sprite sp = skill.icon != null ? skill.icon : skill.skillIcon;
+            toggleBadgeIcon.sprite = sp;
+            toggleBadgeIcon.enabled = sp != null;
+        }
+
+        if (toggleBadgeLabel != null && toggleBadgeLabel.text != skill.skillName)
+            toggleBadgeLabel.text = skill.skillName;
     }
 }

@@ -23,3 +23,8 @@ MonoBehaviour:
   requiredLevel: 1
   staminaCost: 35
   skillDescription: "T\u1EA1o 1 l\u1ED7 gi\u1EEFa b\xE0n trong 2 l\u01B0\u1EE3t"
+  targetingType: 0
+  showLogoUntilNextShot: 0
+  areaRadius: 0.4
+  targetingHint: 
+  livePreview: 0

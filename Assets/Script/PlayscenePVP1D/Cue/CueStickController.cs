@@ -219,7 +219,8 @@ public class CueStickController : MonoBehaviour
             SkillSelectionManager ssm = SkillSelectionManager.Instance;
             if (ssm == null) return false;
 
-            if (ssm.IsSelecting || ssm.IsInDelay) return true;
+            //if (ssm.IsSelecting || ssm.IsInDelay) return true;
+            if (ssm.IsSelecting || ssm.IsInDelay || ssm.IsTargeting) return true;
 
             return ssm.WindowEnabledForNextShot &&
                    (shotState == ShotState.WaitingEvents || shotState == ShotState.Resolving);

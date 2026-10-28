@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7708b17d079c14f468df133e7bd38562, type: 3}
+  m_Name: BeelzitaLoadout Test
+  m_EditorClassIdentifier: 
+  slot1: {fileID: 11400000, guid: e79b7e919ff24c14a933bf34c09c5f2c, type: 2}
+  slot2: {fileID: 11400000, guid: 88aa471c3a0bf1644875dfdb4134c89d, type: 2}
+  slot3: {fileID: 11400000, guid: 7751671b61cc29f4a89ef9fb644a8a4f, type: 2}

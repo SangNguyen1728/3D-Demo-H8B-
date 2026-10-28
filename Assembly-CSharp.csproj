@@ -133,6 +133,7 @@
     <Compile Include="Assets\Script\PlayscenePVP1D\NineBallRules.cs" />
     <Compile Include="Assets\Script\SkillsChoosed\SkillSelectionManager.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\Glaszek\RewardSkill.cs" />
+    <Compile Include="Assets\Script\SkillJoystick.cs" />
     <Compile Include="Assets\Script\CueBall\BallSelectionButtonUI.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\TargetBallFinder.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\BallNo.cs" />
@@ -140,11 +141,13 @@
     <Compile Include="Assets\Script\HomeScript\HomeScreen\UIFlowManager.cs" />
     <Compile Include="Assets\Script\CueBall\Inventory\InventorySlotUI.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\Ball.cs" />
+    <Compile Include="Assets\Script\SkillTargetingController.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\SkillButtonController.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\Beelzita\BeelzitaBallBehavior.cs" />
     <Compile Include="Assets\PinePie\Simple Joystick\Examples\demo script\MovementScript.cs" />
     <Compile Include="Assets\Script\RaycastDebugger.cs" />
     <Compile Include="Assets\Script\HomeScript\HomeScreen\ModeSelectUI.cs" />
+    <Compile Include="Assets\Script\DemoTargetingSkill.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
