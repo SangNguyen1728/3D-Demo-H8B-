@@ -19,9 +19,13 @@ public class HolePlacementController : MonoBehaviour
     private bool isPlacing = false;
     private Renderer holeRenderer;
 
+    private Coroutine delayRoutine;
+
     public bool isEdgeMode;
 
     public bool IsPlacing => isPlacing;
+
+    public bool IsBusy => currentHole != null;
 
     [Header("Table Bounds")]
     public float tableMinX = -3.5f;
@@ -49,7 +53,31 @@ public class HolePlacementController : MonoBehaviour
         // 🔥 FIX MATERIAL INSTANCE
         holeRenderer.material = new Material(holeRenderer.material);
 
-        StartCoroutine(DelayEnablePlacing());
+        //StartCoroutine(DelayEnablePlacing());
+
+        if (delayRoutine != null) StopCoroutine(delayRoutine);
+        delayRoutine = StartCoroutine(DelayEnablePlacing());
+    }
+    public void CancelPlacement()
+    {
+        if (currentHole == null) return;
+
+        Debug.Log("[HolePlacement] HỦY đặt lỗ: " + currentHole.name);
+
+        if (delayRoutine != null)
+        {
+            StopCoroutine(delayRoutine);
+            delayRoutine = null;
+        }
+
+        GameObject hole = currentHole;
+
+        isPlacing = false;
+        currentHole = null;
+        holeRenderer = null;
+
+        // Trả lỗ về pool (TableHoleManager.ActivateHole lấy lại lỗ chưa bật ở lần sau)
+        if (hole != null) hole.SetActive(false);
     }
 
     IEnumerator DelayEnablePlacing()

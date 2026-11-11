@@ -178,6 +178,54 @@ public class PlayerSkillController : MonoBehaviour
         return TryUseInternal(slot, true, data);
     }
 
+    public bool TryBeginSetupSlot(int slot)
+    {
+        BaseSkills skill = GetSkill(slot);
+        if (skill == null)
+        {
+            Debug.LogError($"[PSC P{PlayerNo()}] slot{slot} NULL — kiểm tra Loadout!");
+            return false;
+        }
+
+        if (enforceSelectionGate && grantedSlot != slot)
+        {
+            Debug.LogWarning($"[PSC P{PlayerNo()}] BỊ CHẶN: slot{slot} chưa được giành (granted={grantedSlot})");
+            return false;
+        }
+
+        if (hasUsedSkillThisShot)
+        {
+            Debug.LogWarning("[PSC] Đã dùng skill trong lượt đánh này, không thể dùng thêm!");
+            return false;
+        }
+
+        StaminaManager stamina = StaminaManagerRegistry.Get(manager.playerNumber);
+        if (stamina != null && stamina.GetCurrentStamina() < skill.staminaCost)
+        {
+            Debug.LogWarning($"[PSC P{PlayerNo()}] Không đủ stamina để bắt đầu {skill.skillName}");
+            return false;
+        }
+
+        hasUsedSkillThisShot = true;
+        grantedSlot = 0;
+        Debug.Log($"[PSC P{PlayerNo()}] BẮT ĐẦU slot{slot}: {skill.skillName} (có bước thao tác, chưa trừ stamina)");
+
+        skill.Activate(gameObject, manager);
+        return true;
+    }
+
+    /// <summary>Trừ stamina khi bước thao tác đã xong. Trả về số stamina thực sự bị trừ.</summary>
+    public float ChargeSetupCost(int slot)
+    {
+        BaseSkills skill = GetSkill(slot);
+        if (skill == null) return 0f;
+
+        StaminaManager stamina = StaminaManagerRegistry.Get(manager.playerNumber);
+        if (stamina == null) return 0f;
+
+        if (stamina.TryConsume(skill.staminaCost)) return skill.staminaCost;
+        return stamina.ConsumeUpTo(skill.staminaCost); // phòng stamina đã tụt giữa chừng: trừ phần còn lại
+    }
     private bool TryUseInternal(int slot, bool withTarget, SkillTargetData data)
     {
         BaseSkills skill = GetSkill(slot);

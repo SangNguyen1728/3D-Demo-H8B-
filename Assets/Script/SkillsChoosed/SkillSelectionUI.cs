@@ -490,6 +490,9 @@ public class SkillSelectionUI : MonoBehaviour
     [Tooltip("Nút dùng skill của P2. Để Size = 0 (trống) nếu cả hai người dùng chung bộ nút của P1")]
     public UseButtonUI[] player2UseButtons = new UseButtonUI[0];
 
+    [Tooltip("true = khi người NGOÀI lượt giữ skill, chữ trên nút HUD thêm tên người đó (vd 'P2: Rabbit 2.1') để biết nút của ai")]
+    public bool showOwnerWhenOutOfTurn = true;
+
     [Header("Thông báo")]
     public TMP_Text messageText;
     public float messageDuration = 1.5f;
@@ -627,7 +630,13 @@ public class SkillSelectionUI : MonoBehaviour
         SkillSelectionManager.State st = manager.CurrentState;
         bool selecting = st == SkillSelectionManager.State.Selecting;
         //bool showLocked = !selecting && st != SkillSelectionManager.State.Ready && ShouldShowLocked();
-        bool showLocked = !selecting && st != SkillSelectionManager.State.Ready && st != SkillSelectionManager.State.Targeting && ShouldShowLocked();
+        //bool showLocked = !selecting && st != SkillSelectionManager.State.Ready && st != SkillSelectionManager.State.Targeting && ShouldShowLocked();
+
+        bool showLocked = !selecting
+                     && st != SkillSelectionManager.State.Ready
+                     && st != SkillSelectionManager.State.Targeting
+                     && st != SkillSelectionManager.State.Performing
+                     && ShouldShowLocked();
 
         // Thanh chỉ nhận chạm khi đang Selecting. Ở trạng thái khóa thì chỉ để xem (không chặn input)
         SetPanelVisible(selecting || showLocked, selecting);
@@ -715,8 +724,16 @@ public class SkillSelectionUI : MonoBehaviour
             BaseSkills skill = manager.GetSkill(manager.ReadyPlayer, i + 1);
             if (skill != null)
             {
-                if (ub.label != null && ub.label.text != skill.skillName)
-                    ub.label.text = skill.skillName;
+                //if (ub.label != null && ub.label.text != skill.skillName)
+                //    ub.label.text = skill.skillName;
+
+                if (ub.label != null)
+                {
+                    bool outOfTurn = manager.ReadyPlayer != manager.TurnPlayer;
+                    string text = (showOwnerWhenOutOfTurn && outOfTurn) ? $"P{manager.ReadyPlayer}: {skill.skillName}" : skill.skillName;
+                    if (ub.label.text != text) ub.label.text = text;
+                }
+
 
                 if (ub.icon != null)
                 {
@@ -729,8 +746,11 @@ public class SkillSelectionUI : MonoBehaviour
             // Vòng đếm ngược thời gian dùng skill
             if (ub.cooldownFill != null)
             {
-                float total = manager.readyDuration;
-                ub.cooldownFill.fillAmount = total > 0f ? Mathf.Clamp01(manager.ReadyTimeLeft / total) : 1f;
+                //float total = manager.readyDuration;
+                //ub.cooldownFill.fillAmount = total > 0f ? Mathf.Clamp01(manager.ReadyTimeLeft / total) : 1f;
+
+                float total = manager.SkillTimeTotal;
+                ub.cooldownFill.fillAmount = total > 0f ? Mathf.Clamp01(manager.SkillTimeLeft / total) : 1f;
             }
         }
     }
@@ -1006,7 +1026,8 @@ public class SkillSelectionUI : MonoBehaviour
         if (toggleBadge == null || manager == null) return;
 
         BaseSkills skill = manager.BadgeSkill;
-        bool show = skill != null;
+        //bool show = skill != null;
+        bool show = skill != null && manager.BadgeVisible;
 
         if (show != badgeShownLast)
         {

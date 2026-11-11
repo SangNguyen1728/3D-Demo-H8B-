@@ -117,8 +117,11 @@ public class SkillTargetingController : MonoBehaviour
         UpdateTarget(cam);
         UpdateCandidateMarkers(cam);
 
+        //if (timerText != null)
+        //    timerText.text = manager.targetingDuration > 0f ? Mathf.CeilToInt(manager.TargetingTimeLeft).ToString() : "";
+
         if (timerText != null)
-            timerText.text = manager.targetingDuration > 0f ? Mathf.CeilToInt(manager.TargetingTimeLeft).ToString() : "";
+            timerText.text = manager.SkillTimeTotal > 0f ? Mathf.CeilToInt(manager.SkillTimeLeft).ToString() : "";
     }
 
     private void OnEnter()

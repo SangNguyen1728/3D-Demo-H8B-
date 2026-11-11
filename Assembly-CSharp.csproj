@@ -110,6 +110,7 @@
     <Compile Include="Assets\PinePie\Simple Joystick\Core\Base\JoystickController.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\Glaszek\BallOwnership.cs" />
     <Compile Include="Assets\Script\Saving\SaveData.cs" />
+    <Compile Include="Assets\Script\SkillPhaseHighlight.cs" />
     <Compile Include="Assets\Script\HomeScript\Character\SkillVariantSO.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\Script\HomeScript\LoadingScreen\LoadingScreenController.cs" />
@@ -120,6 +121,7 @@
     <Compile Include="Assets\Script\PlayscenePVP1D\PlayerSkillLoadout.cs" />
     <Compile Include="Assets\Script\PlayerManagerRegistry.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\Beelzita\RabbitSkill.cs" />
+    <Compile Include="Assets\Script\PlayscenePVP1D\TakeDamage\BallHealthHUD.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\Beelzita\MouseSkill.cs" />
     <Compile Include="Assets\Script\PlayscenePVP1D\Beelzita\BeelzitaManager.cs" />
     <Compile Include="Assets\Script\StaminaManagerRegistry.cs" />

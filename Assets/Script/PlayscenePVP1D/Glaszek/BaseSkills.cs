@@ -58,6 +58,14 @@ public abstract class BaseSkills : ScriptableObject
     [Tooltip("Chỉ cho Target: bật = XEM TRƯỚC TRỰC TIẾP, kết quả của skill chạy theo bi đang chọn (Duyệt = chốt, Hủy = thu hồi). Tắt = skill chỉ chạy sau khi Duyệt. Chỉ có tác dụng khi skill đã viết BeginPreview / UpdatePreview.")]
     public bool livePreview = false;
 
+    [Header("Dùng ngoài lượt")]
+    [Tooltip("true = người chơi NGOÀI lượt giành được skill này vẫn được dùng. Tắt cho skill chưa an toàn khi dùng ngoài lượt (ví dụ code còn dùng pocket.currentPlayer). Tắt thì skill bị tối ở hàng của người ngoài lượt.")]
+    public bool usableOutOfTurn = true;
+
+    [Header("Thời gian dùng")]
+    [Tooltip("Thời gian (giây) từ lúc giành tới lúc dùng XONG cho riêng skill này (gồm cả chọn bi / thao tác thêm). 0 = dùng chung Ready Duration của SkillSelectionManager.")]
+    public float useDurationOverride = 0f;
+
     /// <summary>true nếu skill thuộc loại Target. Mọi giá trị khác (kể cả số 1 cũ của Area) coi là Toggle.</summary>
     public bool IsTargetSkill => targetingType == SkillTargetingType.Target;
 
@@ -116,4 +124,12 @@ public abstract class BaseSkills : ScriptableObject
 
     /// <summary>Hủy / hết giờ / đổi lượt: thu hồi bản xem trước.</summary>
     public virtual void CancelPreview(GlaszekManager manager) { }
+
+    public virtual bool HasSetupStep => false;
+
+    /// <summary>Bước thao tác còn đang chạy không? (false = đã xong hoặc đã bị hủy)</summary>
+    public virtual bool IsSetupRunning(GlaszekManager manager) { return false; }
+
+    /// <summary>Hết giờ giữa chừng: hủy bước thao tác dở dang và thu hồi mọi thứ đã tạo.</summary>
+    public virtual void CancelSetup(GlaszekManager manager) { }
 }

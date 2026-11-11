@@ -184,6 +184,13 @@ public class PocketTowPs : MonoBehaviour
             winPlayerText.gameObject.SetActive(false);
     }
 
+    public event System.Action OnGroupAssigned;
+
+    public string GetPlayerGroup(int player)
+    {
+        return player == 1 ? player1Group : player2Group;
+    }
+
     private void ResetGame()
     {
         groupAssigned = false;
@@ -203,6 +210,8 @@ public class PocketTowPs : MonoBehaviour
 
         timeRemaining = totalTimeInput;
         cueStickController.stopTimer = false;
+
+        UpdateGroupUI();
     }
 
     public void LoadPlayersInfoData()
@@ -265,7 +274,35 @@ public class PocketTowPs : MonoBehaviour
         PlayerPrefs.SetInt("PocketedBallsSaved", totalPottedBallsCount); // ✅ đồng bộ key
         LoadRacksAndBallsCount();
     }
-   
+
+    private void UpdateGroupUI()
+    {
+        bool isNine = gameMode == PoolGameMode.NineBall;
+
+        ApplyGroupIcons(player1Group, isNine, solidImage_01, stripesImage_01, nineBalls_01, noGroupImage_01);
+        ApplyGroupIcons(player2Group, isNine, solidImage_02, stripesImage_02, nineBalls_02, noGroupImage_02);
+
+        Debug.Log($"<color=cyan>[PocketTowPs] UpdateGroupUI -> P1={player1Group} | P2={player2Group} | mode={gameMode}</color>");
+    }
+
+    private void ApplyGroupIcons(string group, bool isNine,
+        GameObject solid, GameObject stripe, GameObject nine, GameObject none)
+    {
+        if (isNine)
+        {
+            // 9 bi: không có nhóm, chỉ hiện icon 9 bi
+            if (solid) solid.SetActive(false);
+            if (stripe) stripe.SetActive(false);
+            if (none) none.SetActive(false);
+            if (nine) nine.SetActive(true);
+            return;
+        }
+
+        if (nine) nine.SetActive(false);
+        if (solid) solid.SetActive(group == "SOLID");
+        if (stripe) stripe.SetActive(group == "STRIPE");
+        if (none) none.SetActive(string.IsNullOrEmpty(group));
+    }
 
     private void AssignGroup(string ballTag)
     {
@@ -289,6 +326,8 @@ public class PocketTowPs : MonoBehaviour
         }
 
         groupAssigned = true;
+        UpdateGroupUI();
+        OnGroupAssigned?.Invoke();
 
         Debug.Log("GROUP ASSIGNED");
 

@@ -220,7 +220,9 @@ public class CueStickController : MonoBehaviour
             if (ssm == null) return false;
 
             //if (ssm.IsSelecting || ssm.IsInDelay) return true;
-            if (ssm.IsSelecting || ssm.IsInDelay || ssm.IsTargeting) return true;
+            //if (ssm.IsSelecting || ssm.IsInDelay || ssm.IsTargeting) return true;
+            if (ssm.IsSelecting || ssm.IsInDelay || ssm.IsTargeting || ssm.IsPerforming) return true;
+            if (ssm.IsOutOfTurnSkillPending) return true;
 
             return ssm.WindowEnabledForNextShot &&
                    (shotState == ShotState.WaitingEvents || shotState == ShotState.Resolving);

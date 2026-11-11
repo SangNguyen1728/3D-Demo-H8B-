@@ -72,6 +72,19 @@ public class RewardSkill : BaseSkills
         manager.StartCoroutine(WaitPlacementDone());
     }
 
+    public override bool HasSetupStep => true;
+
+    public override bool IsSetupRunning(GlaszekManager manager)
+    {
+        return HolePlacementController.Instance != null && HolePlacementController.Instance.IsBusy;
+    }
+
+    public override void CancelSetup(GlaszekManager manager)
+    {
+        if (HolePlacementController.Instance != null)
+            HolePlacementController.Instance.CancelPlacement();
+    }
+
     System.Collections.IEnumerator WaitPlacementDone()
     {
         yield return new WaitUntil(() => !HolePlacementController.Instance.IsPlacing);
